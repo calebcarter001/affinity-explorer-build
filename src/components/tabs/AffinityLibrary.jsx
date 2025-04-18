@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus } from 'react-icons/fi';
+import { useLocation } from 'react-router-dom';
+import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiLayers, FiGrid } from 'react-icons/fi';
 import { getAffinities } from '../../services/apiService';
 import EmptyState from '../common/EmptyState';
 import SkeletonLoader from '../common/SkeletonLoader';
+import AffinityCollections from '../collections/AffinityCollections';
 
 const AffinityLibrary = () => {
+  const location = useLocation();
+  const [activeView, setActiveView] = useState(location.state?.view || 'library');
   const [affinities, setAffinities] = useState([]);
   const [filteredAffinities, setFilteredAffinities] = useState([]);
   const [selectedAffinity, setSelectedAffinity] = useState(null);
@@ -13,8 +17,19 @@ const AffinityLibrary = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedCollection, setSelectedCollection] = useState(null);
 
-  // Load affinities when component mounts
+  // Set initial view and selected collection from navigation state
+  useEffect(() => {
+    if (location.state?.view) {
+      setActiveView(location.state.view);
+    }
+    if (location.state?.selectedCollection) {
+      setSelectedCollection(location.state.selectedCollection);
+    }
+  }, [location.state]);
+
+  // Load affinities and handle initial selection from navigation
   useEffect(() => {
     const loadAffinities = async () => {
       setLoading(true);
@@ -22,6 +37,16 @@ const AffinityLibrary = () => {
         const data = await getAffinities();
         setAffinities(data);
         setFilteredAffinities(data);
+        
+        // Handle selection from navigation state
+        if (location.state?.selectedAffinity) {
+          const affinityToSelect = data.find(
+            affinity => affinity.name === location.state.selectedAffinity
+          );
+          if (affinityToSelect) {
+            setSelectedAffinity(affinityToSelect);
+          }
+        }
       } catch (err) {
         setError('Failed to load affinities');
         console.error(err);
@@ -31,7 +56,7 @@ const AffinityLibrary = () => {
     };
 
     loadAffinities();
-  }, []);
+  }, [location.state?.selectedAffinity]);
 
   // Filter affinities when search term, category, or status changes
   useEffect(() => {
@@ -306,61 +331,94 @@ const AffinityLibrary = () => {
   return (
     <div className="p-4 md:p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-0">Affinity Library</h2>
-        <button className="btn btn-primary flex items-center gap-2">
-          <FiPlus /> New Affinity
-        </button>
-      </div>
-      
-      {/* Filters & Search */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="w-full md:w-auto">
-            <div className="relative">
-              <input 
-                type="text" 
-                placeholder="Search affinity concepts..." 
-                value={searchTerm}
-                onChange={handleSearch}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full md:w-64 focus:outline-none focus:border-blue-500"
-              />
-              <div className="absolute left-3 top-2.5 text-gray-400">
-                <FiSearch />
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-0">Affinity Library</h2>
+          <div className="flex bg-gray-100 rounded-lg p-1">
+            <button
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                activeView === 'library' 
+                  ? 'bg-white text-gray-900 shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+              onClick={() => setActiveView('library')}
+            >
+              <div className="flex items-center gap-2">
+                <FiGrid />
+                <span>Library</span>
               </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-3">
-            <select 
-              value={categoryFilter}
-              onChange={handleCategoryChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                activeView === 'collections' 
+                  ? 'bg-white text-gray-900 shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+              onClick={() => setActiveView('collections')}
             >
-              <option value="all">All Categories</option>
-              <option value="Family">Family</option>
-              <option value="Adults">Adults</option>
-              <option value="Premium">Premium</option>
-              <option value="Outdoors">Outdoors</option>
-              <option value="Location">Location</option>
-              <option value="Cultural">Cultural</option>
-            </select>
-            
-            <select 
-              value={statusFilter}
-              onChange={handleStatusChange}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
-            >
-              <option value="all">All Status</option>
-              <option value="Validated">Active</option>
-              <option value="In Enrichment">In Enrichment</option>
-              <option value="Scoring">Scoring</option>
-              <option value="Discovery">Discovery</option>
-            </select>
+              <div className="flex items-center gap-2">
+                <FiLayers />
+                <span>Collections</span>
+              </div>
+            </button>
           </div>
         </div>
       </div>
       
-      {renderContent()}
+      {activeView === 'library' ? (
+        <>
+          {/* Filters & Search */}
+          <div className="bg-white p-4 rounded-lg shadow mb-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="w-full md:w-auto">
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Search affinity concepts..." 
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full md:w-64 focus:outline-none focus:border-blue-500"
+                  />
+                  <div className="absolute left-3 top-2.5 text-gray-400">
+                    <FiSearch />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <select 
+                  value={categoryFilter}
+                  onChange={handleCategoryChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Family">Family</option>
+                  <option value="Adults">Adults</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Outdoors">Outdoors</option>
+                  <option value="Location">Location</option>
+                  <option value="Cultural">Cultural</option>
+                </select>
+                
+                <select 
+                  value={statusFilter}
+                  onChange={handleStatusChange}
+                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="Validated">Active</option>
+                  <option value="In Enrichment">In Enrichment</option>
+                  <option value="Scoring">Scoring</option>
+                  <option value="Discovery">Discovery</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          {renderContent()}
+        </>
+      ) : (
+        <AffinityCollections selectedCollectionName={selectedCollection} />
+      )}
     </div>
   );
 };

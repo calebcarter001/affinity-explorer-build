@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
-import Dashboard from './components/tabs/Dashboard';
+import Dashboard from './components/Dashboard';
 import AgentView from './components/tabs/AgentView';
 import AffinityLibrary from './components/tabs/AffinityLibrary';
 import ScoringExplorer from './components/tabs/ScoringExplorer';

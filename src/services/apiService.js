@@ -5,6 +5,7 @@ export const getDashboardStats = async () => {
   
   // Return mock data
   return {
+    // Basic stats
     totalAffinities: 248,
     quarterlyGrowth: 12,
     avgCoverage: 78,
@@ -12,7 +13,110 @@ export const getDashboardStats = async () => {
     implementationRate: 85,
     quarterlyGrowthImplementation: 8,
     reuseRate: 92,
-    targetDiffReuse: 7
+    targetDiffReuse: 7,
+    
+    // Enhanced Goal tracking data
+    goals: {
+      travelConcepts: {
+        total: 50,
+        completed: 35,
+        inProgress: 10,
+        notStarted: 5,
+        breakdown: {
+          validated: 25,
+          inValidation: 10,
+          inDevelopment: 10,
+          planned: 5
+        },
+        quarterlyTarget: 45,
+        yearlyTarget: 200,
+        progressRate: 70,
+        lastUpdated: '2024-03-20'
+      },
+      
+      validation: {
+        accuracy: {
+          current: 68,
+          target: 75,
+          trend: [65, 68, 70, 68, 72, 68],
+          lastSixMonths: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
+        },
+        coverage: {
+          total: 248,
+          validated: 170,
+          pending: 78,
+          breakdown: {
+            humanValidated: 120,
+            aiValidated: 50,
+            needsReview: 28,
+            failed: 50
+          }
+        },
+        confidence: {
+          high: 142,
+          medium: 68,
+          low: 38,
+          threshold: 0.85
+        }
+      },
+      
+      completeness: {
+        overall: {
+          complete: 180,
+          incomplete: 68,
+          total: 248,
+          percentage: 73
+        },
+        subScores: {
+          attributes: { complete: 223, incomplete: 25, required: true },
+          images: { complete: 233, incomplete: 15, required: true },
+          reviews: { complete: 238, incomplete: 10, required: true },
+          geo: { complete: 240, incomplete: 8, required: false },
+          booking: { complete: 238, incomplete: 10, required: true }
+        },
+        priority: {
+          high: 35,
+          medium: 22,
+          low: 11
+        },
+        trend: [68, 70, 71, 72, 73, 73]
+      },
+      
+      alignment: {
+        quarterly: {
+          target: 85,
+          current: 78,
+          gap: 7,
+          initiatives: [
+            { name: 'Increase validation rate', progress: 82 },
+            { name: 'Improve coverage', progress: 75 },
+            { name: 'Enhance completeness', progress: 77 }
+          ]
+        },
+        yearly: {
+          target: 95,
+          projected: 88,
+          gap: 7,
+          riskLevel: 'medium'
+        }
+      }
+    },
+    
+    // Chart data for coverage and accuracy trends
+    trends: {
+      coverage: {
+        data: [65, 59, 80, 81, 56, 55, 70, 75, 82, 85, 78, 80],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      accuracy: {
+        data: [45, 50, 55, 58, 62, 65, 68, 70, 72, 75, 73, 75],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      completeness: {
+        data: [60, 62, 65, 68, 70, 71, 72, 72, 73, 73, 73, 73],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      }
+    }
   };
 };
 
