@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FiX, FiCheck } from 'react-icons/fi';
 import { getAffinities, getProperties } from '../../services/apiService';
+import EmptyStateStyled from '../common/EmptyStateStyled';
+import SkeletonLoader from '../common/SkeletonLoader';
 
 const AffinityCombination = () => {
   const [availableAffinities, setAvailableAffinities] = useState([]);
@@ -13,8 +15,8 @@ const AffinityCombination = () => {
     const loadData = async () => {
       setLoading(true);
       try {
-        const affinities = await getAffinities();
-        setAvailableAffinities(affinities);
+        const response = await getAffinities();
+        setAvailableAffinities(response.data);
       } catch (err) {
         setError('Failed to load affinities');
         console.error(err);
@@ -91,126 +93,150 @@ const AffinityCombination = () => {
       <div className="bg-white p-6 rounded-lg shadow mb-6">
         <h3 className="text-lg font-semibold mb-4">Build Your Affinity Combination</h3>
         
-        {loading && <div className="text-center py-8 text-gray-500">Loading affinities...</div>}
-        {error && <div className="text-center py-8 text-red-500">{error}</div>}
+        {loading && (
+          <div className="py-8">
+            <SkeletonLoader type="card" count={3} />
+          </div>
+        )}
+        
+        {error && (
+          <EmptyStateStyled
+            type="ERROR"
+            actionButton={{
+              label: 'Try Again',
+              onClick: () => window.location.reload()
+            }}
+          />
+        )}
         
         {!loading && !error && (
           <>
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">Available affinities:</label>
               <div className="flex flex-wrap gap-2">
-                {availableAffinities
-                  .filter(affinity => !selectedAffinities.some(selected => selected.id === affinity.id))
-                  .map(affinity => (
-                    <div
-                      key={affinity.id}
-                      onClick={() => addToCombination(affinity)}
-                      className="affinity-tag cursor-pointer hover:bg-blue-50"
-                    >
-                      {affinity.name}
-                    </div>
-                  ))}
+                {availableAffinities.map(affinity => (
+                  <button
+                    key={affinity.id}
+                    onClick={() => addToCombination(affinity)}
+                    disabled={selectedAffinities.some(a => a.id === affinity.id)}
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      selectedAffinities.some(a => a.id === affinity.id)
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                    }`}
+                  >
+                    {affinity.name}
+                  </button>
+                ))}
               </div>
             </div>
             
-            <div className="p-4 bg-gray-50 rounded-lg mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-sm font-medium text-gray-700">Your combination:</label>
-                {selectedAffinities.length > 0 && (
-                  <button 
-                    onClick={clearCombination}
-                    className="text-sm text-red-600 hover:text-red-800"
-                  >
-                    Clear All
-                  </button>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {selectedAffinities.length === 0 ? (
-                  <div className="text-gray-500 italic text-sm">
-                    No affinities selected yet. Click on affinities above to add them to your combination.
-                  </div>
-                ) : (
-                  selectedAffinities.map(affinity => (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Selected affinities:</label>
+              {selectedAffinities.length === 0 ? (
+                <EmptyStateStyled
+                  type="NO_DATA"
+                  title="No Affinities Selected"
+                  description="Select at least two affinities to find matching properties"
+                />
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {selectedAffinities.map(affinity => (
                     <div
                       key={affinity.id}
-                      className="affinity-tag selected flex items-center"
+                      className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-600 text-white text-sm font-medium"
                     >
                       {affinity.name}
                       <button
                         onClick={() => removeFromCombination(affinity)}
-                        className="ml-2 text-gray-500 hover:text-gray-700"
+                        className="ml-1 text-white hover:text-gray-200"
                       >
-                        <FiX />
+                        <FiX size={14} />
                       </button>
                     </div>
-                  ))
-                )}
-              </div>
+                  ))}
+                  {selectedAffinities.length > 0 && (
+                    <button
+                      onClick={clearCombination}
+                      className="px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-300"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
+            
+            {selectedAffinities.length >= 2 && (
+              <div className="mb-6">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Compatibility Score</h4>
+                  <span className="text-lg font-bold text-green-600">{getCompatibilityScore()}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                  <div
+                    className="bg-green-600 h-2.5 rounded-full"
+                    style={{ width: `${getCompatibilityScore()}%` }}
+                  ></div>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  This score indicates how well these affinities work together for property matching.
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>
       
-      {/* Combination Analysis */}
-      {selectedAffinities.length >= 2 ? (
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-4">Combination Analysis</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold mb-3">Compatibility Score</h4>
-              <div className="bg-blue-50 p-4 rounded-md mb-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Overall Compatibility:</span>
-                  <span className="font-bold text-lg">{getCompatibilityScore()}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                  <div 
-                    className="h-2 rounded-full bg-blue-500"
-                    style={{ width: `${getCompatibilityScore()}%` }}
-                  />
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  These affinities work well together and are frequently found in the same properties.
-                </p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-3">Top Matching Properties</h4>
-              <div className="bg-gray-50 p-4 rounded-md">
-                {matchingProperties.length === 0 ? (
-                  <p className="text-sm text-gray-500">No properties found matching all selected affinities.</p>
-                ) : (
-                  <div className="space-y-2">
-                    {matchingProperties.slice(0, 5).map(property => (
-                      <div 
-                        key={property.id}
-                        className="flex justify-between items-center py-1 cursor-pointer hover:bg-gray-100 rounded px-2"
-                      >
-                        <span className="text-sm">{property.name}</span>
-                        <span className={`text-xs font-medium px-2 py-1 rounded-full ${getScoreClass(property.avgScore)}`}>
-                          {property.avgScore.toFixed(1)}/10
+      {/* Matching Properties */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h3 className="text-lg font-semibold mb-4">Matching Properties</h3>
+        
+        {selectedAffinities.length < 2 ? (
+          <EmptyStateStyled
+            type="NO_DATA"
+            title="Select More Affinities"
+            description="Select at least two affinities to find matching properties"
+          />
+        ) : matchingProperties.length === 0 ? (
+          <EmptyStateStyled
+            type="NO_DATA"
+            title="No Matching Properties"
+            description="No properties match all the selected affinities"
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {matchingProperties.map(property => (
+              <div key={property.id} className="border rounded-lg p-4">
+                <h4 className="font-medium text-gray-900">{property.name}</h4>
+                <p className="text-sm text-gray-500 mb-3">{property.address}</p>
+                <div className="space-y-2">
+                  {property.affinityScores
+                    .filter(score => selectedAffinities.some(aff => aff.name === score.name))
+                    .map(score => (
+                      <div key={score.name} className="flex justify-between items-center">
+                        <span className="text-sm">{score.name}</span>
+                        <span className={`text-sm font-medium ${getScoreClass(score.score)}`}>
+                          {score.score.toFixed(1)}/10
                         </span>
                       </div>
                     ))}
+                </div>
+                <div className="mt-3 pt-3 border-t">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">Average Score:</span>
+                    <span className={`text-sm font-bold ${getScoreClass(property.avgScore)}`}>
+                      {property.avgScore.toFixed(1)}/10
+                    </span>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
-      ) : (
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
-          <div className="text-center py-8 text-gray-500">
-            <i className="fas fa-layer-group text-gray-300 text-4xl mb-3"></i>
-            <p>Select two or more affinities to see their combination analysis</p>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default AffinityCombination;
+export default AffinityCombination; 

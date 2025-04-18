@@ -179,7 +179,7 @@ const Settings = () => {
               </div>
 
               {settings.autoRefresh && (
-                <div>
+                        <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Refresh Interval (minutes):</label>
                   <select 
                     className="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500"
@@ -190,7 +190,7 @@ const Settings = () => {
                     <option value="5">5 minutes</option>
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
-                  </select>
+                            </select>
                 </div>
               )}
             </div>

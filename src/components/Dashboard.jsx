@@ -11,13 +11,14 @@ import {
   FiBarChart2,
   FiStar,
   FiLayers,
-  FiRefreshCw
+  FiRefreshCw,
+  FiPlusCircle
 } from 'react-icons/fi';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ProgressTracker from './goals/ProgressTracker';
 import AccuracyMetrics from './goals/AccuracyMetrics';
-import { getDashboardStats } from '../services/apiService';
+import { getDashboardStats, getAffinityStats, getRecentActivity } from '../services/apiService';
 import SkeletonLoader from './common/SkeletonLoader';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -31,7 +32,9 @@ const getStatusColor = (progress) => {
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [stats, setStats] = useState(null);
+  const [recentActivity, setRecentActivity] = useState([]);
   const [goalData, setGoalData] = useState({
     affinityExpansion: {
       current: 10,
@@ -109,25 +112,32 @@ const Dashboard = () => {
     }
   ];
 
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const [statsData, activityData] = await Promise.all([
+        getAffinityStats(),
+        getRecentActivity()
+      ]);
+      setStats(statsData);
+      setRecentActivity(activityData);
+    } catch (err) {
+      setError('Error loading dashboard data');
+      console.error('Dashboard data fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const data = await getDashboardStats();
-        setStats(data);
-      } catch (err) {
-        console.error('Failed to fetch dashboard stats:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchStats();
+    fetchDashboardData();
   }, []);
 
-  const handleAffinityClick = (affinityName) => {
+  const handleAffinityClick = (affinity) => {
     navigate('/affinity-library', { 
       state: { 
-        selectedAffinity: affinityName,
+        selectedAffinity: affinity.name,
         source: 'dashboard'
       } 
     });
@@ -140,6 +150,10 @@ const Dashboard = () => {
         selectedCollection: collectionName
       } 
     });
+  };
+
+  const handleCreateAffinity = () => {
+    navigate('/affinity-library/create');
   };
 
   // Calculate overall progress
@@ -166,20 +180,60 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="p-6">
-        <div className="h-8 bg-gray-200 rounded w-48 mb-6 animate-pulse"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <SkeletonLoader type="stats" count={4} />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <SkeletonLoader type="chart" count={2} />
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="h-32 bg-gray-200 rounded"></div>
+            <div className="h-32 bg-gray-200 rounded"></div>
+            <div className="h-32 bg-gray-200 rounded"></div>
+          </div>
         </div>
       </div>
     );
   }
 
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-center">
+          <FiAlertTriangle className="mx-auto h-12 w-12 text-red-500" />
+          <h3 className="mt-2 text-lg font-medium text-gray-900">Error loading dashboard data</h3>
+          <button
+            onClick={fetchDashboardData}
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+          >
+            <FiRefreshCw className="mr-2" />
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats || stats.total === 0) {
+    return (
+      <div className="p-6">
+        <div className="text-center">
+          <FiAlertTriangle className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-2 text-lg font-medium text-gray-900">No affinities found</h3>
+          <p className="mt-1 text-sm text-gray-500">Start by creating your first affinity</p>
+          <button
+            onClick={handleCreateAffinity}
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+          >
+            <FiPlusCircle className="mr-2" />
+            Create Affinity
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const completionPercentage = Math.round((stats.completed / stats.total) * 100);
+  const isFullyCompleted = completionPercentage === 100;
+
   return (
     <div className="h-full flex flex-col p-6 space-y-6 bg-gray-50">
-      {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
@@ -187,297 +241,127 @@ const Dashboard = () => {
         </div>
         <div className="flex items-center space-x-2 text-sm">
           <span className="text-gray-500">Last updated:</span>
-          <span className="font-medium">{goalData.affinityExpansion.lastUpdated}</span>
+          <span className="font-medium">2024-03-20</span>
         </div>
       </div>
 
-      {/* Quick Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <FiCheckCircle className="text-green-500 mr-2" />
+              <FiTrendingUp className="text-green-500 mr-2" />
               <h3 className="font-medium">Affinity Expansion Goal</h3>
             </div>
             <span className="text-sm text-green-600">+8%</span>
           </div>
-          <p className="text-3xl font-bold mt-2">
-            {Math.round((goalData.affinityExpansion.current / goalData.affinityExpansion.target) * 100)}%
-          </p>
+          <p className="text-3xl font-bold mt-2">{completionPercentage}%</p>
           <p className="text-sm text-gray-500 mt-1">
-            {goalData.affinityExpansion.current} of {goalData.affinityExpansion.target} completed
+            {stats.completed} of {stats.total} completed
           </p>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <FiTarget className="text-blue-500 mr-2" />
+              <FiPieChart className="text-blue-500 mr-2" />
               <h3 className="font-medium">Accuracy Goal Tracking</h3>
             </div>
             <span className="text-sm text-blue-600">+3%</span>
           </div>
           <p className="text-3xl font-bold mt-2">{goalData.accuracy.current}%</p>
-          <p className="text-sm text-gray-500 mt-1">Target: {goalData.accuracy.target}%</p>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <FiActivity className="text-purple-500 mr-2" />
-              <h3 className="font-medium">Completeness Goal</h3>
-            </div>
-            <span className="text-sm text-purple-600">+5%</span>
-          </div>
-          <p className="text-3xl font-bold mt-2">{Math.round((goalData.completeness.current / goalData.completeness.target) * 100)}%</p>
           <p className="text-sm text-gray-500 mt-1">
-            {goalData.completeness.current} of {goalData.completeness.target}
+            Target: {goalData.accuracy.target}%
           </p>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <FiBarChart2 className="text-orange-500 mr-2" />
-              <h3 className="font-medium">Overall Goal Tracker</h3>
+              <FiTarget className="text-purple-500 mr-2" />
+              <h3 className="font-medium">Completeness Goal</h3>
             </div>
-            <span className="text-sm text-orange-600">On Track</span>
+            <span className="text-sm text-purple-600">+5%</span>
+          </div>
+          <p className="text-3xl font-bold mt-2">{goalData.completeness.current}%</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Target: {goalData.completeness.target}%
+          </p>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <FiActivity className="text-orange-500 mr-2" />
+              <h3 className="font-medium">Overall Progress</h3>
+            </div>
+            <span className="text-sm text-orange-600">+4%</span>
           </div>
           <p className="text-3xl font-bold mt-2">{calculateOverallProgress()}%</p>
-          <p className="text-sm text-gray-500 mt-1">Combined Goals</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {stats.inProgress} in progress, {stats.pending} pending
+          </p>
         </div>
       </div>
 
-      {/* Goals & Progress Section */}
+      {isFullyCompleted && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <FiCheckCircle className="text-green-500 mr-2" />
+            <h3 className="text-lg font-medium text-green-800">Congratulations!</h3>
+          </div>
+          <p className="mt-1 text-sm text-green-700">All affinities completed</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium">Affinity Completion Tracking</h3>
-              <span className="text-sm text-gray-500">Last updated: {goalData.affinityExpansion.lastUpdated}</span>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Overall Progress</span>
-                <span className="text-sm font-medium">{goalData.affinityExpansion.current}/{goalData.affinityExpansion.target}</span>
-              </div>
-              <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 ${getStatusColor(Math.round((goalData.affinityExpansion.current / goalData.affinityExpansion.target) * 100))}`}
-                  style={{ width: `${Math.round((goalData.affinityExpansion.current / goalData.affinityExpansion.target) * 100)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Status Indicators */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex items-center p-3 bg-green-50 rounded-lg">
-                <FiCheckCircle className="text-green-500 text-xl mr-3" />
-                <div>
-                  <p className="text-sm text-gray-600">Completed</p>
-                  <p className="text-xl font-semibold">{goalData.affinityExpansion.current}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center p-3 bg-blue-50 rounded-lg">
-                <FiClock className="text-blue-500 text-xl mr-3" />
-                <div>
-                  <p className="text-sm text-gray-600">Remaining</p>
-                  <p className="text-xl font-semibold">{goalData.affinityExpansion.target - goalData.affinityExpansion.current}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center p-3 bg-red-50 rounded-lg">
-                <FiAlertTriangle className="text-red-500 text-xl mr-3" />
-                <div>
-                  <p className="text-sm text-gray-600">Total</p>
-                  <p className="text-xl font-semibold">{goalData.affinityExpansion.target}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Summary Stats */}
-            <div className="mt-6 pt-6 border-t">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Completed</p>
-                  <p className="text-lg font-semibold">{Math.round((goalData.affinityExpansion.current / goalData.affinityExpansion.target) * 100)}%</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Remaining</p>
-                  <p className="text-lg font-semibold">{goalData.affinityExpansion.target - goalData.affinityExpansion.current}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <h3 className="text-lg font-medium mb-4">Recent Activity</h3>
+          {recentActivity.length > 0 ? (
+            <ul className="space-y-4">
+              {recentActivity.map((activity) => (
+                <li key={activity.id} className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <FiClock className="text-gray-400" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-gray-900">
+                      {activity.type === 'affinity_created' && 'New affinity created'}
+                      {activity.type === 'affinity_updated' && 'Affinity updated'}
+                      {activity.type === 'affinity_completed' && 'Affinity completed'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(activity.timestamp).toLocaleString()}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500">No recent activity</p>
+          )}
         </div>
-        <div className="space-y-6">
-          {/* Accuracy Goal Tracking */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium">Accuracy Goal Tracking</h3>
-              <div className="flex items-center">
-                <span className={`text-sm font-medium ${goalData.accuracy.current >= goalData.accuracy.target ? 'text-green-600' : 'text-yellow-600'}`}>
-                  {goalData.accuracy.current}%
-                </span>
-              </div>
-            </div>
 
-            {/* Overall Progress Bar */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Overall Progress</span>
-                <span className="text-sm font-medium">{goalData.accuracy.current}% / {goalData.accuracy.target}%</span>
-              </div>
-              <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 ${
-                    goalData.accuracy.current >= goalData.accuracy.target ? 'bg-green-500' : 'bg-yellow-500'
-                  }`}
-                  style={{ width: `${(goalData.accuracy.current / goalData.accuracy.target) * 100}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Validation Strategy Breakdown with Pie Chart */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-medium text-gray-700">Validation Strategy Contributors</h4>
-              <div className="flex flex-col items-center space-y-6">
-                <div className="w-48 h-48">
-                  <Pie
-                    data={{
-                      labels: goalData.accuracy.validationStrategies.map(strategy => strategy.name),
-                      datasets: [
-                        {
-                          data: goalData.accuracy.validationStrategies.map(strategy => strategy.contribution),
-                          backgroundColor: [
-                            'rgba(54, 162, 235, 0.8)',
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(153, 102, 255, 0.8)',
-                          ],
-                          borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                          ],
-                          borderWidth: 1,
-                        },
-                      ],
-                    }}
-                    options={{
-                      plugins: {
-                        legend: {
-                          display: false
-                        },
-                        tooltip: {
-                          callbacks: {
-                            label: function(context) {
-                              return `${context.label}: ${context.raw}%`;
-                            }
-                          }
-                        }
-                      },
-                      maintainAspectRatio: false,
-                    }}
-                  />
-                </div>
-                <div className="flex justify-center items-center space-x-6">
-                  {goalData.accuracy.validationStrategies.map((strategy, index) => (
-                    <div key={index} className="flex items-center">
-                      <div 
-                        className="w-3 h-3 rounded-full mr-2"
-                        style={{
-                          backgroundColor: [
-                            'rgba(54, 162, 235, 0.8)',
-                            'rgba(75, 192, 192, 0.8)',
-                            'rgba(153, 102, 255, 0.8)',
-                          ][index]
-                        }}
-                      />
-                      <span className="text-sm text-gray-600">{strategy.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Remaining Progress */}
-            <div className="mt-6 pt-4 border-t">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Remaining to Target</span>
-                <span className="text-sm font-medium text-yellow-600">{goalData.accuracy.target - goalData.accuracy.current}%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Recently Viewed Section */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Recently Viewed</h2>
-          <button className="text-gray-500 hover:text-gray-700">
-            <FiRefreshCw className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {recentlyViewed.map((item, index) => (
-            <div 
-              key={index} 
-              className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer" 
-              onClick={() => handleAffinityClick(item.name)}
-              role="button"
-              tabIndex={0}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleAffinityClick(item.name);
-                }
-              }}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                <span className="px-2 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-full">
-                  {item.status}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 mb-4 line-clamp-2">{item.description}</p>
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>Average Score: {item.score}</span>
-                <span>Coverage: {item.coverage}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* My Favorites Section */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">My Favorites</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {favorites.map((collection, index) => (
-            <div
-              key={index}
-              onClick={() => handleCollectionClick(collection.name)}
-              className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center">
-                  <FiLayers className="w-5 h-5 text-blue-500 mr-2" />
-                  <h3 className="font-semibold text-gray-900">{collection.name}</h3>
-                </div>
-                <button className="text-amber-500 hover:text-amber-600">
-                  <FiStar className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="text-sm text-gray-500">
-                {collection.affinities} affinities
-              </div>
-            </div>
-          ))}
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <h3 className="text-lg font-medium mb-4">My Favorites</h3>
+          {favorites.length > 0 ? (
+            <ul className="space-y-4">
+              {favorites.map((favorite) => (
+                <li
+                  key={favorite.name}
+                  className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer"
+                  onClick={() => handleCollectionClick(favorite.name)}
+                >
+                  <div className="flex items-center">
+                    <FiStar className="text-yellow-400 mr-2" />
+                    <span className="text-sm font-medium">{favorite.name}</span>
+                  </div>
+                  <span className="text-sm text-gray-500">{favorite.affinities} affinities</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500">No favorites yet</p>
+          )}
         </div>
       </div>
     </div>

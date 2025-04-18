@@ -1,77 +1,137 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import { FiSearch, FiMapPin, FiDownload, FiStar, FiDollarSign, FiCalendar } from 'react-icons/fi';
+import { FiSearch, FiMapPin, FiDownload, FiStar, FiDollarSign, FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { searchProperties } from '../../services/apiService';
+import { cacheService } from '../../services/cacheService';
 import Chart from 'chart.js/auto';
+import EmptyStateStyled from '../common/EmptyStateStyled';
+import PropertyCard from '../common/PropertyCard';
+
+const ITEMS_PER_PAGE = 10;
 
 const ScoringExplorer = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isSearching, setIsSearching] = useState(false);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
   
-  // Load all properties when component mounts
-  useEffect(() => {
-    const loadAllProperties = async () => {
-      setLoading(true);
-      try {
-        // Use a wildcard search to get all properties
-        const results = await searchProperties('*');
-        setSearchResults(results);
-      } catch (err) {
-        setError('Failed to load properties');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadAllProperties();
-  }, []);
-  
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
-      // If search term is empty, load all properties
-      setLoading(true);
-      try {
-        const results = await searchProperties('*');
-        setSearchResults(results);
-        setSelectedProperty(null);
-      } catch (err) {
-        setError('Failed to load properties');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-    
-    setLoading(true);
-    setError(null);
-    
+  // Load all properties with pagination
+  const loadAllProperties = async (page = 1) => {
     try {
-      const results = await searchProperties(searchTerm);
-      setSearchResults(results);
-      setSelectedProperty(null);
+      setLoading(true);
+      setError(null);
+      
+      // Check cache first
+      const cacheKey = cacheService.generateKey('properties', { page, limit: ITEMS_PER_PAGE });
+      const cachedData = cacheService.get(cacheKey);
+      
+      if (cachedData) {
+        setProperties(cachedData.data);
+        setTotalPages(cachedData.totalPages);
+        setLoading(false);
+        return;
+      }
+
+      const response = await searchProperties('', page, ITEMS_PER_PAGE);
+      setProperties(response.data);
+      setTotalPages(response.totalPages);
+      
+      // Cache the results
+      cacheService.set(cacheKey, response);
     } catch (err) {
-      setError('Failed to search properties');
-      console.error(err);
+      setError('Failed to load properties. Please try again.');
+      console.error('Error loading properties:', err);
     } finally {
       setLoading(false);
     }
   };
-  
+
+  // Handle search with debouncing
+  const handleSearch = useCallback(async () => {
+    if (!searchTerm.trim()) {
+      loadAllProperties(currentPage);
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      setError(null);
+      
+      // Check cache first
+      const cacheKey = cacheService.generateKey('properties_search', { 
+        term: searchTerm, 
+        page: currentPage, 
+        limit: ITEMS_PER_PAGE 
+      });
+      const cachedData = cacheService.get(cacheKey);
+      
+      if (cachedData) {
+        setProperties(cachedData.data);
+        setTotalPages(cachedData.totalPages);
+        setIsSearching(false);
+        return;
+      }
+
+      const response = await searchProperties(searchTerm, currentPage, ITEMS_PER_PAGE);
+      setProperties(response.data);
+      setTotalPages(response.totalPages);
+      
+      // Cache the results
+      cacheService.set(cacheKey, response);
+    } catch (err) {
+      setError('Search failed. Please try again.');
+      console.error('Search error:', err);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [searchTerm, currentPage]);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleSearch();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, currentPage, handleSearch]);
+
+  // Initial load
+  useEffect(() => {
+    loadAllProperties(1);
+  }, []);
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
   };
-  
+
   const selectProperty = (property) => {
+    // Optimistic update
     setSelectedProperty(property);
+    
+    // Update the property in the list to show it's selected
+    setProperties(prevProperties => 
+      prevProperties.map(p => ({
+        ...p,
+        isSelected: p.id === property.id
+      }))
+    );
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    if (searchTerm) {
+      handleSearch();
+    } else {
+      loadAllProperties(pageNumber);
+    }
   };
 
   useEffect(() => {
@@ -122,119 +182,332 @@ const ScoringExplorer = () => {
     };
   }, [selectedProperty]);
   
+  const renderPropertyList = () => {
+    if (loading) {
+      return (
+        <div className="space-y-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="p-4 border rounded-lg animate-pulse bg-white">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="h-5 bg-gray-200 rounded w-1/3"></div>
+                    <div className="h-5 bg-gray-200 rounded-full w-12"></div>
+                  </div>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="h-4 bg-gray-200 rounded w-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="h-3 bg-gray-200 rounded w-3"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+                  </div>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <div className="h-4 bg-gray-200 rounded w-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <EmptyStateStyled
+          type="ERROR"
+          actionButton={{
+            label: 'Try Again',
+            onClick: handleSearch
+          }}
+          suggestions={[
+            'Check your internet connection',
+            'Verify that the API service is running',
+            'Try refreshing the page'
+          ]}
+        />
+      );
+    }
+
+    if (!properties || !properties.length) {
+      return (
+        <EmptyStateStyled
+          type="NO_RESULTS"
+          actionButton={{
+            label: 'Clear Search',
+            onClick: () => {
+              setSearchTerm('');
+              handleSearch();
+            }
+          }}
+          suggestions={[
+            'Try using different search terms',
+            'Check for typos in your search',
+            'Remove any filters that might be limiting results'
+          ]}
+        />
+      );
+    }
+
+    // Calculate pagination
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentItems = properties.slice(indexOfFirstItem, indexOfLastItem);
+
+    return (
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-4">
+          {currentItems.map((property) => (
+            <PropertyCard
+              key={property.id}
+              property={property}
+              isSelected={selectedProperty?.id === property.id}
+              onClick={selectProperty}
+              showMetrics={false}
+            />
+          ))}
+        </div>
+        
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="mt-6 flex justify-center items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-md ${
+                currentPage === 1
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <FiChevronLeft className="w-5 h-5" />
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`px-3 py-1 rounded-md ${
+                  currentPage === page
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-md ${
+                currentPage === totalPages
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <FiChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+        
+        <div className="mt-2 text-center text-sm text-gray-500">
+          Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, properties.length)} of {properties.length} properties
+        </div>
+      </div>
+    );
+  };
+
+  const renderPropertyDetails = () => {
+    if (loading) {
+      return (
+        <div className="space-y-6 animate-pulse">
+          <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="h-5 bg-gray-200 rounded w-1/4"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="bg-gray-50 p-4 rounded-md">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                      <div className="h-4 bg-gray-200 rounded w-16"></div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-5 bg-gray-200 rounded w-1/4"></div>
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div className="bg-gray-50 px-6 py-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                  </div>
+                </div>
+                <div className="divide-y divide-gray-200">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="px-6 py-4">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (!selectedProperty) {
+      return (
+        <EmptyStateStyled
+          type="NO_DATA"
+          title="Select a Property"
+          description="Choose a property from the list to view its scoring details"
+          suggestions={[
+            'Click on a property card to select it',
+            'Use the search bar to find specific properties',
+            'Try clearing any active filters if you don\'t see expected properties'
+          ]}
+        />
+      );
+    }
+
+    const getInterpretation = (score) => {
+      if (score >= 9) return 'Exceptional match';
+      if (score >= 8) return 'Strong match';
+      if (score >= 6) return 'Good match';
+      if (score >= 4) return 'Moderate match';
+      return 'Weak match';
+    };
+
+    return (
+      <div className="space-y-6">
+        <h3 className="text-lg font-bold">Property Affinity Scores</h3>
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <h4 className="font-medium text-base">Score Details</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {selectedProperty.affinityScores.map(score => (
+                <div key={score.name} className="bg-gray-50 p-4 rounded-md">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium">{score.name}</h4>
+                    <span className={`font-semibold ${
+                      score.score >= 8 ? 'text-green-600' : 
+                      score.score >= 6 ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
+                      {score.score.toFixed(1)}/10
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className={`h-2.5 rounded-full ${
+                        score.score >= 8 ? 'bg-green-600' : 
+                        score.score >= 6 ? 'bg-yellow-600' : 'bg-red-600'
+                      }`}
+                      style={{ width: `${score.score * 10}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h4 className="font-medium text-base">Affinity Sub-Scores</h4>
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Affinity Concept
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Score
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Interpretation
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {selectedProperty.affinityScores.map(score => (
+                    <tr key={score.name}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {score.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          score.score >= 9 ? 'bg-green-100 text-green-800' :
+                          score.score >= 8 ? 'bg-blue-100 text-blue-800' :
+                          score.score >= 6 ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {score.score.toFixed(1)}/10
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {getInterpretation(score.score)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <ExplorerContainer>
       <ExplorerHeader>
-        <h1>Affinity Scores</h1>
+        <h1>Property Affinity Scores</h1>
         <p>Search for properties and explore their affinity scores</p>
       </ExplorerHeader>
       
-      <SearchSection>
-        <h2>Find a Property or Destination</h2>
-        <SearchContainer>
-          <SearchInput 
-            type="text" 
-            placeholder="Search by name, location, type, or amenities..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <SearchButton onClick={handleSearch} disabled={loading || !searchTerm.trim()}>
-            <FiSearch /> Search
-          </SearchButton>
-        </SearchContainer>
-        
-        {loading && <LoadingMessage>Searching properties...</LoadingMessage>}
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        
-        {searchResults.length === 0 && searchTerm && !loading && (
-          <NoResults>No properties found matching your search.</NoResults>
-        )}
-      </SearchSection>
-      
       <ExplorerGrid>
-        <SearchResults>
-          <h2>Browse Properties</h2>
-          <PropertyGrid>
-            {searchResults.map(property => (
-              <PropertyCard 
-                key={property.id} 
-                onClick={() => selectProperty(property)}
-                selected={selectedProperty?.id === property.id}
-              >
-                <PropertyName>{property.name}</PropertyName>
-                <PropertyLocation><FiMapPin /> {property.location}</PropertyLocation>
-                <PropertyType>{property.type}</PropertyType>
-                <PropertyDescription>{property.description}</PropertyDescription>
-                <PropertyMeta>
-                  <MetaItem><FiStar /> {property.rating} ({property.reviewCount} reviews)</MetaItem>
-                  <MetaItem><FiDollarSign /> {property.priceRange}</MetaItem>
-                </PropertyMeta>
-                {selectedProperty?.id === property.id && (
-                  <ViewButton>View Scores</ViewButton>
-                )}
-              </PropertyCard>
-            ))}
-          </PropertyGrid>
-        </SearchResults>
+        <LeftPanel>
+          <SearchSection>
+            <SearchContainer>
+              <SearchInput 
+                type="text" 
+                placeholder="Search by name, location, type, or amenities..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+              <SearchButton onClick={handleSearch} disabled={loading || isSearching}>
+                <FiSearch /> Search
+              </SearchButton>
+            </SearchContainer>
+            
+            {(loading || isSearching) && <LoadingMessage>Loading...</LoadingMessage>}
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            
+            {(!properties || properties.length === 0) && searchTerm && !loading && (
+              <NoResults>No properties found matching your search.</NoResults>
+            )}
+          </SearchSection>
+          
+          <SearchResults>
+            {renderPropertyList()}
+          </SearchResults>
+        </LeftPanel>
         
-        {selectedProperty && (
-          <PropertyDetail>
-            <PropertyHeader>
-              <div>
-                <h2>{selectedProperty.name}</h2>
-                <PropertyLocation><FiMapPin /> {selectedProperty.location}</PropertyLocation>
-                <PropertyType>{selectedProperty.type}</PropertyType>
-              </div>
-              <PropertyMeta>
-                <MetaItem><FiStar /> {selectedProperty.rating} ({selectedProperty.reviewCount} reviews)</MetaItem>
-                <MetaItem><FiDollarSign /> {selectedProperty.priceRange}</MetaItem>
-                <MetaItem><FiCalendar /> Last updated: {selectedProperty.lastUpdated}</MetaItem>
-              </PropertyMeta>
-            </PropertyHeader>
-            
-            <PropertyDescription>{selectedProperty.description}</PropertyDescription>
-            
-            <ChartContainer>
-              <canvas ref={chartRef}></canvas>
-            </ChartContainer>
-            
-            <ScoresSection>
-              <h3>Affinity Scores</h3>
-              <ScoresList>
-                {selectedProperty.affinityScores.map(score => (
-                  <ScoreCard key={score.affinityId}>
-                    <ScoreName>{score.name}</ScoreName>
-                    <ScoreBar>
-                      <ScoreFill 
-                        style={{ 
-                          width: `${score.score * 10}%`,
-                          backgroundColor: score.score > 7 ? '#27ae60' : score.score > 5 ? '#f39c12' : '#e74c3c'
-                        }} 
-                      />
-                    </ScoreBar>
-                    <ScoreValue>{score.score.toFixed(1)}/10</ScoreValue>
-                  </ScoreCard>
-                ))}
-              </ScoresList>
-            </ScoresSection>
-            
-            <AmenitiesSection>
-              <h3>Amenities</h3>
-              <AmenitiesList>
-                {selectedProperty.amenities.map((amenity, index) => (
-                  <AmenityTag key={index}>{amenity}</AmenityTag>
-                ))}
-              </AmenitiesList>
-            </AmenitiesSection>
-
-            <ExportSection>
-              <ExportButton>
-                <FiDownload /> Export Report
-              </ExportButton>
-            </ExportSection>
-          </PropertyDetail>
-        )}
+        <PropertyDetail>
+          {renderPropertyDetails()}
+        </PropertyDetail>
       </ExplorerGrid>
     </ExplorerContainer>
   );
@@ -262,7 +535,7 @@ const ExplorerHeader = styled.div`
 
 const ExplorerGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 400px 1fr;
   gap: 2rem;
   
   @media (max-width: 1024px) {
@@ -270,28 +543,30 @@ const ExplorerGrid = styled.div`
   }
 `;
 
+const LeftPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
 const SearchSection = styled.section`
-  margin-bottom: 2.5rem;
+  background-color: var(--card-bg-light);
+  border-radius: 8px;
+  padding: 1.5rem;
   
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+  .dark & {
+    background-color: var(--card-bg-dark);
   }
 `;
 
 const SearchContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1rem;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
 `;
 
 const SearchInput = styled.input`
-  flex: 1;
+  width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 6px;
   border: 1px solid var(--border-color);
@@ -314,8 +589,9 @@ const SearchInput = styled.input`
 const SearchButton = styled.button`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0 1.5rem;
+  padding: 0.75rem;
   background-color: var(--primary-color);
   color: white;
   border-radius: 6px;
@@ -333,19 +609,15 @@ const SearchButton = styled.button`
 `;
 
 const SearchResults = styled.div`
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-`;
-
-const PropertyGrid = styled.div`
-  display: grid;
-  gap: 1rem;
-  max-height: 600px;
+  flex: 1;
   overflow-y: auto;
-  padding-right: 1rem;
+  background-color: var(--card-bg-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  
+  .dark & {
+    background-color: var(--card-bg-dark);
+  }
   
   &::-webkit-scrollbar {
     width: 6px;
@@ -366,207 +638,33 @@ const PropertyGrid = styled.div`
   }
 `;
 
-const PropertyCard = styled.div`
-  background-color: ${props => props.selected ? 'rgba(74, 108, 247, 0.1)' : 'var(--card-bg-light)'};
-  border: 1px solid ${props => props.selected ? 'var(--primary-color)' : 'var(--border-color)'};
-  border-radius: 8px;
-  padding: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  .dark & {
-    background-color: ${props => props.selected ? 'rgba(74, 108, 247, 0.1)' : 'var(--card-bg-dark)'};
-    border-color: ${props => props.selected ? 'var(--primary-color)' : '#374151'};
-  }
-  
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const PropertyName = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-`;
-
-const PropertyLocation = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--secondary-color);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-`;
-
-const PropertyType = styled.div`
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background-color: rgba(74, 108, 247, 0.1);
-  color: var(--primary-color);
-  border-radius: 4px;
-  font-size: 0.8rem;
-  margin-bottom: 0.5rem;
-`;
-
-const PropertyDescription = styled.p`
-  color: var(--secondary-color);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  line-height: 1.4;
-`;
-
-const PropertyMeta = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
-`;
-
-const MetaItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--secondary-color);
-  font-size: 0.9rem;
-`;
-
-const ViewButton = styled.button`
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background-color: #3451c4;
-  }
-`;
-
 const PropertyDetail = styled.div`
   background-color: var(--card-bg-light);
   border-radius: 8px;
   padding: 2rem;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
   
   .dark & {
     background-color: var(--card-bg-dark);
   }
-`;
-
-const PropertyHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
   
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+  &::-webkit-scrollbar {
+    width: 6px;
   }
-`;
-
-const ChartContainer = styled.div`
-  height: 300px;
-  margin-bottom: 2rem;
-`;
-
-const ScoresSection = styled.section`
-  margin-bottom: 2rem;
   
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+  &::-webkit-scrollbar-track {
+    background: var(--card-bg-light);
+    border-radius: 3px;
   }
-`;
-
-const ScoresList = styled.div`
-  display: grid;
-  gap: 1rem;
-`;
-
-const ScoreCard = styled.div`
-  background-color: var(--card-bg-light);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 1rem;
   
-  .dark & {
-    background-color: var(--card-bg-dark);
-    border-color: #374151;
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
   }
-`;
-
-const ScoreName = styled.div`
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-`;
-
-const ScoreBar = styled.div`
-  height: 8px;
-  background-color: var(--border-color);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-`;
-
-const ScoreFill = styled.div`
-  height: 100%;
-  transition: width 0.3s ease;
-`;
-
-const ScoreValue = styled.div`
-  font-size: 0.9rem;
-  color: var(--secondary-color);
-`;
-
-const AmenitiesSection = styled.section`
-  margin-bottom: 2rem;
   
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-`;
-
-const AmenitiesList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-`;
-
-const AmenityTag = styled.div`
-  padding: 0.5rem 1rem;
-  background-color: rgba(74, 108, 247, 0.1);
-  color: var(--primary-color);
-  border-radius: 4px;
-  font-size: 0.9rem;
-`;
-
-const ExportSection = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2rem;
-`;
-
-const ExportButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background-color: #3451c4;
+  .dark &::-webkit-scrollbar-track {
+    background: var(--card-bg-dark);
   }
 `;
 

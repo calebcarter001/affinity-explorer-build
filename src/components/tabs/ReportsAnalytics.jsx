@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiDownload, FiFilter, FiCalendar, FiBarChart2 } from 'react-icons/fi';
 import SkeletonLoader from '../common/SkeletonLoader';
-import EmptyState from '../common/EmptyState';
+import EmptyStateStyled from '../common/EmptyStateStyled';
 
 const ReportsAnalytics = () => {
   const [loading, setLoading] = useState(false);
@@ -122,7 +122,7 @@ const ReportsAnalytics = () => {
             <SkeletonLoader type="table" />
           </div>
         ) : error ? (
-          <EmptyState
+          <EmptyStateStyled
             type="ERROR"
             actionButton={
               <button
@@ -137,7 +137,7 @@ const ReportsAnalytics = () => {
             }
           />
         ) : !showPreview ? (
-          <EmptyState
+          <EmptyStateStyled
             type="NO_DATA"
             title="No Report Generated"
             description="Configure your report parameters and click 'Generate Report' to view the results"

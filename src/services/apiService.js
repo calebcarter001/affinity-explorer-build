@@ -1,10 +1,16 @@
-// Mock API service
+import { cacheService } from './cacheService';
+
+// Mock API service with caching and pagination
 export const getDashboardStats = async () => {
+  const cacheKey = cacheService.generateKey('dashboard_stats');
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   // Return mock data
-  return {
+  const data = {
     // Basic stats
     totalAffinities: 248,
     quarterlyGrowth: 12,
@@ -118,15 +124,22 @@ export const getDashboardStats = async () => {
       }
     }
   };
+  
+  cacheService.set(cacheKey, data);
+  return data;
 };
 
-// Mock affinity data
-export const getAffinities = async () => {
+// Mock affinity data with pagination
+export const getAffinities = async (page = 1, limit = 10) => {
+  const cacheKey = cacheService.generateKey('affinities', { page, limit });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   // Return mock data
-  return [
+  const mockAffinities = [
     {
       id: 1,
       name: "Pet-Friendly",
@@ -224,14 +237,31 @@ export const getAffinities = async () => {
       definition: "Properties with historical significance or located in historical areas."
     }
   ];
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedData = {
+    data: mockAffinities.slice(startIndex, endIndex),
+    total: mockAffinities.length,
+    page,
+    limit,
+    totalPages: Math.ceil(mockAffinities.length / limit)
+  };
+  
+  cacheService.set(cacheKey, paginatedData);
+  return paginatedData;
 };
 
-// Mock property search
-export const searchProperties = async (searchTerm) => {
+// Mock property search with pagination
+export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
+  const cacheKey = cacheService.generateKey('properties_search', { searchTerm, page, limit });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Mock data
+  // Mock data with pagination
   const mockProperties = [
     {
       id: 'PROP001',
@@ -304,21 +334,30 @@ export const searchProperties = async (searchTerm) => {
     }
   ];
   
-  // If search term is a wildcard, return all properties
-  if (searchTerm === '*') {
-    return mockProperties;
-  }
-  
   // Filter properties based on search term
-  const searchTermLower = searchTerm.toLowerCase();
-  return mockProperties.filter(property => 
-    property.name.toLowerCase().includes(searchTermLower) ||
-    property.location.toLowerCase().includes(searchTermLower) ||
-    property.id.toLowerCase().includes(searchTermLower) ||
-    property.type.toLowerCase().includes(searchTermLower) ||
-    property.description.toLowerCase().includes(searchTermLower) ||
-    property.amenities.some(amenity => amenity.toLowerCase().includes(searchTermLower))
-  );
+  const filteredProperties = searchTerm === '*' 
+    ? mockProperties 
+    : mockProperties.filter(property => 
+        property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.amenities.some(amenity => amenity.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedData = {
+    data: filteredProperties.slice(startIndex, endIndex),
+    total: filteredProperties.length,
+    page,
+    limit,
+    totalPages: Math.ceil(filteredProperties.length / limit)
+  };
+  
+  cacheService.set(cacheKey, paginatedData);
+  return paginatedData;
 };
 
 // Mock data for the application
@@ -434,4 +473,44 @@ export const getProperties = () => {
       resolve(properties);
     }, 500);
   });
+};
+
+export const getAffinityStats = async () => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return mock data
+  return {
+    total: 248,
+    completed: 180,
+    inProgress: 48,
+    pending: 20
+  };
+};
+
+export const getRecentActivity = async () => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return mock data
+  return [
+    {
+      id: 1,
+      type: 'affinity_created',
+      timestamp: new Date().toISOString(),
+      details: {
+        name: 'Pet-Friendly',
+        category: 'Family'
+      }
+    },
+    {
+      id: 2,
+      type: 'affinity_updated',
+      timestamp: new Date().toISOString(),
+      details: {
+        name: 'Romantic',
+        category: 'Adults'
+      }
+    }
+  ];
 }; 

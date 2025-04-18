@@ -3,12 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react({
-      // Enables Fast Refresh
-      fastRefresh: true,
-    })
-  ],
+  plugins: [react()],
   server: {
     port: 3000,
     strictPort: true,
@@ -26,5 +21,18 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.js',
+    css: true,
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/setupTests.js',
+      ],
+    },
   }
 }) 

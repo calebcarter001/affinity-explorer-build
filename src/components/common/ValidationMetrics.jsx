@@ -58,7 +58,7 @@ const ValidationMetrics = ({
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <FiBarChart2 className="text-gray-400 mr-2" />
-          <h3 className="text-lg font-semibold">{title}</h3>
+          <h3 className="text-lg font-bold">{title}</h3>
         </div>
         <div className="flex items-center">
           {getStatusIcon()}

@@ -23,7 +23,7 @@ const GoalTracker = ({ goals }) => {
       {/* Travel Concepts Progress */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium">Travel Concepts</h3>
+          <h3 className="text-lg font-bold">Travel Concepts</h3>
           <span className="text-sm text-gray-500">Last updated: {travelConcepts.lastUpdated}</span>
         </div>
         
@@ -64,7 +64,7 @@ const GoalTracker = ({ goals }) => {
       
       {/* Validation Metrics */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4">Validation Progress</h3>
+        <h3 className="text-lg font-bold mb-4">Validation Progress</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="border rounded-lg p-4">
             <h4 className="text-sm text-gray-500 mb-2">Accuracy</h4>
@@ -105,7 +105,7 @@ const GoalTracker = ({ goals }) => {
       
       {/* Quarterly Goals */}
       <div>
-        <h3 className="text-lg font-medium mb-4">Quarterly Alignment</h3>
+        <h3 className="text-lg font-bold mb-4">Quarterly Alignment</h3>
         <div className="space-y-4">
           {alignment.quarterly.initiatives.map((initiative, index) => (
             <div key={index} className="border rounded-lg p-4">

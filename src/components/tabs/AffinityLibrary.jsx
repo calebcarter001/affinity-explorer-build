@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiLayers, FiGrid } from 'react-icons/fi';
+import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus, FiChevronLeft, FiChevronRight, FiLayers, FiBook } from 'react-icons/fi';
 import { getAffinities } from '../../services/apiService';
-import EmptyState from '../common/EmptyState';
+import EmptyStateStyled from '../common/EmptyStateStyled';
 import SkeletonLoader from '../common/SkeletonLoader';
 import AffinityCollections from '../collections/AffinityCollections';
+import FilterPanel from '../common/FilterPanel';
 
 const AffinityLibrary = () => {
   const location = useLocation();
-  const [activeView, setActiveView] = useState(location.state?.view || 'library');
+  const [activeTab, setActiveTab] = useState('library');
   const [affinities, setAffinities] = useState([]);
   const [filteredAffinities, setFilteredAffinities] = useState([]);
   const [selectedAffinity, setSelectedAffinity] = useState(null);
@@ -17,35 +18,33 @@ const AffinityLibrary = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage] = useState(10);
 
-  // Set initial view and selected collection from navigation state
-  useEffect(() => {
-    if (location.state?.view) {
-      setActiveView(location.state.view);
-    }
-    if (location.state?.selectedCollection) {
-      setSelectedCollection(location.state.selectedCollection);
-    }
-  }, [location.state]);
-
-  // Load affinities and handle initial selection from navigation
+  // Load affinities when component mounts or filters change
   useEffect(() => {
     const loadAffinities = async () => {
       setLoading(true);
       try {
-        const data = await getAffinities();
-        setAffinities(data);
-        setFilteredAffinities(data);
-        
-        // Handle selection from navigation state
+        const response = await getAffinities(currentPage, itemsPerPage);
+        setAffinities(response.data);
+        setFilteredAffinities(response.data);
+        setTotalPages(response.totalPages);
+
+        // If we have a selectedAffinity from navigation state, find and select it
         if (location.state?.selectedAffinity) {
-          const affinityToSelect = data.find(
+          const affinityToSelect = response.data.find(
             affinity => affinity.name === location.state.selectedAffinity
           );
           if (affinityToSelect) {
             setSelectedAffinity(affinityToSelect);
           }
+        }
+
+        // If we have a collections view from navigation state, switch to collections tab
+        if (location.state?.view === 'collections') {
+          setActiveTab('collections');
         }
       } catch (err) {
         setError('Failed to load affinities');
@@ -56,7 +55,7 @@ const AffinityLibrary = () => {
     };
 
     loadAffinities();
-  }, [location.state?.selectedAffinity]);
+  }, [currentPage, itemsPerPage, location.state]);
 
   // Filter affinities when search term, category, or status changes
   useEffect(() => {
@@ -83,6 +82,67 @@ const AffinityLibrary = () => {
 
     setFilteredAffinities(filtered);
   }, [affinities, searchTerm, categoryFilter, statusFilter]);
+
+  // Optimistic update function
+  const updateAffinityOptimistically = (updatedAffinity) => {
+    setAffinities(prevAffinities => 
+      prevAffinities.map(affinity => 
+        affinity.id === updatedAffinity.id ? updatedAffinity : affinity
+      )
+    );
+  };
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Render pagination controls
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex justify-center items-center mt-4 space-x-2">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 rounded ${
+            currentPage === 1
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          <FiChevronLeft />
+        </button>
+        
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`px-3 py-1 rounded ${
+              currentPage === page
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+        
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-3 py-1 rounded ${
+            currentPage === totalPages
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          <FiChevronRight />
+        </button>
+      </div>
+    );
+  };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -128,7 +188,7 @@ const AffinityLibrary = () => {
 
     if (error) {
       return (
-        <EmptyState
+        <EmptyStateStyled
           type="ERROR"
           actionButton={
             <button
@@ -161,7 +221,7 @@ const AffinityLibrary = () => {
 
     if (!affinities.length) {
       return (
-        <EmptyState
+        <EmptyStateStyled
           type="NO_AFFINITIES"
           actionButton={
             <button
@@ -184,7 +244,7 @@ const AffinityLibrary = () => {
 
     if (filteredAffinities.length === 0) {
       return (
-        <EmptyState
+        <EmptyStateStyled
           type="FILTERED"
           actionButton={
             <button
@@ -317,7 +377,7 @@ const AffinityLibrary = () => {
           </div>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow flex items-center justify-center h-full">
-            <EmptyState 
+            <EmptyStateStyled 
               icon="inbox"
               title="No Affinity Selected"
               description="Select an affinity from the list to view its details."
@@ -331,40 +391,34 @@ const AffinityLibrary = () => {
   return (
     <div className="p-4 md:p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-0">Affinity Library</h2>
-          <div className="flex bg-gray-100 rounded-lg p-1">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xl md:text-2xl font-bold">Affinity Library</h2>
+          <div className="flex rounded-lg border border-gray-200 overflow-hidden">
             <button
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                activeView === 'library' 
-                  ? 'bg-white text-gray-900 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-900'
+              onClick={() => setActiveTab('library')}
+              className={`px-4 py-2 flex items-center gap-2 ${
+                activeTab === 'library'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
               }`}
-              onClick={() => setActiveView('library')}
             >
-              <div className="flex items-center gap-2">
-                <FiGrid />
-                <span>Library</span>
-              </div>
+              <FiBook /> Library
             </button>
             <button
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                activeView === 'collections' 
-                  ? 'bg-white text-gray-900 shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-900'
+              onClick={() => setActiveTab('collections')}
+              className={`px-4 py-2 flex items-center gap-2 ${
+                activeTab === 'collections'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
               }`}
-              onClick={() => setActiveView('collections')}
             >
-              <div className="flex items-center gap-2">
-                <FiLayers />
-                <span>Collections</span>
-              </div>
+              <FiLayers /> Collections
             </button>
           </div>
         </div>
       </div>
       
-      {activeView === 'library' ? (
+      {activeTab === 'library' ? (
         <>
           {/* Filters & Search */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">
@@ -415,9 +469,10 @@ const AffinityLibrary = () => {
           </div>
           
           {renderContent()}
+          {renderPagination()}
         </>
       ) : (
-        <AffinityCollections selectedCollectionName={selectedCollection} />
+        <AffinityCollections selectedCollectionName={location.state?.selectedCollection} />
       )}
     </div>
   );

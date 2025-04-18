@@ -34,7 +34,7 @@ const NavigationMenu = () => {
     },
     {
       path: '/scoring-explorer',
-      label: 'Affinity Scores',
+      label: 'Property Affinity Scores',
       icon: <FiSearch />
     },
     {

@@ -51,7 +51,7 @@ const AgentAnalysis = ({
           {styles.icon}
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-1">{title}</h3>
+          <h3 className="text-lg font-bold mb-1">{title}</h3>
           <p className="text-gray-600">{description}</p>
         </div>
       </div>

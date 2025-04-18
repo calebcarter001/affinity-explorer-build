@@ -7,7 +7,7 @@ const Sidebar = () => {
   const navItems = [
     { path: '/', icon: 'tachometer-alt', text: 'Dashboard' },
     { path: '/affinity-library', icon: 'book', text: 'Affinity Library' },
-    { path: '/scoring-explorer', icon: 'chart-bar', text: 'Affinity Scores' },
+    { path: '/scoring-explorer', icon: 'chart-bar', text: 'Property Affinity Scores' },
     { path: '/lifecycle-tracker', icon: 'project-diagram', text: 'Lifecycle Tracker' },
     { path: '/agent-view', icon: 'brain', text: 'Agent View' },
     { path: '/combine', icon: 'layer-group', text: 'Affinity Combination' },

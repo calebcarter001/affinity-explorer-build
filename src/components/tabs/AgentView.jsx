@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FiSearch, FiChevronDown } from 'react-icons/fi';
 import { searchProperties } from '../../services/apiService';
-import EmptyState from '../common/EmptyState';
+import EmptyStateStyled from '../common/EmptyStateStyled';
+import PropertyCard from '../common/PropertyCard';
 
 const AgentView = () => {
   const [activeTab, setActiveTab] = useState('verification');
@@ -11,14 +12,27 @@ const AgentView = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [expandedPanels, setExpandedPanels] = useState(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 5;
+
+  // Calculate pagination values
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProperties = properties.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     const fetchProperties = async () => {
       setLoading(true);
       setError(null);
       try {
-        const results = await searchProperties(searchTerm || '*');
-        setProperties(results);
+        const response = await searchProperties(searchTerm || '*', currentPage, itemsPerPage);
+        setProperties(response.data);
+        setTotalPages(response.totalPages);
       } catch (err) {
         setError(err.message);
       }
@@ -26,11 +40,12 @@ const AgentView = () => {
     };
 
     fetchProperties();
-  }, [searchTerm]);
+  }, [searchTerm, currentPage, itemsPerPage]);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setSearchTerm(searchTerm.trim());
+      setCurrentPage(1); // Reset to first page when new search results arrive
     }
   };
 
@@ -50,15 +65,58 @@ const AgentView = () => {
     });
   };
 
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex justify-center items-center mt-4 space-x-2">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 rounded ${
+            currentPage === 1
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Previous
+        </button>
+        <div className="flex space-x-1">
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`w-8 h-8 rounded ${
+                currentPage === index + 1
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-3 py-1 rounded ${
+            currentPage === totalPages
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Next
+        </button>
+      </div>
+    );
+  };
+
   const renderPropertyList = () => {
     if (loading) {
       return (
-        <div className="flex gap-4 overflow-x-auto pb-4">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="flex-none w-80 p-4 border rounded-lg animate-pulse">
-              <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 bg-gray-100 animate-pulse rounded-lg" />
           ))}
         </div>
       );
@@ -66,11 +124,12 @@ const AgentView = () => {
 
     if (error) {
       return (
-        <EmptyState
+        <EmptyStateStyled
           type="ERROR"
+          description={error}
           actionButton={{
             label: 'Try Again',
-            onClick: () => setSearchTerm('*')
+            onClick: () => setError(null)
           }}
         />
       );
@@ -78,44 +137,47 @@ const AgentView = () => {
 
     if (!properties.length) {
       return (
-        <EmptyState
-          type="NO_RESULTS"
+        <EmptyStateStyled
+          type="NO_PROPERTIES"
+          description="No properties available. Add properties to get started."
           actionButton={{
-            label: 'Clear Search',
-            onClick: () => setSearchTerm('')
+            label: 'Add Properties',
+            onClick: () => {/* TODO: Implement add properties */} 
           }}
         />
       );
     }
 
     return (
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {properties.map(property => (
-          <div
-            key={property.id}
-            className={`flex-none w-80 p-4 border rounded-lg cursor-pointer transition-all ${
-              selectedProperty?.id === property.id ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200 hover:border-gray-300'
-            }`}
-            onClick={() => handlePropertySelect(property)}
-          >
-            <h3 className="text-lg font-semibold">{property.name}</h3>
-            <p className="text-gray-600">{property.location}</p>
-            <p className="text-sm text-gray-500">ID: {property.id}</p>
-          </div>
-        ))}
-      </div>
+      <>
+        <div className="space-y-4">
+          {currentProperties.map((property) => (
+            <PropertyCard
+              key={property.id}
+              property={property}
+              isSelected={selectedProperty?.id === property.id}
+              onClick={handlePropertySelect}
+              className="w-full"
+            />
+          ))}
+        </div>
+        {renderPagination()}
+      </>
     );
   };
 
   const renderAgentContent = () => {
     if (!selectedProperty) {
       return (
-        <EmptyState
-          type="NO_DATA"
+        <EmptyStateStyled
+          type="NO_PROPERTIES"
           title="Select a Property"
-          description="Choose a property from the list to view its analysis"
-          icon="search"
-          className="mt-8"
+          description="Choose a property from the list to view its details and affinities"
+          suggestions={[
+            'Click on a property card to select it',
+            'Use the search bar to find specific properties',
+            'Try clearing any active filters if you don\'t see expected properties'
+          ]}
         />
       );
     }
@@ -124,10 +186,7 @@ const AgentView = () => {
       case 'verification':
         return (
           <div className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
-              <p className="text-gray-600">This agent confirms affinity scores against ground truth using human-verified data, multiple external sources, and crowdsourced information.</p>
-            </div>
+            <p className="text-gray-600 mb-4">This agent confirms affinity scores against ground truth using human-verified data, multiple external sources, and crowdsourced information.</p>
             
             <h4 className="font-semibold text-lg mb-3">Verified Affinities</h4>
             
@@ -360,7 +419,7 @@ const AgentView = () => {
         );
       default:
         return (
-          <EmptyState
+          <EmptyStateStyled
             type="NO_DATA"
             description="This agent view is under development"
           />
@@ -369,63 +428,97 @@ const AgentView = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      {/* Page Title */}
       <div>
-        <h2 className="text-xl font-bold mb-4">Select a Property to Analyze</h2>
-        <div className="flex gap-4 mb-6">
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="Enter property name (e.g., Oceanview Resort)"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            />
-          </div>
-          <button
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            onClick={handleSearch}
-          >
-            Find Property
-          </button>
-        </div>
-        {renderPropertyList()}
+        <h1 className="text-2xl font-bold text-gray-900">Agent View</h1>
+        <p className="mt-1 text-sm text-gray-500">Analyze properties using different agent perspectives</p>
       </div>
 
-      {selectedProperty && (
-        <div>
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
-              {[
-                { id: 'verification', label: 'Verification Agent' },
-                { id: 'discovery', label: 'Discovery Agent' },
-                { id: 'sentiment', label: 'Sentiment Agent' },
-                { id: 'competitive', label: 'Competitive Agent' },
-                { id: 'bias', label: 'Bias Detection Agent' },
-                { id: 'trend', label: 'Trend Agent' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  className={`
-                    whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm
-                    ${activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }
-                  `}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
+      <div className="grid grid-cols-12 gap-6 h-[calc(100vh-8rem)]">
+        {/* Property Selection Section - Left Side */}
+        <div className="col-span-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+          <div className="p-4 border-b">
+            <h2 className="text-xl font-bold mb-4">Select a Property to Analyze</h2>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  placeholder="Enter property name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                />
+              </div>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                onClick={handleSearch}
+              >
+                Find
+              </button>
+            </div>
           </div>
-          <div className="mt-6">
-            {renderAgentContent()}
+          <div className="flex-1 overflow-y-auto p-4">
+            {renderPropertyList()}
           </div>
         </div>
-      )}
+
+        {/* Agent View Section - Right Side */}
+        <div className="col-span-8">
+          {selectedProperty ? (
+            <div className="bg-white h-full rounded-lg shadow-sm border border-gray-200 flex flex-col overflow-hidden">
+              {/* Property Details Section */}
+              <div className="p-4 border-b">
+                <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
+                <p className="text-gray-600 mb-1">{selectedProperty.location || 'No address available'}</p>
+                <p className="text-sm text-gray-500">ID: {selectedProperty.id}</p>
+              </div>
+
+              {/* Agent Tabs */}
+              <div className="border-b border-gray-200 px-4">
+                <nav className="flex space-x-8">
+                  {[
+                    { id: 'verification', label: 'Verification Agent' },
+                    { id: 'discovery', label: 'Discovery Agent' },
+                    { id: 'sentiment', label: 'Sentiment Agent' },
+                    { id: 'competitive', label: 'Competitive Agent' },
+                    { id: 'bias', label: 'Bias Detection Agent' },
+                    { id: 'trend', label: 'Trend Agent' }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      className={`
+                        whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+                        ${activeTab === tab.id
+                          ? 'border-blue-500 text-blue-600'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }
+                      `}
+                      onClick={() => setActiveTab(tab.id)}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Agent Content - Scrollable */}
+              <div className="flex-1 overflow-y-auto p-4">
+                {renderAgentContent()}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white h-full rounded-lg shadow-sm border border-gray-200 flex items-center justify-center">
+              <EmptyStateStyled
+                type="NO_PROPERTIES"
+                title="Select a Property"
+                description="Choose a property from the list to view its details and affinities"
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

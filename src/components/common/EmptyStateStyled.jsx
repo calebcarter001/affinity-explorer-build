@@ -8,7 +8,8 @@ import {
   FiWifiOff,
   FiLock,
   FiFileText,
-  FiSettings
+  FiSettings,
+  FiHome
 } from 'react-icons/fi';
 
 const EMPTY_STATE_TYPES = {
@@ -16,53 +17,95 @@ const EMPTY_STATE_TYPES = {
     icon: 'search',
     title: 'No Results Found',
     description: 'Try adjusting your search terms or filters',
+    suggestions: [
+      'Check for typos in your search',
+      'Try using fewer filters',
+      'Search for a different term'
+    ]
   },
   NO_DATA: {
     icon: 'inbox',
     title: 'No Data Available',
     description: 'There is no data to display at this time',
+    suggestions: [
+      'Check if data has been imported',
+      'Verify your data source',
+      'Contact support if the issue persists'
+    ]
   },
   ERROR: {
     icon: 'alert',
     title: 'Something Went Wrong',
     description: 'An error occurred while fetching the data',
+    suggestions: [
+      'Check your internet connection',
+      'Verify your API credentials',
+      'Try refreshing the page'
+    ]
   },
   FILTERED: {
     icon: 'filter',
     title: 'No Matching Items',
     description: 'Try adjusting your filters to see more results',
+    suggestions: [
+      'Clear all filters',
+      'Try different category selections',
+      'Check your search terms'
+    ]
   },
   NO_ACCESS: {
     icon: 'lock',
     title: 'Access Required',
     description: 'You don\'t have permission to view this content',
+    suggestions: [
+      'Contact your administrator',
+      'Verify your account permissions',
+      'Try logging out and back in'
+    ]
   },
   OFFLINE: {
     icon: 'offline',
     title: 'You\'re Offline',
     description: 'Check your internet connection and try again',
+    suggestions: [
+      'Check your network settings',
+      'Verify your Wi-Fi connection',
+      'Try using a different network'
+    ]
   },
   NO_AFFINITIES: {
     icon: 'file',
     title: 'No Affinities Found',
     description: 'Start by creating your first affinity or importing existing ones',
+    suggestions: [
+      'Create a new affinity',
+      'Import existing affinities',
+      'Use the Discovery Agent to find potential affinities'
+    ]
   },
   NO_PROPERTIES: {
     icon: 'building',
     title: 'No Properties Found',
     description: 'Add properties to start analyzing affinities',
+    suggestions: [
+      'Import property data',
+      'Add properties manually',
+      'Connect to your property management system'
+    ]
   },
   NEEDS_SETUP: {
     icon: 'settings',
     title: 'Setup Required',
     description: 'Complete the initial setup to get started',
+    suggestions: [
+      'Configure your account settings',
+      'Set up your data sources',
+      'Define your scoring criteria'
+    ]
   }
 };
 
-/**
- * Enhanced empty state component with various presets and customization options
- */
-const EmptyState = ({ 
+const EmptyStateStyled = ({ 
   type,
   icon, 
   title, 
@@ -77,6 +120,7 @@ const EmptyState = ({
   const finalIcon = icon || (preset?.icon ?? 'inbox');
   const finalTitle = title || preset?.title;
   const finalDescription = description || preset?.description;
+  const finalSuggestions = suggestions || preset?.suggestions;
 
   const getIcon = () => {
     switch (finalIcon) {
@@ -96,6 +140,8 @@ const EmptyState = ({
         return <FiSettings className="w-12 h-12 text-gray-400" />;
       case 'refresh':
         return <FiRefreshCw className="w-12 h-12 text-gray-400" />;
+      case 'building':
+        return <FiHome className="w-12 h-12 text-gray-400" />;
       case 'inbox':
       default:
         return <FiInbox className="w-12 h-12 text-gray-400" />;
@@ -103,46 +149,35 @@ const EmptyState = ({
   };
 
   return (
-    <div 
-      className={`
-        flex flex-col items-center justify-center 
-        ${compact ? 'p-4' : 'p-8'} 
-        text-center 
-        ${className}
-      `}
-    >
-      <div className={`${compact ? 'mb-2' : 'mb-4'}`}>
+    <div className={`text-center p-8 ${compact ? 'py-4' : ''} ${className}`}>
+      <div className="flex justify-center mb-4">
         {getIcon()}
       </div>
-      <h3 className={`text-lg font-medium text-gray-900 ${compact ? 'mb-1' : 'mb-2'}`}>
+      <h3 className="text-lg font-medium text-gray-900 mb-2">
         {finalTitle}
       </h3>
-      <p className="text-sm text-gray-500 mb-4 max-w-md">
+      <p className="text-gray-500 mb-4">
         {finalDescription}
       </p>
-      
-      {suggestions && suggestions.length > 0 && (
-        <div className="mt-2 space-y-1">
-          {suggestions.map((suggestion, index) => (
-            <p key={index} className="text-sm text-gray-500">
-              • {suggestion}
-            </p>
+      {finalSuggestions && (
+        <ul className="text-sm text-gray-500 mb-4">
+          {finalSuggestions.map((suggestion, index) => (
+            <li key={index} className="mb-1">
+              {suggestion}
+            </li>
           ))}
-        </div>
+        </ul>
       )}
-
       {actionButton && (
-        <div className={`${compact ? 'mt-2' : 'mt-4'}`}>
-          <button
-            onClick={actionButton.onClick}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            {actionButton.label}
-          </button>
-        </div>
+        <button
+          onClick={actionButton.onClick}
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          {actionButton.label}
+        </button>
       )}
     </div>
   );
 };
 
-export default EmptyState; 
+export default EmptyStateStyled; 
