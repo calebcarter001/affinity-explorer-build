@@ -1,46 +1,56 @@
 import React, { useState } from 'react';
-
-const FAQItem = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="border-b pb-3 faq-item">
-      <div 
-        className="flex justify-between items-center cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <h4 className="font-medium">{question}</h4>
-        <i className={`fas fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
-      </div>
-      <div className={`mt-2 text-gray-600 ${isOpen ? 'block' : 'hidden'}`}>
-        {answer}
-      </div>
-    </div>
-  );
-};
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 const HelpSupport = () => {
+  const [expandedFaqs, setExpandedFaqs] = useState({});
+  const [supportForm, setSupportForm] = useState({
+    subject: 'General question',
+    message: ''
+  });
+
+  const toggleFaq = (index) => {
+    setExpandedFaqs(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSupportForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log('Support request submitted:', supportForm);
+    // Reset form after submission
+    setSupportForm({
+      subject: 'General question',
+      message: ''
+    });
+  };
+
   const faqs = [
     {
-      question: "What are affinities?",
-      answer: "Affinities are data-driven indicators that help identify specific characteristics or preferences associated with properties. They help match properties with target audiences more effectively."
+      question: 'What are affinities?',
+      answer: 'Affinities are scored attributes that represent different aspects or characteristics of properties and destinations. They help match travelers with the right accommodations based on their preferences.'
     },
     {
-      question: "How are affinity scores calculated?",
-      answer: "Affinity scores are calculated using machine learning algorithms that analyze various data points including property features, guest reviews, booking patterns, and historical performance data."
+      question: 'How are affinity scores calculated?',
+      answer: 'Affinity scores are calculated using a combination of first-party data, external sources, human verification, and algorithmic processing. The specific formula varies by affinity type.'
     },
     {
-      question: "How can I implement affinities in my product?",
-      answer: "You can implement affinities using our REST API. Check the Implementation Guide tab for detailed instructions and code examples."
-    },
-    {
-      question: "What's the validation process for new affinities?",
-      answer: "New affinities go through a three-phase validation process: initial data analysis, enrichment, and final validation. You can track this process in the Lifecycle Tracker."
+      question: 'How do I implement affinities in my product?',
+      answer: 'Refer to the Implementation Guide section for detailed steps on how to integrate affinities into your product using our APIs.'
     }
   ];
 
   return (
-    <div id="help-tab" className="tab-content">
+    <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Help & Support</h2>
       
       <div className="bg-white p-6 rounded-lg shadow mb-6">
@@ -48,41 +58,67 @@ const HelpSupport = () => {
         
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <FAQItem key={index} question={faq.question} answer={faq.answer} />
+            <div key={index} className="border-b pb-3">
+              <div 
+                className="flex justify-between items-center cursor-pointer"
+                onClick={() => toggleFaq(index)}
+              >
+                <h4 className="font-medium">{faq.question}</h4>
+                {expandedFaqs[index] ? 
+                  <FiChevronUp className="text-gray-500" /> : 
+                  <FiChevronDown className="text-gray-500" />
+                }
+              </div>
+              {expandedFaqs[index] && (
+                <div className="mt-2">
+                  <p className="text-gray-600">{faq.answer}</p>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
-
+      
       <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-4">Need More Help?</h3>
+        <h3 className="text-lg font-semibold mb-4">Contact Support</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center mb-3">
-              <i className="fas fa-envelope text-expedia-blue text-xl mr-3"></i>
-              <h4 className="font-medium">Email Support</h4>
-            </div>
-            <p className="text-gray-600 mb-3">
-              Get help from our support team within 24 hours
-            </p>
-            <button className="text-expedia-blue hover:underline focus:outline-none">
-              Send an email
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Subject:</label>
+            <select 
+              name="subject"
+              value={supportForm.subject}
+              onChange={handleInputChange}
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+            >
+              <option>General question</option>
+              <option>API integration help</option>
+              <option>Report an issue</option>
+              <option>Feature request</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Message:</label>
+            <textarea 
+              name="message"
+              value={supportForm.message}
+              onChange={handleInputChange}
+              rows="4" 
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500" 
+              placeholder="Describe your question or issue..."
+            ></textarea>
+          </div>
+          
+          <div className="flex justify-end">
+            <button 
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
+            >
+              Submit Request
             </button>
           </div>
-
-          <div className="p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center mb-3">
-              <i className="fas fa-book text-expedia-blue text-xl mr-3"></i>
-              <h4 className="font-medium">Documentation</h4>
-            </div>
-            <p className="text-gray-600 mb-3">
-              Browse our detailed documentation and guides
-            </p>
-            <button className="text-expedia-blue hover:underline focus:outline-none">
-              View docs
-            </button>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   );

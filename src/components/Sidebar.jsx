@@ -6,10 +6,10 @@ const Sidebar = () => {
 
   const navItems = [
     { path: '/', icon: 'tachometer-alt', text: 'Dashboard' },
-    { path: '/agent-view', icon: 'brain', text: 'Agent View' },
     { path: '/affinity-library', icon: 'book', text: 'Affinity Library' },
-    { path: '/scoring-explorer', icon: 'chart-bar', text: 'Scoring Explorer' },
+    { path: '/scoring-explorer', icon: 'chart-bar', text: 'Affinity Scores' },
     { path: '/lifecycle-tracker', icon: 'project-diagram', text: 'Lifecycle Tracker' },
+    { path: '/agent-view', icon: 'brain', text: 'Agent View' },
     { path: '/combine', icon: 'layer-group', text: 'Affinity Combination' },
     { path: '/implementation', icon: 'code', text: 'Implementation Guide' },
     { path: '/reports', icon: 'file-alt', text: 'Reports & Analytics' },

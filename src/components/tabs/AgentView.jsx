@@ -1,101 +1,89 @@
 import React, { useState } from 'react';
-import { FiChevronDown, FiArrowUp, FiCheck } from 'react-icons/fi';
+import { FiChevronDown, FiArrowUp } from 'react-icons/fi';
 
-const mockProperties = [
-  {
-    id: 'PROP001',
-    name: 'Oceanview Resort & Spa',
-    location: 'Miami Beach, FL',
-    affinities: [
-      {
-        name: 'Luxury',
+const AgentView = () => {
+  const [activeTab, setActiveTab] = useState('verification');
+  const [expandedSections, setExpandedSections] = useState({});
+
+  // Mock property data
+  const selectedProperty = {
+    name: "Oceanview Resort & Spa",
+    affinities: {
+      luxury: {
         score: 9.1,
         evidence: [
           {
-            description: 'Premium amenities and exceptional service',
-            confidence: 95,
-            sources: ['Property website (verified)', 'Guest reviews (aggregated)']
-          }
-        ]
-      },
-      {
-        name: 'Beach Access',
-        score: 9.5,
-        evidence: [
+            source: "Guest Reviews",
+            quote: "The marble bathrooms and premium amenities exceeded our expectations",
+            confidence: 92
+          },
           {
-            description: 'Direct beachfront location confirmed',
-            confidence: 98,
-            sources: ['Geospatial data (verified)', 'On-site inspection (verified)']
+            source: "Professional Assessment",
+            quote: "High-end finishes and attentive service throughout",
+            confidence: 88
           }
         ]
       }
-    ],
+    },
     discoveries: [
       {
-        attribute: 'Electric Vehicle Charging Stations',
-        confidence: 92,
-        description: '4 Tesla and 2 universal charging stations available in the parking garage.',
-        suggestion: 'Eco-Friendly affinity'
+        attribute: "Wellness Focus",
+        confidence: 89,
+        description: "Strong emphasis on health and wellness programs",
+        suggestion: "Consider adding Wellness affinity score"
       },
       {
-        attribute: 'Soundproof Rooms',
-        confidence: 89,
-        description: 'Enhanced soundproofing mentioned in 37 recent guest reviews.',
-        suggestion: 'Enhances: Privacy, Luxury affinities'
+        attribute: "Local Culture Integration",
+        confidence: 85,
+        description: "Significant incorporation of local art and traditions",
+        suggestion: "Potential Cultural Authenticity affinity"
       }
     ],
     sentiment: {
-      totalReviews: 736,
+      totalReviews: 250,
       luxuryAnalysis: {
         keyPhrases: [
-          { phrase: 'exceptional service', mentions: 127, sentiment: 'positive' },
-          { phrase: 'worth every penny', mentions: 98, sentiment: 'positive' },
-          { phrase: '5-star experience', mentions: 82, sentiment: 'positive' },
-          { phrase: 'overpriced', mentions: 24, sentiment: 'negative' }
+          { phrase: "exceptional service", sentiment: "positive", mentions: 45 },
+          { phrase: "worth every penny", sentiment: "positive", mentions: 32 },
+          { phrase: "dated furniture", sentiment: "negative", mentions: 8 }
         ]
       }
     },
     competitive: {
       luxuryPositioning: {
-        expedia: 9.1,
+        expedia: 9.2,
         competitors: [
-          { name: 'Competitor A', score: 8.7 },
-          { name: 'Competitor B', score: 8.9 }
+          { name: "Grand Resort", score: 8.8 },
+          { name: "Elite Hotel", score: 8.5 }
         ],
-        advantage: 0.3
+        advantage: 0.5
       }
     },
     biases: [
       {
-        type: 'Review Source Bias',
-        description: 'Pet-Friendly scores are disproportionately influenced by reviews from summer travelers (72% of data points).',
-        severity: 'Medium',
-        impact: 11,
+        type: "Seasonal Sampling",
+        severity: "Low",
+        impact: 5,
+        description: "Reviews slightly overrepresent peak season experiences",
         correction: {
-          original: 7.5,
-          corrected: 7.2,
-          action: 'Reweighted seasonal reviews to ensure balanced representation.'
+          action: "Applied seasonal normalization factor",
+          original: 9.3,
+          corrected: 9.1
         }
       }
     ],
     trends: [
       {
-        name: 'Wellness Travel',
-        status: 'Rising Trend',
-        description: '43% increase in searches for wellness amenities and spa facilities in luxury beach resorts over last 90 days.',
+        name: "Sustainable Luxury",
+        status: "Rising",
+        description: "Growing demand for eco-conscious luxury experiences",
         alignment: {
-          description: 'Property has comprehensive spa facilities, meditation classes, and wellness packages.',
-          opportunity: 'Create new "Wellness Retreat" affinity and feature property prominently.'
+          description: "Property has some green initiatives but room for expansion",
+          opportunity: "Enhance sustainability programs while maintaining luxury standards"
         }
       }
     ]
-  }
-];
-
-const AgentView = () => {
-  const [selectedProperty] = useState(mockProperties[0]);
-  const [activeTab, setActiveTab] = useState('verification');
-  const [expandedSections, setExpandedSections] = useState({});
+  };
 
   const toggleSection = (sectionId) => {
     setExpandedSections(prev => ({
@@ -112,94 +100,102 @@ const AgentView = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Agent View</h2>
-
       <div className="bg-white rounded-lg shadow">
-        {/* Property Selection */}
-        <div className="p-6 border-b">
-          <h3 className="text-xl font-bold">{selectedProperty.name}</h3>
-          <p className="text-gray-600">{selectedProperty.location}</p>
-        </div>
-
-        {/* Agent Tabs */}
         <div className="border-b">
-          <div className="flex">
+          <nav className="flex space-x-4 px-4" aria-label="Tabs">
             <button
-              className={`agent-tab ${activeTab === 'verification' ? 'active' : ''}`}
               onClick={() => setActiveTab('verification')}
+              className={`px-3 py-2 text-sm font-medium ${
+                activeTab === 'verification'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
             >
               Verification Agent
             </button>
             <button
-              className={`agent-tab ${activeTab === 'discovery' ? 'active' : ''}`}
               onClick={() => setActiveTab('discovery')}
+              className={`px-3 py-2 text-sm font-medium ${
+                activeTab === 'discovery'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
             >
               Discovery Agent
             </button>
             <button
-              className={`agent-tab ${activeTab === 'sentiment' ? 'active' : ''}`}
               onClick={() => setActiveTab('sentiment')}
+              className={`px-3 py-2 text-sm font-medium ${
+                activeTab === 'sentiment'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
             >
               Sentiment Agent
             </button>
             <button
-              className={`agent-tab ${activeTab === 'competitive' ? 'active' : ''}`}
               onClick={() => setActiveTab('competitive')}
+              className={`px-3 py-2 text-sm font-medium ${
+                activeTab === 'competitive'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
             >
               Competitive Agent
             </button>
             <button
-              className={`agent-tab ${activeTab === 'bias' ? 'active' : ''}`}
               onClick={() => setActiveTab('bias')}
+              className={`px-3 py-2 text-sm font-medium ${
+                activeTab === 'bias'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
             >
               Bias Agent
             </button>
             <button
-              className={`agent-tab ${activeTab === 'trend' ? 'active' : ''}`}
               onClick={() => setActiveTab('trend')}
+              className={`px-3 py-2 text-sm font-medium ${
+                activeTab === 'trend'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
             >
               Trend Agent
             </button>
-          </div>
+          </nav>
         </div>
 
-        {/* Agent Content */}
-        <div className="p-6">
+        <div className="p-4">
           {/* Verification Agent */}
           {activeTab === 'verification' && (
             <div>
               <div className="mb-4">
-                <p className="text-gray-600">This agent verifies affinity scores using multiple data sources and evidence.</p>
+                <p className="text-gray-600">This agent verifies the evidence supporting each affinity score.</p>
               </div>
               
               <h4 className="font-semibold text-lg mb-3">Evidence Analysis</h4>
               <div className="space-y-4">
-                {selectedProperty.affinities.map((affinity, index) => (
-                  <div key={index} className="bg-gray-50 p-4 rounded-md">
-                    <div className="flex justify-between items-center mb-2">
-                      <h5 className="font-semibold">{affinity.name}</h5>
-                      <span className={`badge ${getScoreClass(affinity.score)}`}>
-                        {affinity.score}/10 Verified
+                {Object.entries(selectedProperty.affinities).map(([affinity, data]) => (
+                  <div key={affinity} className="bg-gray-50 p-4 rounded-md">
+                    <div className="flex justify-between items-center mb-3">
+                      <h5 className="font-semibold capitalize">{affinity}</h5>
+                      <span className={`badge ${getScoreClass(data.score)}`}>
+                        Score: {data.score}/10
                       </span>
                     </div>
-                    {affinity.evidence.map((item, i) => (
-                      <div key={i} className="evidence-panel">
-                        <div 
-                          className="flex justify-between items-center cursor-pointer"
-                          onClick={() => toggleSection(`evidence-${index}-${i}`)}
-                        >
-                          <p className="text-sm text-gray-700">{item.description}</p>
-                          <FiChevronDown className={`transform transition-transform ${
-                            expandedSections[`evidence-${index}-${i}`] ? 'rotate-180' : ''
-                          }`} />
+                    
+                    {data.evidence.map((item, index) => (
+                      <div key={index} className="mt-2 border-t pt-2">
+                        <div className="flex justify-between items-start">
+                          <span className="text-sm font-medium">{item.source}</span>
+                          <span className="text-sm text-gray-500">
+                            Confidence: {item.confidence}%
+                          </span>
                         </div>
-                        {expandedSections[`evidence-${index}-${i}`] && (
-                          <div className="mt-2">
-                            <p className="text-xs text-gray-600">
-                              Source: {item.sources.join(', ')}
-                            </p>
-                          </div>
-                        )}
+                        <p className="text-sm mt-1 italic">
+                          "{item.quote}"
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -398,7 +394,7 @@ const AgentView = () => {
                         <h6 className="font-medium">Property Alignment</h6>
                         <p className="mt-1">{trend.alignment.description}</p>
                         <p className="text-green-700 mt-2">
-                          <i className="fas fa-lightbulb mr-1"></i>
+                          <FiArrowUp className="inline mr-1" />
                           Opportunity: {trend.alignment.opportunity}
                         </p>
                       </div>
