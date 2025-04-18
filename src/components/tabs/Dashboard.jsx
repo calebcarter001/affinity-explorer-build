@@ -65,10 +65,10 @@ const Dashboard = () => {
     },
     scales: {
       y: {
-        min: 15,
-        max: 55,
+        min: 0,
+        max: 200,
         ticks: {
-          stepSize: 5,
+          stepSize: 50,
           callback: (value) => `${value} properties`
         },
         title: {

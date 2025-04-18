@@ -358,11 +358,39 @@ const AgentView = () => {
           <SkeletonLoader type="card" />
           <SkeletonLoader type="text" count={3} />
         </div>
+      ) : error ? (
+        <EmptyState
+          type="ERROR"
+          actionButton={
+            <button
+              onClick={() => {
+                setError(null);
+                setLoading(true);
+                // Simulate loading
+                setTimeout(() => setLoading(false), 1000);
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Try Again
+            </button>
+          }
+        />
       ) : !selectedProperty ? (
         <EmptyState
-          icon="search"
-          title="No Property Selected"
-          description="Please select a property to analyze"
+          type="NO_PROPERTIES"
+          actionButton={
+            <button
+              onClick={() => setSearchTerm('')}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              View All Properties
+            </button>
+          }
+          suggestions={[
+            'Select a property from the list above',
+            'Use the search to find specific properties',
+            'Make sure you have properties in the system'
+          ]}
         />
       ) : (
         <div className="space-y-4">

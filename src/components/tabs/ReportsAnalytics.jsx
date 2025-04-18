@@ -9,6 +9,8 @@ const ReportsAnalytics = () => {
   const [dateRange, setDateRange] = useState('last-30-days');
   const [affinityFilter, setAffinityFilter] = useState('all');
   const [showPreview, setShowPreview] = useState(false);
+  const [error, setError] = useState(null);
+  const [reportPreview, setReportPreview] = useState(null);
 
   const handleGenerateReport = () => {
     setLoading(true);
@@ -16,6 +18,7 @@ const ReportsAnalytics = () => {
     setTimeout(() => {
       setLoading(false);
       setShowPreview(true);
+      setReportPreview(true);
     }, 1500);
   };
 
@@ -111,94 +114,115 @@ const ReportsAnalytics = () => {
         </div>
       </div>
 
-      {/* Report Preview */}
-      {loading ? (
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Report Preview</h3>
-          <SkeletonLoader type="card" count={3} />
-        </div>
-      ) : showPreview ? (
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-            <h3 className="text-lg font-semibold">Report Preview</h3>
-            <div className="flex flex-col sm:flex-row gap-2 mt-2 md:mt-0">
-              <button className="btn btn-outline text-sm">Save Report</button>
-              <button className="btn btn-primary text-sm">Download PDF</button>
-            </div>
+      {/* Report Preview Section */}
+      <div className="mt-8">
+        {loading ? (
+          <div className="space-y-4">
+            <SkeletonLoader type="text" count={2} />
+            <SkeletonLoader type="table" />
           </div>
-          
-          <div className="border-t border-gray-200 pt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium mb-2">Total Affinities</h4>
-                <p className="text-2xl md:text-3xl font-bold text-expedia-blue">248</p>
-                <p className="text-sm text-gray-500">+12% from last month</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium mb-2">Implementation Rate</h4>
-                <p className="text-2xl md:text-3xl font-bold text-green-600">78%</p>
-                <p className="text-sm text-gray-500">+5% from last month</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium mb-2">API Calls</h4>
-                <p className="text-2xl md:text-3xl font-bold text-purple-600">1.2M</p>
-                <p className="text-sm text-gray-500">Last 30 days</p>
-              </div>
-            </div>
-            
-            <div className="mt-6">
-              <h4 className="font-medium mb-3">Performance Trends</h4>
-              <div className="bg-gray-50 p-4 rounded-lg h-64 flex items-center justify-center">
-                <p className="text-gray-500">Chart visualization would appear here</p>
-              </div>
-            </div>
-            
-            <div className="mt-6">
-              <h4 className="font-medium mb-3">Top Performing Affinities</h4>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Affinity</th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    <tr>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Luxury</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Premium</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">9.2</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+0.3</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Family-Friendly</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Family</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">8.7</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+0.2</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Beachfront</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Location</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">8.5</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-red-600">-0.1</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-white p-4 md:p-6 rounded-lg shadow flex items-center justify-center h-64">
-          <EmptyState 
-            icon="inbox"
-            title="No Report Generated"
-            description="Select your report criteria and click 'Generate Report' to create a new report."
+        ) : error ? (
+          <EmptyState
+            type="ERROR"
+            actionButton={
+              <button
+                onClick={() => {
+                  setError(null);
+                  handleGenerateReport();
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Try Again
+              </button>
+            }
           />
-        </div>
-      )}
+        ) : !showPreview ? (
+          <EmptyState
+            type="NO_DATA"
+            title="No Report Generated"
+            description="Configure your report parameters and click 'Generate Report' to view the results"
+            suggestions={[
+              'Select a report type from the dropdown',
+              'Choose a date range for your report',
+              'Filter by specific affinities if needed'
+            ]}
+          />
+        ) : (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-xl font-semibold mb-4">Report Preview</h3>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+              <h3 className="text-lg font-semibold">Report Preview</h3>
+              <div className="flex flex-col sm:flex-row gap-2 mt-2 md:mt-0">
+                <button className="btn btn-outline text-sm">Save Report</button>
+                <button className="btn btn-primary text-sm">Download PDF</button>
+              </div>
+            </div>
+            
+            <div className="border-t border-gray-200 pt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium mb-2">Total Affinities</h4>
+                  <p className="text-2xl md:text-3xl font-bold text-expedia-blue">248</p>
+                  <p className="text-sm text-gray-500">+12% from last month</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium mb-2">Implementation Rate</h4>
+                  <p className="text-2xl md:text-3xl font-bold text-green-600">78%</p>
+                  <p className="text-sm text-gray-500">+5% from last month</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium mb-2">API Calls</h4>
+                  <p className="text-2xl md:text-3xl font-bold text-purple-600">1.2M</p>
+                  <p className="text-sm text-gray-500">Last 30 days</p>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <h4 className="font-medium mb-3">Performance Trends</h4>
+                <div className="bg-gray-50 p-4 rounded-lg h-64 flex items-center justify-center">
+                  <p className="text-gray-500">Chart visualization would appear here</p>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <h4 className="font-medium mb-3">Top Performing Affinities</h4>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Affinity</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Luxury</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Premium</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">9.2</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+0.3</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Family-Friendly</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Family</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">8.7</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+0.2</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Beachfront</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Location</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">8.5</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-red-600">-0.1</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
