@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affinity Explorer Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        .sidebar {
+            width: 240px;
+            background-color: #00355F; /* Expedia blue */
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        .sidebar-collapsed {
+            width: 60px;
+        }
+        .main-content {
+            margin-left: 240px;
+            transition: all 0.3s;
+        }
+        .main-content-expanded {
+            margin-left: 60px;
+        }
+        .nav-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left-color: #EF6D00; /* Expedia orange */
+        }
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left-color: #EF6D00; /* Expedia orange */
+        }
+        .nav-icon {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        .header {
+            height: 60px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card.selected {
+            border: 2px solid #00355F;
+            box-shadow: 0 4px 8px rgba(0, 53, 95, 0.2);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-validated {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+        .badge-enrichment {
+            background-color: #fef7e0;
+            color: #b06000;
+        }
+        .badge-scoring {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+        .badge-discovery {
+            background-color: #f3e8fd;
+            color: #8430ce;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #ebedf0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #00355F;
+            border-radius: 4px;
+        }
+        .progress-fill-success {
+            background-color: #34a853;
+        }
+        .progress-fill-warning {
+            background-color: #fbbc04;
+        }
+        /* Score styles */
+        .score-high {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+        .score-medium {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+        .score-low {
+            background-color: #fef7e0;
+            color: #b06000;
+        }
+        /* Affinity tag styles */
+        .affinity-tag {
+            display: inline-block;
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        .affinity-tag.selected {
+            background-color: #d2e3fc;
+            border-color: #1a73e8;
+            border: 2px solid #1a73e8;
+        }
+        /* Agent view styles */
+        .agent-tab {
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+        .agent-tab:hover {
+            background-color: #f5f7fa;
+        }
+        .agent-tab.active {
+            border-bottom-color: #00355F;
+            color: #00355F;
+            font-weight: 600;
+        }
+        .evidence-panel {
+            border-left: 3px solid #00355F;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        .confidence-indicator {
+            height: 8px;
+            width: 100%;
+            background-color: #ebedf0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .confidence-fill {
+            height: 100%;
+            background-color: #34a853;
+            border-radius: 4px;
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsible-content.expanded {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="p-4 flex items-center justify-between">
+            <h1 class="text-xl font-bold whitespace-nowrap sidebar-text">Affinity Explorer</h1>
+            <button id="toggleSidebar" class="text-white focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="mt-6">
+            <div class="nav-item active" data-tab="dashboard">
+                <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <span class="sidebar-text">Dashboard</span>
+            </div>
+            <div class="nav-item" data-tab="library">
+                <div class="nav-icon"><i class="fas fa-book"></i></div>
+                <span class="sidebar-text">Affinity Library</span>
+            </div>
+            <div class="nav-item" data-tab="scoring">
+                <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+                <span class="sidebar-text">Scoring Explorer</span>
+            </div>
+            <div class="nav-item" data-tab="lifecycle">
+                <div class="nav-icon"><i class="fas fa-project-diagram"></i></div>
+                <span class="sidebar-text">Lifecycle Tracker</span>
+            </div>
+            <div class="nav-item" data-tab="combine">
+                <div class="nav-icon"><i class="fas fa-layer-group"></i></div>
+                <span class="sidebar-text">Affinity Combination</span>
+            </div>
+            <div class="nav-item" data-tab="agent">
+                <div class="nav-icon"><i class="fas fa-brain"></i></div>
+                <span class="sidebar-text">Agent View</span>
+            </div>
+            <div class="nav-item" data-tab="implementation">
+                <div class="nav-icon"><i class="fas fa-code"></i></div>
+                <span class="sidebar-text">Implementation Guide</span>
+            </div>
+            <div class="nav-item" data-tab="reports">
+                <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+                <span class="sidebar-text">Reports & Analytics</span>
+            </div>
+        </div>
+        <div class="mt-auto pt-8 absolute bottom-0 w-full">
+            <div class="nav-item" data-tab="settings">
+                <div class="nav-icon"><i class="fas fa-cog"></i></div>
+                <span class="sidebar-text">Settings</span>
+            </div>
+            <div class="nav-item" data-tab="help">
+                <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
+                <span class="sidebar-text">Help & Support</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <div class="header px-6 flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="relative w-64 mr-4">
+                    <input type="text" placeholder="Search affinities, properties..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-blue-500">
+                    <div class="absolute left-3 top-2.5 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <div class="relative mr-4">
+                    <i class="fas fa-bell text-gray-600"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
+                </div>
+                <div class="relative mr-4">
+                    <i class="fas fa-question-circle text-gray-600"></i>
+                </div>
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                    PM
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <h2 class="text-2xl font-bold mb-6">Dashboard</h2>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <p class="text-gray-500 font-medium">Total Affinities</p>
+                            <i class="fas fa-th text-blue-600"></i>
+                        </div>
+                        <p class="text-3xl font-bold mt-2">49</p>
+                        <p class="text-sm text-green-600 mt-1">+4 in the last quarter</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <p class="text-gray-500 font-medium">Avg Coverage</p>
+                            <i class="fas fa-chart-bar text-blue-600"></i>
+                        </div>
+                        <p class="text-3xl font-bold mt-2">68%</p>
+                        <p class="text-sm text-green-600 mt-1">+12% vs last year</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <p class="text-gray-500 font-medium">Implementation Rate</p>
+                            <i class="fas fa-chart-line text-blue-600"></i>
+                        </div>
+                        <p class="text-3xl font-bold mt-2">42%</p>
+                        <p class="text-sm text-green-600 mt-1">+8% this quarter</p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <p class="text-gray-500 font-medium">Reuse Rate</p>
+                            <i class="fas fa-star text-blue-600"></i>
+                        </div>
+                        <p class="text-3xl font-bold mt-2">31%</p>
+                        <p class="text-sm text-green-600 mt-1">+5% vs target</p>
+                    </div>
+                </div>
+                
+                <!-- Recent Activities -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Recently Viewed</h3>
+                        <i class="fas fa-history text-gray-400"></i>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="card p-4 recent-card" data-name="Pet-Friendly">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Pet-Friendly</h4>
+                                <span class="badge badge-validated">Validated</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Properties that welcome pets with amenities or policies that accommodate animals.</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Average Score: 7.2/10</span>
+                                <span>Coverage: 72%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-4 recent-card" data-name="Romantic">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Romantic</h4>
+                                <span class="badge badge-validated">Validated</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Properties suitable for couples seeking a romantic experience.</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Average Score: 6.8/10</span>
+                                <span>Coverage: 65%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-4 recent-card" data-name="Family-Friendly">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Family-Friendly</h4>
+                                <span class="badge badge-validated">Validated</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Properties that cater to families with children offering suitable amenities and activities.</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Average Score: 7.9/10</span>
+                                <span>Coverage: 81%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-4 recent-card" data-name="Luxury">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold">Luxury</h4>
+                                <span class="badge badge-validated">Validated</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">High-end properties offering premium amenities, services, and experiences.</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Average Score: 8.2/10</span>
+                                <span>Coverage: 45%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Favorites Section -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">My Favorites</h3>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="card p-4 favorite-card">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-layer-group text-blue-500 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-semibold">Summer Getaway Collection</h4>
+                                        <p class="text-xs text-gray-500">5 affinities</p>
+                                    </div>
+                                </div>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-4 favorite-card">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-layer-group text-blue-500 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-semibold">Urban Exploration Bundle</h4>
+                                        <p class="text-xs text-gray-500">3 affinities</p>
+                                    </div>
+                                </div>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-4 favorite-card">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-layer-group text-blue-500 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-semibold">Family Trip Essentials</h4>
+                                        <p class="text-xs text-gray-500">4 affinities</p>
+                                    </div>
+                                </div>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Affinity Library Tab -->
+            <div id="library-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Affinity Library</h2>
+                
+                <!-- Filters & Search -->
+                <div class="bg-white p-4 rounded-lg shadow mb-6">
+                    <div class="flex flex-wrap items-center justify-between">
+                        <div class="w-full md:w-auto mb-4 md:mb-0">
+                            <div class="relative">
+                                <input type="text" id="affinity-search" placeholder="Search affinity concepts..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full md:w-64 focus:outline-none focus:border-blue-500">
+                                <div class="absolute left-3 top-2.5 text-gray-400">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-3">
+                            <select id="category-filter" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                                <option value="all">All Categories</option>
+                                <option value="Family">Family</option>
+                                <option value="Adults">Adults</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Outdoors">Outdoors</option>
+                                <option value="Location">Location</option>
+                            </select>
+                            
+                            <select id="status-filter" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                                <option value="all">All Status</option>
+                                <option value="Validated">Validated</option>
+                                <option value="In Enrichment">In Enrichment</option>
+                                <option value="Scoring">Scoring</option>
+                                <option value="Discovery">Discovery</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Affinity Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="affinity-container">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                
+                <!-- Selected Affinity Details -->
+                <div id="affinity-details" class="bg-white p-6 rounded-lg shadow hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold" id="detail-name">Affinity Name</h3>
+                            <p class="text-gray-600" id="detail-definition">Affinity definition will appear here.</p>
+                        </div>
+                        <span class="badge badge-validated" id="detail-status">Validated</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">Metadata</h4>
+                            <div class="bg-gray-50 p-4 rounded-md">
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <div class="font-medium">Category:</div>
+                                    <div id="detail-category">Family</div>
+                                    
+                                    <div class="font-medium">Type:</div>
+                                    <div id="detail-type">Platform Score</div>
+                                    
+                                    <div class="font-medium">Applicable Entities:</div>
+                                    <div id="detail-entities">Property, Destination</div>
+                                    
+                                    <div class="font-medium">Average Score:</div>
+                                    <div id="detail-score">7.2/10</div>
+                                    
+                                    <div class="font-medium">Coverage:</div>
+                                    <div id="detail-coverage">72%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold mb-2">Related Concepts</h4>
+                            <div class="bg-gray-50 p-4 rounded-md">
+                                <div id="detail-related" class="space-y-2">
+                                    <!-- Related concepts will be added by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scoring Explorer Tab -->
+            <div id="scoring-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Scoring Explorer</h2>
+                
+                <!-- Property Search -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Find a Property or Destination</h3>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex-grow">
+                            <input type="text" id="property-search" placeholder="Enter property ID or name (e.g., PROP12345)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                        <button id="search-property-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">Search</button>
+                    </div>
+                    
+                    <div id="property-search-error" class="text-red-500 text-sm mt-2 hidden">No property found with that ID or name.</div>
+                </div>
+                
+                <!-- Property List -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Browse Properties</h3>
+                        <div class="relative w-64">
+                            <input type="text" id="property-filter" placeholder="Filter by name or location" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-blue-500">
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="property-container">
+                        <!-- Property cards will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Selected Property Details -->
+                <div id="property-details" class="bg-white rounded-lg shadow hidden">
+                    <div class="bg-gray-100 p-4 border-b">
+                        <h3 class="text-xl font-bold" id="detail-property-name">Property Name</h3>
+                        <p class="text-gray-600" id="detail-property-location">Location • Type</p>
+                        <p class="text-xs text-gray-500 mt-1" id="detail-property-id">ID: PROP12345</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h4 class="text-lg font-semibold mb-4">Affinities</h4>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="property-scores">
+                            <!-- Affinity scores will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Affinity Analysis -->
+                        <div class="mb-6">
+                            <h4 class="font-semibold mb-3">Affinity Analysis</h4>
+                            <div class="p-4 bg-blue-50 rounded-md">
+                                <ul class="space-y-2" id="property-analysis">
+                                    <!-- Analysis will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Affinity Breakdown -->
+                        <div>
+                            <h4 class="font-semibold mb-3">Affinity Breakdown</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full border">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left border">Affinity Concept</th>
+                                            <th class="px-4 py-2 text-left border">Score</th>
+                                            <th class="px-4 py-2 text-left border">Interpretation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="property-breakdown">
+                                        <!-- Breakdown will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lifecycle Tracker Tab -->
+            <div id="lifecycle-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Lifecycle Tracker</h2>
+                
+                <!-- Filter -->
+                <div class="bg-white p-4 rounded-lg shadow mb-6">
+                    <div class="flex flex-wrap items-center">
+                        <label class="mr-2 text-gray-700">Filter by Status:</label>
+                        <select id="lifecycle-filter" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                            <option value="all">All Concepts</option>
+                            <option value="complete">Complete</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="not-started">Not Started</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="lifecycle-container">
+                    <!-- Lifecycle cards will be populated by JavaScript -->
+                </div>
+                
+                <!-- Selected Lifecycle Details -->
+                <div id="lifecycle-details" class="bg-white rounded-lg shadow hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4" id="detail-lifecycle-name">Lifecycle Stages: Concept Name</h3>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full border">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left border">Stage</th>
+                                        <th class="px-4 py-2 text-left border">Status</th>
+                                        <th class="px-4 py-2 text-left border">Last Updated</th>
+                                        <th class="px-4 py-2 text-left border">Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lifecycle-stages">
+                                    <!-- Stages will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+                                Export JSON
+                            </button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+                                Export to Confluence
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Affinity Combination Tab -->
+            <div id="combine-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Affinity Combination Tool</h2>
+                
+                <!-- Combination Builder -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Build Your Affinity Combination</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Available affinities:</label>
+                        <div class="flex flex-wrap" id="available-affinities">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-50 rounded-lg mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm font-medium text-gray-700">Your combination:</label>
+                            <button id="clear-combination" class="text-sm text-red-600 hover:text-red-800">Clear All</button>
+                        </div>
+                        <div class="flex flex-wrap" id="selected-affinities">
+                            <!-- Will be populated when user selects affinities -->
+                            <div class="text-gray-500 italic text-sm" id="empty-selection">No affinities selected yet. Click on affinities above to add them to your combination.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Combination Visualization -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Combination Analysis</h3>
+                    
+                    <div id="no-combination-message" class="text-center py-8 text-gray-500">
+                        <i class="fas fa-layer-group text-gray-300 text-4xl mb-3"></i>
+                        <p>Select two or more affinities to see their combination analysis</p>
+                    </div>
+                    
+                    <div id="combination-analysis" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-3">Compatibility Score</h4>
+                                <div class="bg-blue-50 p-4 rounded-md mb-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-700">Overall Compatibility:</span>
+                                        <span class="font-bold text-lg" id="compatibility-score">86%</span>
+                                    </div>
+                                    <div class="progress-bar mt-2">
+                                        <div class="progress-fill" id="compatibility-bar" style="width: 86%"></div>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-2">These affinities work well together and are frequently found in the same properties.</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-semibold mb-3">Top Matching Properties</h4>
+                                <div class="bg-gray-50 p-4 rounded-md">
+                                    <div class="space-y-3" id="matching-properties">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent View Tab -->
+            <div id="agent-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Agent View</h2>
+                
+                <!-- Property Selection -->
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Select a Property to Analyze</h3>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex-grow">
+                            <input type="text" id="agent-property-search" placeholder="Enter property name (e.g., Oceanview Resort)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                        <button id="agent-search-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">Find Property</button>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="agent-property-cards">
+                        <div class="card p-4 agent-property-card" data-property="oceanview">
+                            <h4 class="font-semibold">Oceanview Resort & Spa</h4>
+                            <p class="text-sm text-gray-600">Miami Beach, FL</p>
+                            <p class="text-xs text-gray-500 mt-1">ID: PROP12345</p>
+                        </div>
+                        <div class="card p-4 agent-property-card" data-property="mountain">
+                            <h4 class="font-semibold">Mountain Lodge</h4>
+                            <p class="text-sm text-gray-600">Aspen, CO</p>
+                            <p class="text-xs text-gray-500 mt-1">ID: PROP67890</p>
+                        </div>
+                        <div class="card p-4 agent-property-card" data-property="city">
+                            <h4 class="font-semibold">City Center Suites</h4>
+                            <p class="text-sm text-gray-600">New York, NY</p>
+                            <p class="text-xs text-gray-500 mt-1">ID: PROP24680</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Agent Tabs -->
+                <div class="bg-white rounded-lg shadow" id="agent-content">
+                    <div class="border-b">
+                        <div class="flex overflow-x-auto">
+                            <div class="agent-tab active" data-agent="verification">Verification Agent</div>
+                            <div class="agent-tab" data-agent="discovery">Discovery Agent</div>
+                            <div class="agent-tab" data-agent="sentiment">Sentiment Agent</div>
+                            <div class="agent-tab" data-agent="competitive">Competitive Agent</div>
+                            <div class="agent-tab" data-agent="bias">Bias Detection Agent</div>
+                            <div class="agent-tab" data-agent="trend">Trend Agent</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div id="no-property-selected" class="text-center py-8 text-gray-500">
+                            <i class="fas fa-building text-gray-300 text-4xl mb-3"></i>
+                            <p>Select a property to see agent analysis</p>
+                        </div>
+                        
+                        <div id="agent-property-content" class="hidden">
+                            <!-- Verification Agent Content -->
+                            <div class="agent-content" id="verification-content">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-bold mb-2" id="agent-property-name">Oceanview Resort & Spa</h3>
+                                    <p class="text-gray-600">This agent confirms affinity scores against ground truth using human-verified data, multiple external sources, and crowdsourced information.</p>
+                                </div>
+                                
+                                <h4 class="font-semibold text-lg mb-3">Verified Affinities</h4>
+                                
+                                <div class="space-y-4" id="verified-affinities">
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h5 class="font-semibold">Luxury</h5>
+                                            <span class="badge score-high">9.1/10 Verified</span>
+                                        </div>
+                                        <div class="evidence-panel collapsible-header">
+                                            <div class="flex justify-between items-center cursor-pointer">
+                                                <p class="text-sm text-gray-700">Five-star rating confirmed</p>
+                                                <i class="fas fa-chevron-down text-gray-500"></i>
+                                            </div>
+                                            <div class="collapsible-content">
+                                                <p class="text-xs text-gray-600 mt-2">Source: Official Hotel Classification Registry (verified)</p>
+                                            </div>
+                                        </div>
+                                        <div class="evidence-panel collapsible-header">
+                                            <div class="flex justify-between items-center cursor-pointer">
+                                                <p class="text-sm text-gray-700">Premium amenities detected: spa, butler service, fine dining</p>
+                                                <i class="fas fa-chevron-down text-gray-500"></i>
+                                            </div>
+                                            <div class="collapsible-content">
+                                                <p class="text-xs text-gray-600 mt-2">Source: Property website (verified), Guest reviews (aggregated)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h5 class="font-semibold">Beach Access</h5>
+                                            <span class="badge score-high">9.5/10 Verified</span>
+                                        </div>
+                                        <div class="evidence-panel collapsible-header">
+                                            <div class="flex justify-between items-center cursor-pointer">
+                                                <p class="text-sm text-gray-700">Direct beachfront location confirmed</p>
+                                                <i class="fas fa-chevron-down text-gray-500"></i>
+                                            </div>
+                                            <div class="collapsible-content">
+                                                <p class="text-xs text-gray-600 mt-2">Source: Geospatial data (verified), On-site inspection (verified)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Discovery Agent Content -->
+                            <div class="agent-content hidden" id="discovery-content">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-bold mb-2" id="discovery-property-name">Oceanview Resort & Spa</h3>
+                                    <p class="text-gray-600">This agent identifies new attributes and characteristics not currently captured in existing affinities.</p>
+                                </div>
+                                
+                                <h4 class="font-semibold text-lg mb-3">Newly Discovered Attributes</h4>
+                                <p class="mb-3 text-gray-700">Discovery Agent found 8 new attributes that can enhance existing affinities or suggest new ones.</p>
+                                
+                                <div class="space-y-4" id="discovered-attributes">
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h5 class="font-semibold">Electric Vehicle Charging Stations</h5>
+                                            <span class="badge score-high">High Confidence (92%)</span>
+                                        </div>
+                                        <p class="text-sm">4 Tesla and 2 universal charging stations available in the parking garage.</p>
+                                        <p class="text-xs text-blue-600 mt-2">Suggests: Eco-Friendly affinity</p>
+                                        <div class="confidence-indicator mt-2">
+                                            <div class="confidence-fill" style="width: 92%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h5 class="font-semibold">Soundproof Rooms</h5>
+                                            <span class="badge score-high">High Confidence (89%)</span>
+                                        </div>
+                                        <p class="text-sm">Enhanced soundproofing mentioned in 37 recent guest reviews.</p>
+                                        <p class="text-xs text-blue-600 mt-2">Enhances: Privacy, Luxury affinities</p>
+                                        <div class="confidence-indicator mt-2">
+                                            <div class="confidence-fill" style="width: 89%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sentiment Agent Content -->
+                            <div class="agent-content hidden" id="sentiment-content">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-bold mb-2" id="sentiment-property-name">Oceanview Resort & Spa</h3>
+                                    <p class="text-gray-600">This agent analyzes reviews and social media to gauge sentiment about property affinities.</p>
+                                </div>
+                                
+                                <h4 class="font-semibold text-lg mb-3">Sentiment Analysis</h4>
+                                <p class="mb-3 text-gray-700">Sentiment Agent analyzed 736 recent reviews and social media mentions.</p>
+                                
+                                <div class="space-y-4" id="sentiment-analysis">
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <h5 class="font-semibold mb-2">Luxury Sentiment</h5>
+                                        <div class="mb-3">
+                                            <h6 class="text-sm font-medium">Key Phrases (736 reviews)</h6>
+                                            <div class="mt-2 flex flex-wrap gap-2">
+                                                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                                    "exceptional service" (127 mentions)
+                                                </span>
+                                                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                                    "worth every penny" (98 mentions)
+                                                </span>
+                                                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                                    "5-star experience" (82 mentions)
+                                                </span>
+                                                <span class="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                                                    "overpriced" (24 mentions)
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm">Impact: Sentiment confirms high Luxury score (9.1)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Other agent content sections will be similar -->
+                            <div class="agent-content hidden" id="competitive-content">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-bold mb-2">Oceanview Resort & Spa</h3>
+                                    <p class="text-gray-600">This agent benchmarks against competitors to identify relative strengths and gaps.</p>
+                                </div>
+                                
+                                <h4 class="font-semibold text-lg mb-3">Competitive Analysis</h4>
+                                <p class="mb-3 text-gray-700">Benchmarked against 16 similar resorts on competing booking sites.</p>
+                                
+                                <div class="space-y-4">
+                                    <div class="bg-gray-50 p-4 rounded-md collapsible-section">
+                                        <div class="cursor-pointer flex justify-between items-center">
+                                            <h5 class="font-semibold">Luxury Positioning</h5>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                        <div class="collapsible-content">
+                                            <div class="mt-3 space-y-2">
+                                                <div class="flex justify-between items-center">
+                                                    <span>Expedia:</span>
+                                                    <span class="font-semibold">9.1/10</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                    <span>Competitor A:</span>
+                                                    <span>8.7/10</span>
+                                                </div>
+                                                <div class="flex justify-between items-center">
+                                                    <span>Competitor B:</span>
+                                                    <span>8.9/10</span>
+                                                </div>
+                                                <div class="mt-3 text-sm text-green-700">
+                                                    <i class="fas fa-arrow-up mr-1"></i> Competitive Edge: +0.3 points above average
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="agent-content hidden" id="bias-content">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-bold mb-2">Oceanview Resort & Spa</h3>
+                                    <p class="text-gray-600">This agent detects and corrects systematic biases in affinity scores.</p>
+                                </div>
+                                
+                                <h4 class="font-semibold text-lg mb-3">Bias Detection</h4>
+                                <p class="mb-3 text-gray-700">Minor biases detected in review sourcing and seasonal sampling.</p>
+                                
+                                <div class="space-y-4">
+                                    <div class="bg-gray-50 p-4 rounded-md collapsible-section">
+                                        <div class="cursor-pointer flex justify-between items-center">
+                                            <h5 class="font-semibold">Review Source Bias</h5>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                        <div class="collapsible-content">
+                                            <p class="mt-3 text-sm">Pet-Friendly scores are disproportionately influenced by reviews from summer travelers (72% of data points).</p>
+                                            <div class="mt-2 px-3 py-2 bg-yellow-50 border-l-4 border-yellow-400">
+                                                <span class="text-sm font-medium">Bias Severity: Medium (11% score impact)</span>
+                                            </div>
+                                            <div class="mt-3">
+                                                <h6 class="text-sm font-medium">Correction Applied</h6>
+                                                <p class="text-sm mt-1">Reweighted seasonal reviews to ensure balanced representation.</p>
+                                                <div class="flex justify-between mt-2 text-sm">
+                                                    <span>Original Score: 7.5/10</span>
+                                                    <span>Corrected Score: 7.2/10</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="agent-content hidden" id="trend-content">
+                                <div class="mb-4">
+                                    <h3 class="text-xl font-bold mb-2">Oceanview Resort & Spa</h3>
+                                    <p class="text-gray-600">This agent identifies emerging trends relevant to the property.</p>
+                                </div>
+                                
+                                <h4 class="font-semibold text-lg mb-3">Trend Analysis</h4>
+                                <p class="mb-3 text-gray-700">Trend Agent identified 4 emerging patterns relevant to this property.</p>
+                                
+                                <div class="space-y-4">
+                                    <div class="bg-gray-50 p-4 rounded-md collapsible-section">
+                                        <div class="cursor-pointer flex justify-between items-center">
+                                            <h5 class="font-semibold">Wellness Travel</h5>
+                                            <span class="badge badge-validated">Rising Trend</span>
+                                        </div>
+                                        <div class="mt-2 text-sm">
+                                            <p>43% increase in searches for wellness amenities and spa facilities in luxury beach resorts over last 90 days.</p>
+                                            <div class="mt-3">
+                                                <h6 class="font-medium">Property Alignment</h6>
+                                                <p class="mt-1">Property has comprehensive spa facilities, meditation classes, and wellness packages.</p>
+                                                <p class="text-green-700 mt-2"><i class="fas fa-lightbulb mr-1"></i> Opportunity: Create new "Wellness Retreat" affinity and feature property prominently.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Implementation Guide Tab -->
+            <div id="implementation-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Implementation Guide</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">How to Implement Affinities</h3>
+                    
+                    <div class="mb-6">
+                        <p class="mb-4">Follow these steps to implement affinity scores in your product:</p>
+                        
+                        <ol class="list-decimal list-inside space-y-3 ml-4">
+                            <li>Choose the appropriate affinity concept that aligns with your use case</li>
+                            <li>Verify the affinity has been fully validated (check the Lifecycle Tracker)</li>
+                            <li>Request API access through the API Gateway</li>
+                            <li>Implement the API call in your application</li>
+                            <li>Test the implementation in your staging environment</li>
+                            <li>Monitor performance after launch</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-md mb-6">
+                        <h4 class="font-semibold mb-2">API Documentation</h4>
+                        <div class="bg-gray-800 text-white p-4 rounded-md font-mono text-sm">
+                            GET /api/v1/affinities/{affinityId}/scores/{propertyId}
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">Returns the affinity score for a specific property.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports & Analytics Tab -->
+            <div id="reports-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Reports & Analytics</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Custom Report Builder</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Report Type:</label>
+                        <select class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500">
+                            <option>Affinity Performance Report</option>
+                            <option>Coverage Analysis</option>
+                            <option>Implementation Impact Report</option>
+                            <option>Concept Adoption Trends</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date Range:</label>
+                            <select class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500">
+                                <option>Last 30 days</option>
+                                <option>Last quarter</option>
+                                <option>Last 6 months</option>
+                                <option>Year to date</option>
+                                <option>Custom range</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Include Affinities:</label>
+                            <select class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500">
+                                <option>All affinities</option>
+                                <option>Validated only</option>
+                                <option>Recently updated</option>
+                                <option>Custom selection</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">
+                            Generate Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Settings</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">User Preferences</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Default View:</label>
+                            <select class="border border-gray-300 rounded-lg px-3 py-2 w-full max-w-md focus:outline-none focus:border-blue-500">
+                                <option>Dashboard</option>
+                                <option>Affinity Library</option>
+                                <option>Recently Viewed</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Results Per Page:</label>
+                            <select class="border border-gray-300 rounded-lg px-3 py-2 w-full max-w-md focus:outline-none focus:border-blue-500">
+                                <option>10</option>
+                                <option>25</option>
+                                <option>50</option>
+                                <option>100</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" checked>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label class="font-medium text-gray-700">Enable email notifications</label>
+                                <p class="text-gray-500">Receive updates when affinities change status</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help & Support Tab -->
+            <div id="help-tab" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6">Help & Support</h2>
+                
+                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Frequently Asked Questions</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="border-b pb-3 faq-item">
+                            <div class="flex justify-between items-center cursor-pointer">
+                                <h4 class="font-medium">What are affinities?</h4>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="mt-2 hidden faq-answer">
+                                <p class="text-gray-600">Affinities are scored attributes that represent different aspects or characteristics of properties and destinations. They help match travelers with the right accommodations based on their preferences.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-b pb-3 faq-item">
+                            <div class="flex justify-between items-center cursor-pointer">
+                                <h4 class="font-medium">How are affinity scores calculated?</h4>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="mt-2 hidden faq-answer">
+                                <p class="text-gray-600">Affinity scores are calculated using a combination of first-party data, external sources, human verification, and algorithmic processing. The specific formula varies by affinity type.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-b pb-3 faq-item">
+                            <div class="flex justify-between items-center cursor-pointer">
+                                <h4 class="font-medium">How do I implement affinities in my product?</h4>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="mt-2 hidden faq-answer">
+                                <p class="text-gray-600">Refer to the Implementation Guide section for detailed steps on how to integrate affinities into your product using our APIs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">Contact Support</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Subject:</label>
+                            <select class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500">
+                                <option>General question</option>
+                                <option>API integration help</option>
+                                <option>Report an issue</option>
+                                <option>Feature request</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Message:</label>
+                            <textarea rows="4" class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500" placeholder="Describe your question or issue..."></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">
+                                Submit Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Mock data for the application
+        const affinityConcepts = [
+            {
+                id: 1,
+                name: "Pet-Friendly",
+                type: "Platform Score",
+                category: "Family",
+                scoreAvailable: true,
+                applicableEntities: ["Property", "Destination"],
+                avgScore: 7.2,
+                status: "Validated",
+                coverage: 72,
+                definition: "Properties that welcome pets with amenities or policies that accommodate animals."
+            },
+            {
+                id: 2,
+                name: "Romantic",
+                type: "Concept Score",
+                category: "Adults",
+                scoreAvailable: true,
+                applicableEntities: ["Property", "Destination", "POI"],
+                avgScore: 6.8,
+                status: "Validated",
+                coverage: 65,
+                definition: "Properties suitable for couples seeking a romantic experience."
+            },
+            {
+                id: 3,
+                name: "Family-Friendly",
+                type: "Platform Score",
+                category: "Family",
+                scoreAvailable: true,
+                applicableEntities: ["Property", "Destination"],
+                avgScore: 7.9,
+                status: "Validated",
+                coverage: 81,
+                definition: "Properties that cater to families with children offering suitable amenities and activities."
+            },
+            {
+                id: 4,
+                name: "Luxury",
+                type: "Concept Score",
+                category: "Premium",
+                scoreAvailable: true,
+                applicableEntities: ["Property"],
+                avgScore: 8.2,
+                status: "Validated",
+                coverage: 45,
+                definition: "High-end properties offering premium amenities, services, and experiences."
+            },
+            {
+                id: 5,
+                name: "Beach Access",
+                type: "Amenity Score",
+                category: "Location",
+                scoreAvailable: true,
+                applicableEntities: ["Property"],
+                avgScore: 8.7,
+                status: "Validated",
+                coverage: 38,
+                definition: "Properties with direct or convenient access to beaches."
+            },
+            {
+                id: 6,
+                name: "Privacy",
+                type: "Concept Score",
+                category: "Adults",
+                scoreAvailable: true,
+                applicableEntities: ["Property"],
+                avgScore: 7.5,
+                status: "In Enrichment",
+                coverage: 62,
+                definition: "Properties offering secluded or private accommodations away from crowds."
+            },
+            {
+                id: 7,
+                name: "Nature Retreat",
+                type: "Concept Score",
+                category: "Outdoors",
+                scoreAvailable: true,
+                applicableEntities: ["Property", "Destination"],
+                avgScore: 7.8,
+                status: "In Enrichment",
+                coverage: 41,
+                definition: "Properties situated in natural surroundings with minimal urban development."
+            },
+            {
+                id: 8,
+                name: "Historical",
+                type: "Concept Score",
+                category: "Cultural",
+                scoreAvailable: true,
+                applicableEntities: ["Property", "Destination", "POI"],
+                avgScore: 6.9,
+                status: "Validated",
+                coverage: 33,
+                definition: "Properties with historical significance or located in historical areas."
+            }
+        ];
+
+        const properties = [
+            {
+                id: "PROP12345",
+                name: "Oceanview Resort & Spa",
+                location: "Miami Beach, FL",
+                propertyType: "Hotel",
+                affinityScores: [
+                    { name: "Pet-Friendly", score: 7.2 },
+                    { name: "Romantic", score: 8.5 },
+                    { name: "Luxury", score: 9.1 },
+                    { name: "Beach Access", score: 9.5 },
+                    { name: "Privacy", score: 8.2 },
+                    { name: "Family-Friendly", score: 6.7 }
+                ]
+            },
+            {
+                id: "PROP67890",
+                name: "Mountain Lodge",
+                location: "Aspen, CO",
+                propertyType: "Resort",
+                affinityScores: [
+                    { name: "Pet-Friendly", score: 8.7 },
+                    { name: "Family-Friendly", score: 7.6 },
+                    { name: "Nature Retreat", score: 9.3 },
+                    { name: "Privacy", score: 8.8 },
+                    { name: "Luxury", score: 8.1 }
+                ]
+            },
+            {
+                id: "PROP24680",
+                name: "City Center Suites",
+                location: "New York, NY",
+                propertyType: "Hotel",
+                affinityScores: [
+                    { name: "Luxury", score: 8.3 },
+                    { name: "Pet-Friendly", score: 6.1 },
+                    { name: "Historical", score: 7.5 },
+                    { name: "Romantic", score: 7.2 }
+                ]
+            }
+        ];
+
+        const lifecycleData = {
+            "Pet-Friendly": {
+                stages: {
+                    "Discovery": { status: "Complete", lastUpdated: "2024-06-15", owner: "Jane Smith" },
+                    "Relationship Definition": { status: "Complete", lastUpdated: "2024-07-22", owner: "Jane Smith" },
+                    "Concept Enrichment": { status: "Complete", lastUpdated: "2024-08-10", owner: "Alex Johnson" },
+                    "Weighting Finalized": { status: "Complete", lastUpdated: "2024-09-05", owner: "Alex Johnson" },
+                    "Scoring Implemented": { status: "Complete", lastUpdated: "2024-10-01", owner: "Michael Chang" },
+                    "Validation & Distribution": { status: "Complete", lastUpdated: "2024-10-20", owner: "Sarah Wilson" }
+                }
+            },
+            "Romantic": {
+                stages: {
+                    "Discovery": { status: "Complete", lastUpdated: "2024-05-10", owner: "Sarah Wilson" },
+                    "Relationship Definition": { status: "Complete", lastUpdated: "2024-06-18", owner: "Alex Johnson" },
+                    "Concept Enrichment": { status: "Complete", lastUpdated: "2024-07-15", owner: "Jane Smith" },
+                    "Weighting Finalized": { status: "Complete", lastUpdated: "2024-08-20", owner: "Alex Johnson" },
+                    "Scoring Implemented": { status: "Complete", lastUpdated: "2024-09-12", owner: "Michael Chang" },
+                    "Validation & Distribution": { status: "Complete", lastUpdated: "2024-10-05", owner: "Sarah Wilson" }
+                }
+            },
+            "Family-Friendly": {
+                stages: {
+                    "Discovery": { status: "Complete", lastUpdated: "2024-07-05", owner: "Jane Smith" },
+                    "Relationship Definition": { status: "Complete", lastUpdated: "2024-08-12", owner: "Jane Smith" },
+                    "Concept Enrichment": { status: "Complete", lastUpdated: "2024-09-08", owner: "Alex Johnson" },
+                    "Weighting Finalized": { status: "In Progress", lastUpdated: "2024-10-20", owner: "Alex Johnson" },
+                    "Scoring Implemented": { status: "Not Started", lastUpdated: "", owner: "" },
+                    "Validation & Distribution": { status: "Not Started", lastUpdated: "", owner: "" }
+                }
+            },
+            "Luxury": {
+                stages: {
+                    "Discovery": { status: "Complete", lastUpdated: "2024-04-10", owner: "Michael Chang" },
+                    "Relationship Definition": { status: "Complete", lastUpdated: "2024-05-15", owner: "Sarah Wilson" },
+                    "Concept Enrichment": { status: "Complete", lastUpdated: "2024-06-22", owner: "Alex Johnson" },
+                    "Weighting Finalized": { status: "Complete", lastUpdated: "2024-07-30", owner: "Alex Johnson" },
+                    "Scoring Implemented": { status: "Complete", lastUpdated: "2024-08-25", owner: "Michael Chang" },
+                    "Validation & Distribution": { status: "In Progress", lastUpdated: "2024-10-15", owner: "Sarah Wilson" }
+                }
+            }
+        };
+
+        // DOM Ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle sidebar
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            const toggleSidebar = document.getElementById('toggleSidebar');
+            
+            toggleSidebar.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('main-content-expanded');
+                
+                sidebarTexts.forEach(text => {
+                    text.classList.toggle('hidden');
+                });
+            });
+            
+            // Tab Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all nav items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to current nav item
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    tabContents.forEach(tab => tab.classList.remove('active'));
+                    
+                    // Show the selected tab content
+                    const activeTab = document.getElementById(`${tabId}-tab`);
+                    if (activeTab) {
+                        activeTab.classList.add('active');
+                    }
+                });
+            });
+            
+            // Recent cards in Dashboard
+            const recentCards = document.querySelectorAll('.recent-card');
+            recentCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const affinityName = this.getAttribute('data-name');
+                    alert(`Viewing details for ${affinityName}`);
+                    
+                    // Switch to library tab and select this affinity
+                    document.querySelector('[data-tab="library"]').click();
+                    
+                    // Find and select the affinity
+                    const affinityCards = document.querySelectorAll('.affinity-card');
+                    affinityCards.forEach(ac => {
+                        if (ac.querySelector('h4').textContent === affinityName) {
+                            ac.click();
+                        }
+                    });
+                });
+            });
+            
+            // Favorite cards in Dashboard
+            const favoriteCards = document.querySelectorAll('.favorite-card');
+            favoriteCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const collectionName = this.querySelector('h4').textContent;
+                    alert(`Opening collection: ${collectionName}`);
+                });
+            });
+            
+            // Populate Affinity Library
+            const affinityContainer = document.getElementById('affinity-container');
+            const affinitySearch = document.getElementById('affinity-search');
+            const categoryFilter = document.getElementById('category-filter');
+            const statusFilter = document.getElementById('status-filter');
+            
+            function getStatusClass(status) {
+                switch(status) {
+                    case 'Validated': return 'badge-validated';
+                    case 'In Enrichment': return 'badge-enrichment';
+                    case 'Scoring': return 'badge-scoring';
+                    case 'Discovery': return 'badge-discovery';
+                    default: return '';
+                }
+            }
+            
+            function populateAffinities(affinities) {
+                if (!affinityContainer) return;
+                
+                affinityContainer.innerHTML = '';
+                
+                affinities.forEach(affinity => {
+                    const card = document.createElement('div');
+                    card.className = 'card p-4 affinity-card';
+                    card.setAttribute('data-id', affinity.id);
+                    
+                    const statusClass = getStatusClass(affinity.status);
+                    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold">${affinity.name}</h4>
+                            <span class="badge ${statusClass}">${affinity.status}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">${affinity.definition}</p>
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>Average Score: ${affinity.avgScore}/10</span>
+                            <span>Coverage: ${affinity.coverage}%</span>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', function() {
+                        // Remove selected class from all cards
+                        document.querySelectorAll('.affinity-card').forEach(c => {
+                            c.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked card
+                        this.classList.add('selected');
+                        
+                        // Show affinity details
+                        showAffinityDetails(affinity);
+                    });
+                    
+                    affinityContainer.appendChild(card);
+                });
+            }
+            
+            function showAffinityDetails(affinity) {
+                const detailsSection = document.getElementById('affinity-details');
+                if (!detailsSection) return;
+                
+                detailsSection.classList.remove('hidden');
+                
+                document.getElementById('detail-name').textContent = affinity.name;
+                document.getElementById('detail-definition').textContent = affinity.definition;
+                document.getElementById('detail-status').textContent = affinity.status;
+                document.getElementById('detail-status').className = `badge ${getStatusClass(affinity.status)}`;
+                
+                document.getElementById('detail-category').textContent = affinity.category;
+                document.getElementById('detail-type').textContent = affinity.type;
+                document.getElementById('detail-entities').textContent = affinity.applicableEntities.join(', ');
+                document.getElementById('detail-score').textContent = `${affinity.avgScore}/10`;
+                document.getElementById('detail-coverage').textContent = `${affinity.coverage}%`;
+                
+                // Populate related concepts
+                const relatedContainer = document.getElementById('detail-related');
+                relatedContainer.innerHTML = '';
+                
+                let relatedConcepts = [];
+                
+                // Mock related concepts based on the current affinity
+                switch(affinity.name) {
+                    case 'Pet-Friendly':
+                        relatedConcepts = ['Family-Friendly', 'Spacious', 'Outdoor Recreation'];
+                        break;
+                    case 'Romantic':
+                        relatedConcepts = ['Privacy', 'Luxury', 'Beach Access'];
+                        break;
+                    case 'Family-Friendly':
+                        relatedConcepts = ['Pet-Friendly', 'Spacious', 'Safety'];
+                        break;
+                    case 'Luxury':
+                        relatedConcepts = ['Premium', 'Upscale Dining', 'Romantic'];
+                        break;
+                    case 'Beach Access':
+                        relatedConcepts = ['Ocean View', 'Luxury', 'Romantic'];
+                        break;
+                    default:
+                        relatedConcepts = ['Example Related Concept 1', 'Example Related Concept 2'];
+                }
+                
+                relatedConcepts.forEach(concept => {
+                    const div = document.createElement('div');
+                    div.className = 'py-1';
+                    div.innerHTML = `<i class="fas fa-link text-blue-500 mr-2"></i> ${concept}`;
+                    div.style.cursor = 'pointer';
+                    div.addEventListener('click', function() {
+                        alert(`Viewing details for ${concept}`);
+                    });
+                    relatedContainer.appendChild(div);
+                });
+            }
+            
+            if (affinitySearch) {
+                affinitySearch.addEventListener('input', function(e) {
+                    filterAffinities();
+                });
+            }
+            
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', function() {
+                    filterAffinities();
+                });
+            }
+            
+            if (statusFilter) {
+                statusFilter.addEventListener('change', function() {
+                    filterAffinities();
+                });
+            }
+            
+            function filterAffinities() {
+                const searchValue = affinitySearch ? affinitySearch.value.toLowerCase() : '';
+                const categoryValue = categoryFilter ? categoryFilter.value : 'all';
+                const statusValue = statusFilter ? statusFilter.value : 'all';
+                
+                let filtered = [...affinityConcepts];
+                
+                // Apply search filter
+                if (searchValue) {
+                    filtered = filtered.filter(
+                        affinity => 
+                            affinity.name.toLowerCase().includes(searchValue) ||
+                            affinity.definition.toLowerCase().includes(searchValue) ||
+                            affinity.category.toLowerCase().includes(searchValue)
+                    );
+                }
+                
+                // Apply category filter
+                if (categoryValue !== 'all') {
+                    filtered = filtered.filter(affinity => affinity.category === categoryValue);
+                }
+                
+                // Apply status filter
+                if (statusValue !== 'all') {
+                    filtered = filtered.filter(affinity => affinity.status === statusValue);
+                }
+                
+                populateAffinities(filtered);
+            }
+            
+            // Initial population of affinities
+            populateAffinities(affinityConcepts);
+            
+            // Populate Properties
+            const propertyContainer = document.getElementById('property-container');
+            const propertySearch = document.getElementById('property-search');
+            const propertyFilter = document.getElementById('property-filter');
+            const searchPropertyBtn = document.getElementById('search-property-btn');
+            
+            function getScoreClass(score) {
+                if (score >= 9) return 'score-high';
+                if (score >= 7.5) return 'score-medium';
+                if (score >= 6) return 'score-low';
+                return 'score-low';
+            }
+            
+            function populateProperties(properties) {
+                if (!propertyContainer) return;
+                
+                propertyContainer.innerHTML = '';
+                
+                properties.forEach(property => {
+                    const card = document.createElement('div');
+                    card.className = 'card p-4 property-card';
+                    card.setAttribute('data-id', property.id);
+                    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-semibold">${property.name}</h4>
+                            <span class="text-xs px-2 py-1 bg-gray-100 rounded-full">
+                                ${property.propertyType}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600">${property.location}</p>
+                        <p class="text-xs text-gray-500 mt-1">ID: ${property.id}</p>
+                        <p class="text-sm mt-2">${property.affinityScores.length} Affinity Scores</p>
+                    `;
+                    
+                    card.addEventListener('click', function() {
+                        // Remove selected class from all cards
+                        document.querySelectorAll('.property-card').forEach(c => {
+                            c.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked card
+                        this.classList.add('selected');
+                        
+                        // Show property details
+                        showPropertyDetails(property);
+                    });
+                    
+                    propertyContainer.appendChild(card);
+                });
+            }
+            
+            function showPropertyDetails(property) {
+                const detailsSection = document.getElementById('property-details');
+                if (!detailsSection) return;
+                
+                detailsSection.classList.remove('hidden');
+                
+                document.getElementById('detail-property-name').textContent = property.name;
+                document.getElementById('detail-property-location').textContent = `${property.location} • ${property.propertyType}`;
+                document.getElementById('detail-property-id').textContent = `ID: ${property.id}`;
+                
+                // Property scores
+                const scoresContainer = document.getElementById('property-scores');
+                scoresContainer.innerHTML = '';
+                
+                const sortedScores = [...property.affinityScores].sort((a, b) => b.score - a.score);
+                
+                sortedScores.forEach(score => {
+                    const scoreClass = getScoreClass(score.score);
+                    
+                    const div = document.createElement('div');
+                    div.className = 'border rounded-md p-3';
+                    div.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-medium">${score.name}</h4>
+                            <span class="px-2 py-1 rounded-full text-sm font-medium ${scoreClass}">
+                                ${score.score}/10
+                            </span>
+                        </div>
+                    `;
+                    
+                    scoresContainer.appendChild(div);
+                });
+                
+                // Property analysis
+                const analysisContainer = document.getElementById('property-analysis');
+                if (analysisContainer) {
+                    const highestScore = sortedScores[0].score;
+                    const highestScoreName = sortedScores[0].name;
+                    const avgScore = (property.affinityScores.reduce((sum, score) => sum + score.score, 0) / property.affinityScores.length).toFixed(1);
+                    
+                    analysisContainer.innerHTML = `
+                        <li>
+                            <strong>Highest Score:</strong> ${highestScore.toFixed(1)}/10 (${highestScoreName})
+                        </li>
+                        <li>
+                            <strong>Average Score:</strong> ${avgScore}/10
+                        </li>
+                        <li>
+                            <strong>Total Affinities:</strong> ${property.affinityScores.length}
+                        </li>
+                    `;
+                }
+                
+                // Property breakdown
+                const breakdownContainer = document.getElementById('property-breakdown');
+                if (breakdownContainer) {
+                    breakdownContainer.innerHTML = '';
+                    
+                    sortedScores.forEach(score => {
+                        let interpretation = '';
+                        
+                        if (score.score >= 9) {
+                            interpretation = 'Exceptional match';
+                        } else if (score.score >= 7.5) {
+                            interpretation = 'Strong match';
+                        } else if (score.score >= 6) {
+                            interpretation = 'Good match';
+                        } else {
+                            interpretation = 'Average match';
+                        }
+                        
+                        const scoreClass = getScoreClass(score.score);
+                        
+                        const row = document.createElement('tr');
+                        row.className = 'border-t';
+                        row.innerHTML = `
+                            <td class="px-4 py-2 border">${score.name}</td>
+                            <td class="px-4 py-2 border">
+                                <span class="px-2 py-1 rounded-full text-xs font-medium ${scoreClass}">
+                                    ${score.score}/10
+                                </span>
+                            </td>
+                            <td class="px-4 py-2 border text-sm">${interpretation}</td>
+                        `;
+                        
+                        breakdownContainer.appendChild(row);
+                    });
+                }
+            }
+            
+            if (searchPropertyBtn) {
+                searchPropertyBtn.addEventListener('click', function() {
+                    const searchValue = propertySearch.value.trim();
+                    const errorMessage = document.getElementById('property-search-error');
+                    
+                    if (!searchValue) {
+                        errorMessage.textContent = "Please enter a property ID or name.";
+                        errorMessage.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    const property = properties.find(p => 
+                        p.id.toLowerCase() === searchValue.toLowerCase() ||
+                        p.name.toLowerCase().includes(searchValue.toLowerCase())
+                    );
+                    
+                    if (property) {
+                        errorMessage.classList.add('hidden');
+                        showPropertyDetails(property);
+                        
+                        // Select the property card if it exists
+                        document.querySelectorAll('.property-card').forEach(c => {
+                            c.classList.remove('selected');
+                            if (c.getAttribute('data-id') === property.id) {
+                                c.classList.add('selected');
+                                c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        });
+                    } else {
+                        errorMessage.textContent = `No property found with ID or name: ${searchValue}`;
+                        errorMessage.classList.remove('hidden');
+                    }
+                });
+            }
+            
+            if (propertyFilter) {
+                propertyFilter.addEventListener('input', function(e) {
+                    const filterValue = e.target.value.toLowerCase();
+                    
+                    if (!filterValue) {
+                        populateProperties(properties);
+                        return;
+                    }
+                    
+                    const filtered = properties.filter(
+                        property => 
+                            property.name.toLowerCase().includes(filterValue) ||
+                            property.location.toLowerCase().includes(filterValue)
+                    );
+                    
+                    populateProperties(filtered);
+                });
+            }
+            
+            // Initial population of properties
+            populateProperties(properties);
+            
+            // Populate Lifecycle Tracker
+            const lifecycleContainer = document.getElementById('lifecycle-container');
+            const lifecycleFilter = document.getElementById('lifecycle-filter');
+            
+            function getLifecycleStatusClass(status) {
+                switch(status) {
+                    case 'Complete': return 'badge-validated';
+                    case 'In Progress': return 'badge-enrichment';
+                    case 'Not Started': return '';
+                    default: return '';
+                }
+            }
+            
+            function populateLifecycles(lifecycles) {
+                if (!lifecycleContainer) return;
+                
+                lifecycleContainer.innerHTML = '';
+                
+                Object.keys(lifecycles).forEach(conceptName => {
+                    const lifecycle = lifecycles[conceptName];
+                    const stages = lifecycle.stages || {};
+                    const totalStages = 6; // Total number of possible stages
+                    const completedStages = Object.values(stages).filter(stage => stage.status === "Complete").length;
+                    const progressPercentage = (completedStages / totalStages) * 100;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card p-4 lifecycle-card';
+                    card.setAttribute('data-name', conceptName);
+                    
+                    let progressFillClass = 'progress-fill';
+                    if (progressPercentage === 100) {
+                        progressFillClass += ' progress-fill-success';
+                    } else if (progressPercentage > 50) {
+                        progressFillClass += ' progress-fill-warning';
+                    }
+                    
+                    card.innerHTML = `
+                        <h4 class="font-semibold">${conceptName}</h4>
+                        <div class="mt-3">
+                            <div class="progress-bar">
+                                <div class="${progressFillClass}" style="width: ${progressPercentage}%"></div>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">
+                                ${completedStages} of ${totalStages} stages complete (${progressPercentage.toFixed(0)}%)
+                            </p>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', function() {
+                        // Remove selected class from all cards
+                        document.querySelectorAll('.lifecycle-card').forEach(c => {
+                            c.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked card
+                        this.classList.add('selected');
+                        
+                        // Show lifecycle details
+                        showLifecycleDetails(conceptName, lifecycle);
+                    });
+                    
+                    lifecycleContainer.appendChild(card);
+                });
+            }
+            
+            function showLifecycleDetails(conceptName, lifecycle) {
+                const detailsSection = document.getElementById('lifecycle-details');
+                if (!detailsSection) return;
+                
+                detailsSection.classList.remove('hidden');
+                
+                document.getElementById('detail-lifecycle-name').textContent = `Lifecycle Stages: ${conceptName}`;
+                
+                // Lifecycle stages
+                const stagesContainer = document.getElementById('lifecycle-stages');
+                stagesContainer.innerHTML = '';
+                
+                const stageNames = ["Discovery", "Relationship Definition", "Concept Enrichment", 
+                                   "Weighting Finalized", "Scoring Implemented", "Validation & Distribution"];
+                
+                stageNames.forEach(stageName => {
+                    const stageData = lifecycle.stages[stageName] || { status: "Not Started", lastUpdated: "", owner: "" };
+                    const statusClass = getLifecycleStatusClass(stageData.status);
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2 border">${stageName}</td>
+                        <td class="px-4 py-2 border">
+                            <span class="inline-flex px-2 py-1 text-xs rounded-full ${statusClass}">
+                                ${stageData.status}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2 border">${stageData.lastUpdated || "—"}</td>
+                        <td class="px-4 py-2 border">${stageData.owner || "—"}</td>
+                    `;
+                    
+                    stagesContainer.appendChild(row);
+                });
+            }
+            
+            if (lifecycleFilter) {
+                lifecycleFilter.addEventListener('change', function(e) {
+                    const filterValue = e.target.value;
+                    
+                    if (filterValue === 'all') {
+                        populateLifecycles(lifecycleData);
+                        return;
+                    }
+                    
+                    const filtered = {};
+                    
+                    Object.keys(lifecycleData).forEach(conceptName => {
+                        const lifecycle = lifecycleData[conceptName];
+                        const stages = lifecycle.stages || {};
+                        const completedStages = Object.values(stages).filter(stage => stage.status === "Complete").length;
+                        const totalStages = 6; // Total number of possible stages
+                        
+                        if (filterValue === 'complete' && completedStages === totalStages) {
+                            filtered[conceptName] = lifecycle;
+                        } else if (filterValue === 'in-progress' && completedStages > 0 && completedStages < totalStages) {
+                            filtered[conceptName] = lifecycle;
+                        } else if (filterValue === 'not-started' && completedStages === 0) {
+                            filtered[conceptName] = lifecycle;
+                        }
+                    });
+                    
+                    populateLifecycles(filtered);
+                });
+            }
+            
+            // Initial population of lifecycles
+            populateLifecycles(lifecycleData);
+            
+            // Affinity Combination
+            const availableAffinitiesContainer = document.getElementById('available-affinities');
+            const selectedAffinitiesContainer = document.getElementById('selected-affinities');
+            const clearCombination = document.getElementById('clear-combination');
+            const noCombinationMessage = document.getElementById('no-combination-message');
+            const combinationAnalysis = document.getElementById('combination-analysis');
+            const emptySelection = document.getElementById('empty-selection');
+            const matchingProperties = document.getElementById('matching-properties');
+            const compatibilityScore = document.getElementById('compatibility-score');
+            const compatibilityBar = document.getElementById('compatibility-bar');
+            
+            const selectedAffinities = [];
+            
+            function populateAvailableAffinities() {
+                if (!availableAffinitiesContainer) return;
+                
+                availableAffinitiesContainer.innerHTML = '';
+                
+                affinityConcepts.forEach(affinity => {
+                    if (selectedAffinities.includes(affinity.name)) return;
+                    
+                    const affinityTag = document.createElement('div');
+                    affinityTag.className = 'affinity-tag';
+                    affinityTag.textContent = affinity.name;
+                    
+                    affinityTag.addEventListener('click', function() {
+                        addToCombination(affinity.name);
+                    });
+                    
+                    availableAffinitiesContainer.appendChild(affinityTag);
+                });
+            }
+            
+            function updateSelectedAffinities() {
+                if (!selectedAffinitiesContainer) return;
+                
+                selectedAffinitiesContainer.innerHTML = '';
+                
+                if (selectedAffinities.length === 0) {
+                    selectedAffinitiesContainer.appendChild(emptySelection);
+                    if (noCombinationMessage) noCombinationMessage.classList.remove('hidden');
+                    if (combinationAnalysis) combinationAnalysis.classList.add('hidden');
+                    return;
+                }
+                
+                emptySelection.remove();
+                
+                selectedAffinities.forEach(affinityName => {
+                    const affinityTag = document.createElement('div');
+                    affinityTag.className = 'affinity-tag selected';
+                    affinityTag.textContent = affinityName;
+                    
+                    const removeIcon = document.createElement('i');
+                    removeIcon.className = 'fas fa-times ml-2';
+                    affinityTag.appendChild(removeIcon);
+                    
+                    affinityTag.addEventListener('click', function() {
+                        removeFromCombination(affinityName);
+                    });
+                    
+                    selectedAffinitiesContainer.appendChild(affinityTag);
+                });
+                
+                if (selectedAffinities.length >= 2) {
+                    if (noCombinationMessage) noCombinationMessage.classList.add('hidden');
+                    if (combinationAnalysis) combinationAnalysis.classList.remove('hidden');
+                    updateCombinationAnalysis();
+                } else {
+                    if (noCombinationMessage) noCombinationMessage.classList.remove('hidden');
+                    if (combinationAnalysis) combinationAnalysis.classList.add('hidden');
+                }
+            }
+            
+            function addToCombination(affinityName) {
+                if (!selectedAffinities.includes(affinityName)) {
+                    selectedAffinities.push(affinityName);
+                    updateSelectedAffinities();
+                    populateAvailableAffinities();
+                }
+            }
+            
+            function removeFromCombination(affinityName) {
+                const index = selectedAffinities.indexOf(affinityName);
+                if (index !== -1) {
+                    selectedAffinities.splice(index, 1);
+                    updateSelectedAffinities();
+                    populateAvailableAffinities();
+                }
+            }
+            
+            function updateCombinationAnalysis() {
+                if (!matchingProperties || !compatibilityScore || !compatibilityBar) return;
+                
+                // Generate random compatibility score between 70-95
+                const score = Math.floor(70 + Math.random() * 25);
+                compatibilityScore.textContent = `${score}%`;
+                compatibilityBar.style.width = `${score}%`;
+                
+                // Mock matching properties
+                matchingProperties.innerHTML = '';
+                
+                const mockProperties = [
+                    { name: "Oceanview Resort & Spa", score: 9.2 },
+                    { name: "Mountain Lodge", score: 8.7 },
+                    { name: "City Center Suites", score: 7.5 }
+                ];
+                
+                mockProperties.forEach(property => {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center py-1';
+                    div.innerHTML = `
+                        <span class="text-sm">${property.name}</span>
+                        <span class="text-xs font-medium px-2 py-1 rounded-full ${getScoreClass(property.score)}">
+                            ${property.score}/10
+                        </span>
+                    `;
+                    
+                    div.addEventListener('click', function() {
+                        alert(`Viewing details for ${property.name}`);
+                    });
+                    
+                    matchingProperties.appendChild(div);
+                });
+            }
+            
+            if (clearCombination) {
+                clearCombination.addEventListener('click', function() {
+                    selectedAffinities.length = 0;
+                    updateSelectedAffinities();
+                    populateAvailableAffinities();
+                });
+            }
+            
+            // Initialize combination tool
+            if (availableAffinitiesContainer) {
+                populateAvailableAffinities();
+                updateSelectedAffinities();
+            }
+            
+            // Agent View Functionality
+            const agentTabs = document.querySelectorAll('.agent-tab');
+            const agentContents = document.querySelectorAll('.agent-content');
+            const agentPropertyCards = document.querySelectorAll('.agent-property-card');
+            const noPropertySelected = document.getElementById('no-property-selected');
+            const agentPropertyContent = document.getElementById('agent-property-content');
+            const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+            const collapsibleSections = document.querySelectorAll('.collapsible-section');
+            
+            // Agent tabs
+            agentTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const agentId = this.getAttribute('data-agent');
+                    
+                    // Remove active class from all tabs
+                    agentTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all content
+                    agentContents.forEach(content => content.classList.add('hidden'));
+                    
+                    // Show selected content
+                    const activeContent = document.getElementById(`${agentId}-content`);
+                    if (activeContent) {
+                        activeContent.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Agent property cards
+            agentPropertyCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const propertyId = this.getAttribute('data-property');
+                    
+                    // Remove selected class from all cards
+                    agentPropertyCards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    
+                    // Show property content and hide no-property message
+                    if (noPropertySelected) noPropertySelected.classList.add('hidden');
+                    if (agentPropertyContent) agentPropertyContent.classList.remove('hidden');
+                    
+                    // Update property names in all agent views
+                    document.querySelectorAll('[id$="-property-name"]').forEach(el => {
+                        if (propertyId === 'oceanview') {
+                            el.textContent = 'Oceanview Resort & Spa';
+                        } else if (propertyId === 'mountain') {
+                            el.textContent = 'Mountain Lodge';
+                        } else if (propertyId === 'city') {
+                            el.textContent = 'City Center Suites';
+                        }
+                    });
+                });
+            });
+            
+            // Collapsible sections
+            collapsibleHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    content.classList.toggle('expanded');
+                    
+                    // Toggle icon
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        if (content.classList.contains('expanded')) {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-up');
+                        } else {
+                            icon.classList.remove('fa-chevron-up');
+                            icon.classList.add('fa-chevron-down');
+                        }
+                    }
+                });
+            });
+            
+            collapsibleSections.forEach(section => {
+                const header = section.querySelector('div');
+                const content = header.nextElementSibling;
+                
+                header.addEventListener('click', function() {
+                    content.classList.toggle('expanded');
+                    
+                    // Toggle icon
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        if (content.classList.contains('expanded')) {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-up');
+                        } else {
+                            icon.classList.remove('fa-chevron-up');
+                            icon.classList.add('fa-chevron-down');
+                        }
+                    }
+                });
+            });
+            
+            // FAQ items
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('div');
+                const answer = item.querySelector('.faq-answer');
+                
+                question.addEventListener('click', function() {
+                    answer.classList.toggle('hidden');
+                    
+                    // Toggle icon
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        if (answer.classList.contains('hidden')) {
+                            icon.classList.remove('fa-chevron-up');
+                            icon.classList.add('fa-chevron-down');
+                        } else {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-up');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
