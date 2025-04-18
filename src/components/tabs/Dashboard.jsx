@@ -5,6 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { Line } from 'react-chartjs-2';
 import { useAppContext } from '../../contexts/AppContext';
 import { getDashboardStats } from '../../services/apiService';
+import SkeletonLoader from '../common/SkeletonLoader';
 
 // Register ChartJS components
 ChartJS.register(
@@ -21,12 +22,23 @@ const Dashboard = () => {
   const { recentlyViewed } = useAppContext();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState(null);
   
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const data = await getDashboardStats();
         setStats(data);
+        setChartData({
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Coverage',
+            data: [65, 59, 80, 81, 56, 55],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }]
+        });
       } catch (err) {
         console.error('Failed to fetch dashboard stats:', err);
       } finally {
@@ -36,21 +48,6 @@ const Dashboard = () => {
     
     fetchStats();
   }, []);
-
-  const chartData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Affinity Coverage',
-        data: [20, 28, 38, 45, 47, 49],
-        borderColor: '#3B82F6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        tension: 0.4,
-        fill: true,
-        cubicInterpolationMode: 'monotone'
-      }
-    ]
-  };
 
   const chartOptions = {
     responsive: true,
@@ -90,8 +87,31 @@ const Dashboard = () => {
   
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-gray-500">Loading dashboard data...</div>
+      <div className="p-6">
+        <div className="h-8 bg-gray-200 rounded w-48 mb-6 animate-pulse"></div>
+        
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <SkeletonLoader type="stats" count={4} />
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Affinity Growth Chart */}
+          <div className="lg:col-span-2">
+            <SkeletonLoader type="chart" count={1} />
+          </div>
+          
+          {/* My Favorites */}
+          <div>
+            <SkeletonLoader type="list" count={1} />
+          </div>
+        </div>
+        
+        {/* Recently Viewed */}
+        <div className="mt-6">
+          <div className="h-6 bg-gray-200 rounded w-48 mb-4 animate-pulse"></div>
+          <SkeletonLoader type="card" count={2} />
+        </div>
       </div>
     );
   }
@@ -103,25 +123,25 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-5xl font-bold text-blue-500 mb-2">49</div>
+          <div className="text-5xl font-bold text-blue-500 mb-2">{stats.totalAffinities}</div>
           <div className="text-gray-600">Total Affinities</div>
           <div className="text-green-500 text-sm mt-2">+4 in the last quarter</div>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-5xl font-bold text-blue-500 mb-2">68%</div>
+          <div className="text-5xl font-bold text-blue-500 mb-2">{stats.avgCoverage}%</div>
           <div className="text-gray-600">Avg Coverage</div>
           <div className="text-green-500 text-sm mt-2">+12% vs last year</div>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-5xl font-bold text-blue-500 mb-2">42%</div>
+          <div className="text-5xl font-bold text-blue-500 mb-2">{stats.implementationRate}%</div>
           <div className="text-gray-600">Implementation Rate</div>
           <div className="text-green-500 text-sm mt-2">+8% this quarter</div>
         </div>
         
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-5xl font-bold text-blue-500 mb-2">31%</div>
+          <div className="text-5xl font-bold text-blue-500 mb-2">{stats.reuseRate}%</div>
           <div className="text-gray-600">Reuse Rate</div>
           <div className="text-green-500 text-sm mt-2">+5% vs target</div>
         </div>

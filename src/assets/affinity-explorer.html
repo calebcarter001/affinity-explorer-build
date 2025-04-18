@@ -210,7 +210,7 @@
             </div>
             <div class="nav-item" data-tab="scoring">
                 <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
-                <span class="sidebar-text">Scoring Explorer</span>
+                <span class="sidebar-text">Affinity Scores</span>
             </div>
             <div class="nav-item" data-tab="lifecycle">
                 <div class="nav-icon"><i class="fas fa-project-diagram"></i></div>
@@ -511,83 +511,81 @@
                 </div>
             </div>
             
-            <!-- Scoring Explorer Tab -->
-            <div id="scoring-tab" class="tab-content">
-                <h2 class="text-2xl font-bold mb-6">Scoring Explorer</h2>
+            <!-- Affinity Scores Tab -->
+            <h2 class="text-2xl font-bold mb-6">Affinity Scores</h2>
+            
+            <!-- Property Search -->
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h3 class="text-lg font-semibold mb-4">Find a Property or Destination</h3>
                 
-                <!-- Property Search -->
-                <div class="bg-white p-6 rounded-lg shadow mb-6">
-                    <h3 class="text-lg font-semibold mb-4">Find a Property or Destination</h3>
-                    
-                    <div class="flex flex-wrap gap-4">
-                        <div class="flex-grow">
-                            <input type="text" id="property-search" placeholder="Enter property ID or name (e.g., PROP12345)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                        </div>
-                        <button id="search-property-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">Search</button>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex-grow">
+                        <input type="text" id="property-search" placeholder="Enter property ID or name (e.g., PROP12345)" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                     </div>
-                    
-                    <div id="property-search-error" class="text-red-500 text-sm mt-2 hidden">No property found with that ID or name.</div>
+                    <button id="search-property-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">Search</button>
                 </div>
                 
-                <!-- Property List -->
-                <div class="bg-white p-6 rounded-lg shadow mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Browse Properties</h3>
-                        <div class="relative w-64">
-                            <input type="text" id="property-filter" placeholder="Filter by name or location" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-blue-500">
-                            <div class="absolute left-3 top-2.5 text-gray-400">
-                                <i class="fas fa-search"></i>
-                            </div>
+                <div id="property-search-error" class="text-red-500 text-sm mt-2 hidden">No property found with that ID or name.</div>
+            </div>
+            
+            <!-- Property List -->
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Browse Properties</h3>
+                    <div class="relative w-64">
+                        <input type="text" id="property-filter" placeholder="Filter by name or location" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:border-blue-500">
+                        <div class="absolute left-3 top-2.5 text-gray-400">
+                            <i class="fas fa-search"></i>
                         </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="property-container">
-                        <!-- Property cards will be populated by JavaScript -->
                     </div>
                 </div>
                 
-                <!-- Selected Property Details -->
-                <div id="property-details" class="bg-white rounded-lg shadow hidden">
-                    <div class="bg-gray-100 p-4 border-b">
-                        <h3 class="text-xl font-bold" id="detail-property-name">Property Name</h3>
-                        <p class="text-gray-600" id="detail-property-location">Location • Type</p>
-                        <p class="text-xs text-gray-500 mt-1" id="detail-property-id">ID: PROP12345</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="property-container">
+                    <!-- Property cards will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Selected Property Details -->
+            <div id="property-details" class="bg-white rounded-lg shadow hidden">
+                <div class="bg-gray-100 p-4 border-b">
+                    <h3 class="text-xl font-bold" id="detail-property-name">Property Name</h3>
+                    <p class="text-gray-600" id="detail-property-location">Location • Type</p>
+                    <p class="text-xs text-gray-500 mt-1" id="detail-property-id">ID: PROP12345</p>
+                </div>
+                
+                <div class="p-6">
+                    <h4 class="text-lg font-semibold mb-4">Affinities</h4>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="property-scores">
+                        <!-- Affinity scores will be populated by JavaScript -->
                     </div>
                     
-                    <div class="p-6">
-                        <h4 class="text-lg font-semibold mb-4">Affinities</h4>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="property-scores">
-                            <!-- Affinity scores will be populated by JavaScript -->
+                    <!-- Affinity Analysis -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3">Affinity Analysis</h4>
+                        <div class="p-4 bg-blue-50 rounded-md">
+                            <ul class="space-y-2" id="property-analysis">
+                                <!-- Analysis will be populated by JavaScript -->
+                            </ul>
                         </div>
-                        
-                        <!-- Affinity Analysis -->
-                        <div class="mb-6">
-                            <h4 class="font-semibold mb-3">Affinity Analysis</h4>
-                            <div class="p-4 bg-blue-50 rounded-md">
-                                <ul class="space-y-2" id="property-analysis">
-                                    <!-- Analysis will be populated by JavaScript -->
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <!-- Affinity Breakdown -->
-                        <div>
-                            <h4 class="font-semibold mb-3">Affinity Breakdown</h4>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full border">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-4 py-2 text-left border">Affinity Concept</th>
-                                            <th class="px-4 py-2 text-left border">Score</th>
-                                            <th class="px-4 py-2 text-left border">Interpretation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="property-breakdown">
-                                        <!-- Breakdown will be populated by JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
+                    </div>
+                    
+                    <!-- Affinity Breakdown -->
+                    <div>
+                        <h4 class="font-semibold mb-3">Affinity Breakdown</h4>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full border">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left border">Affinity Concept</th>
+                                        <th class="px-4 py-2 text-left border">Score</th>
+                                        <th class="px-4 py-2 text-left border">Interpretation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="property-breakdown">
+                                    <!-- Breakdown will be populated by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

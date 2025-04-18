@@ -7,7 +7,7 @@ A modern web application for exploring and analyzing property affinities, built 
 - Interactive dashboard with property insights
 - Agent-based analysis views
 - Affinity library management
-- Scoring explorer
+- Affinity Scores
 - Lifecycle tracking
 - Implementation guides
 - Reports and analytics

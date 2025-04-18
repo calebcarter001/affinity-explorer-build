@@ -1,0 +1,54 @@
+/* Base viewport setup */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content area */
+.main-content {
+  height: calc(100vh - 64px); /* Subtract header height */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content panels */
+.content-panel {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollable sections when needed */
+.scrollable-section {
+  overflow-y: auto;
+  flex-shrink: 1;
+}
+
+/* Compact spacing utilities */
+.compact-spacing {
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+}
+
+/* Compact text utilities */
+.text-compact {
+  line-height: 1.2;
+}
+
+/* Grid layouts */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+/* Card layouts */
+.card-compact {
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+} 

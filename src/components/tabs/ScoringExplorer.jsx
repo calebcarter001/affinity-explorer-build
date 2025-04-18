@@ -125,7 +125,7 @@ const ScoringExplorer = () => {
   return (
     <ExplorerContainer>
       <ExplorerHeader>
-        <h1>Scoring Explorer</h1>
+        <h1>Affinity Scores</h1>
         <p>Search for properties and explore their affinity scores</p>
       </ExplorerHeader>
       

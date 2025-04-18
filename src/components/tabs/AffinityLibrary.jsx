@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiCheck, FiClock, FiAlertCircle } from 'react-icons/fi';
+import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus } from 'react-icons/fi';
 import { getAffinities } from '../../services/apiService';
+import EmptyState from '../common/EmptyState';
+import SkeletonLoader from '../common/SkeletonLoader';
 
 const AffinityLibrary = () => {
   const [affinities, setAffinities] = useState([]);
@@ -94,14 +96,71 @@ const AffinityLibrary = () => {
     return 'text-red-600';
   };
 
+  if (loading) {
+    return (
+      <div className="p-4 md:p-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-2 md:mb-0 animate-pulse"></div>
+          <div className="h-10 bg-gray-200 rounded w-32 animate-pulse"></div>
+        </div>
+        
+        {/* Filters & Search */}
+        <div className="bg-white p-4 rounded-lg shadow mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="h-10 bg-gray-200 rounded w-full md:w-64 animate-pulse"></div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="h-10 bg-gray-200 rounded w-full sm:w-40 animate-pulse"></div>
+              <div className="h-10 bg-gray-200 rounded w-full sm:w-40 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Affinity Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+            <SkeletonLoader type="card" count={4} />
+          </div>
+          
+          {/* Selected Affinity Details */}
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+            <SkeletonLoader type="form" count={1} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <EmptyState 
+        icon="alert"
+        title="Error Loading Affinities"
+        description={error}
+        actionButton={
+          <button 
+            className="btn btn-primary"
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </button>
+        }
+      />
+    );
+  }
+
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Affinity Library</h2>
+    <div className="p-4 md:p-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+        <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-0">Affinity Library</h2>
+        <button className="btn btn-primary flex items-center gap-2">
+          <FiPlus /> New Affinity
+        </button>
+      </div>
       
       {/* Filters & Search */}
       <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="flex flex-wrap items-center justify-between">
-          <div className="w-full md:w-auto mb-4 md:mb-0">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="w-full md:w-auto">
             <div className="relative">
               <input 
                 type="text" 
@@ -116,7 +175,7 @@ const AffinityLibrary = () => {
             </div>
           </div>
           
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <select 
               value={categoryFilter}
               onChange={handleCategoryChange}
@@ -146,120 +205,143 @@ const AffinityLibrary = () => {
         </div>
       </div>
       
-      {loading && <div className="text-center py-8 text-gray-500">Loading affinities...</div>}
-      {error && <div className="text-center py-8 text-red-500">{error}</div>}
-      
-      {!loading && !error && filteredAffinities.length === 0 && (
-        <div className="text-center py-8 text-gray-500">No affinities found matching your criteria.</div>
-      )}
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Affinity Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
-          {filteredAffinities.map(affinity => (
-            <div 
-              key={affinity.id}
-              onClick={() => handleAffinityClick(affinity)}
-              className={`card p-4 ${selectedAffinity?.id === affinity.id ? 'selected' : ''}`}
+      {filteredAffinities.length === 0 ? (
+        <EmptyState 
+          icon="search"
+          title="No Affinities Found"
+          description="No affinities match your current search criteria. Try adjusting your filters or search term."
+          actionButton={
+            <button 
+              className="btn btn-outline"
+              onClick={() => {
+                setSearchTerm('');
+                setCategoryFilter('all');
+                setStatusFilter('all');
+              }}
             >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold">{affinity.name}</h3>
-                {getStatusBadge(affinity.status)}
-              </div>
-              
-              <p className="text-gray-600 text-sm mb-3">{affinity.definition}</p>
-              
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="font-medium">Category:</span>
-                  <span className="ml-1">{affinity.category}</span>
-                </div>
-                <div>
-                  <span className="font-medium">Type:</span>
-                  <span className="ml-1">{affinity.type}</span>
-                </div>
-                <div>
-                  <span className="font-medium">Coverage:</span>
-                  <span className="ml-1">{affinity.coverage}%</span>
-                </div>
-                {affinity.scoreAvailable && (
-                  <div>
-                    <span className="font-medium">Avg Score:</span>
-                    <span className={`ml-1 ${getScoreClass(affinity.avgScore)}`}>
-                      {affinity.avgScore.toFixed(1)}/10
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        {/* Selected Affinity Details */}
-        {selectedAffinity && (
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h3 className="text-xl font-bold">{selectedAffinity.name}</h3>
-                <p className="text-gray-600">{selectedAffinity.definition}</p>
-              </div>
-              {getStatusBadge(selectedAffinity.status)}
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-              <div>
-                <h4 className="font-semibold mb-2">Metadata</h4>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="font-medium">Category:</div>
-                    <div>{selectedAffinity.category}</div>
-                    
-                    <div className="font-medium">Type:</div>
-                    <div>{selectedAffinity.type}</div>
-                    
-                    <div className="font-medium">Applicable Entities:</div>
-                    <div>{selectedAffinity.applicableEntities.join(', ')}</div>
-                    
-                    {selectedAffinity.scoreAvailable && (
-                      <>
-                        <div className="font-medium">Average Score:</div>
-                        <div className={getScoreClass(selectedAffinity.avgScore)}>
-                          {selectedAffinity.avgScore.toFixed(1)}/10
-                        </div>
-                      </>
-                    )}
-                    
-                    <div className="font-medium">Coverage:</div>
-                    <div>{selectedAffinity.coverage}%</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-2">Usage Guidelines</h4>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm">
-                    This affinity can be used to score {selectedAffinity.applicableEntities.join(', ')} entities. 
-                    {selectedAffinity.scoreAvailable 
-                      ? ' Scores are available and can be used for ranking and filtering.' 
-                      : ' Scores are not yet available for this affinity.'}
-                  </p>
+              Clear Filters
+            </button>
+          }
+        />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Affinity Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
+            {filteredAffinities.map(affinity => (
+              <div 
+                key={affinity.id}
+                onClick={() => handleAffinityClick(affinity)}
+                className={`card p-4 cursor-pointer transition-all hover:shadow-md ${
+                  selectedAffinity?.id === affinity.id ? 'border-2 border-blue-500' : ''
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
+                  <h3 className="text-lg font-semibold">{affinity.name}</h3>
+                  {getStatusBadge(affinity.status)}
                 </div>
                 
-                <h4 className="font-semibold mb-2 mt-4">Implementation</h4>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-sm">
-                    To implement this affinity in your application, use the API endpoint:
-                  </p>
-                  <code className="block bg-gray-100 p-2 rounded mt-2 text-sm font-mono">
-                    /api/affinities/{selectedAffinity.id}/score
-                  </code>
+                <p className="text-gray-600 text-sm mb-3">{affinity.definition}</p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="font-medium">Category:</span>
+                    <span className="ml-1">{affinity.category}</span>
+                  </div>
+                  <div>
+                    <span className="font-medium">Type:</span>
+                    <span className="ml-1">{affinity.type}</span>
+                  </div>
+                  <div>
+                    <span className="font-medium">Coverage:</span>
+                    <span className="ml-1">{affinity.coverage}%</span>
+                  </div>
+                  {affinity.scoreAvailable && (
+                    <div>
+                      <span className="font-medium">Avg Score:</span>
+                      <span className={`ml-1 ${getScoreClass(affinity.avgScore)}`}>
+                        {affinity.avgScore.toFixed(1)}/10
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Selected Affinity Details */}
+          {selectedAffinity ? (
+            <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4 gap-2">
+                <div>
+                  <h3 className="text-xl font-bold">{selectedAffinity.name}</h3>
+                  <p className="text-gray-600">{selectedAffinity.definition}</p>
+                </div>
+                {getStatusBadge(selectedAffinity.status)}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div>
+                  <h4 className="font-semibold mb-2">Metadata</h4>
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                      <div className="font-medium">Category:</div>
+                      <div>{selectedAffinity.category}</div>
+                      
+                      <div className="font-medium">Type:</div>
+                      <div>{selectedAffinity.type}</div>
+                      
+                      <div className="font-medium">Applicable Entities:</div>
+                      <div>{selectedAffinity.applicableEntities.join(', ')}</div>
+                      
+                      {selectedAffinity.scoreAvailable && (
+                        <>
+                          <div className="font-medium">Average Score:</div>
+                          <div className={getScoreClass(selectedAffinity.avgScore)}>
+                            {selectedAffinity.avgScore.toFixed(1)}/10
+                          </div>
+                        </>
+                      )}
+                      
+                      <div className="font-medium">Coverage:</div>
+                      <div>{selectedAffinity.coverage}%</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Usage Guidelines</h4>
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <p className="text-sm">
+                      This affinity can be used to score {selectedAffinity.applicableEntities.join(', ')} entities. 
+                      {selectedAffinity.scoreAvailable 
+                        ? ' Scores are available and can be used for ranking and filtering.' 
+                        : ' Scores are not yet available for this affinity.'}
+                    </p>
+                  </div>
+                  
+                  <h4 className="font-semibold mb-2 mt-4">Implementation</h4>
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <p className="text-sm">
+                      To implement this affinity in your application, use the API endpoint:
+                    </p>
+                    <code className="block bg-gray-100 p-2 rounded mt-2 text-sm font-mono overflow-x-auto">
+                      /api/affinities/{selectedAffinity.id}/score
+                    </code>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="bg-white p-6 rounded-lg shadow flex items-center justify-center h-full">
+              <EmptyState 
+                icon="inbox"
+                title="No Affinity Selected"
+                description="Select an affinity from the list to view its details."
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

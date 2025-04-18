@@ -105,7 +105,7 @@ const HelpSupport = () => {
               </FaqQuestion>
               {expandedFaq === 5 && (
                 <FaqAnswer>
-                  Affinity scores are updated on a rolling basis. High-volume properties and popular affinities are updated weekly, while others are updated monthly. When significant changes occur to a property (such as renovations or new amenities), we prioritize updating those scores. You can see the last update date for any affinity score through the API or in the Scoring Explorer interface.
+                  Affinity scores are updated on a rolling basis. High-volume properties and popular affinities are updated weekly, while others are updated monthly. When significant changes occur to a property (such as renovations or new amenities), we prioritize updating those scores. You can see the last update date for any affinity score through the API or in the Affinity Scores interface.
                 </FaqAnswer>
               )}
             </FaqItem>
