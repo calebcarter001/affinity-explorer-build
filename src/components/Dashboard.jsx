@@ -22,6 +22,7 @@ import AccuracyMetrics from './goals/AccuracyMetrics';
 import { getDashboardStats, updateFavorites, updateRecentlyViewed } from '../services/apiService';
 import SkeletonLoader from './common/SkeletonLoader';
 import { useToast } from '../contexts/ToastContext';
+import { layout, card, typography, spacing, badge, button } from '../styles/design-system';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -299,66 +300,66 @@ const Dashboard = () => {
   const completionPercentage = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
 
   return (
-    <div className="h-full flex flex-col p-6 space-y-6 bg-gray-50">
+    <div className={`${layout.container} ${spacing.section}`}>
       {/* Header Section */}
-      <div className="flex items-center justify-between">
+      <div className={layout.flex.between}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-600">Overview of goals, metrics, and performance</p>
+          <h1 className={typography.h1}>Dashboard</h1>
+          <p className={typography.small}>Overview of goals, metrics, and performance</p>
         </div>
-        <div className="flex items-center space-x-2 text-sm">
+        <div className={`${layout.flex.base} ${spacing.inline} ${typography.small}`}>
           <span className="text-gray-500">Last updated:</span>
           <span className="font-medium">{goalData.affinityExpansion.lastUpdated}</span>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
         {/* Affinity Expansion Goal */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+        <div className={`${card.base} ${card.body}`}>
+          <div className={layout.flex.between}>
+            <div className={layout.flex.base}>
               <FiTrendingUp className="text-green-500 mr-2" />
-              <h3 className="font-medium">Affinity Expansion Goal</h3>
+              <h3 className={typography.h4}>Affinity Expansion Goal</h3>
             </div>
             <span className="text-sm text-green-600">+8%</span>
           </div>
           <p className="text-3xl font-bold mt-2">{goalData.affinityExpansion.current}%</p>
-          <p className="text-sm text-gray-500 mt-1">{goalData.affinityExpansion.current} of {goalData.affinityExpansion.target} completed</p>
+          <p className={typography.small}>Target: {goalData.affinityExpansion.target}%</p>
         </div>
 
         {/* Accuracy Goal */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+        <div className={`${card.base} ${card.body}`}>
+          <div className={layout.flex.between}>
+            <div className={layout.flex.base}>
               <FiTarget className="text-blue-500 mr-2" />
-              <h3 className="font-medium">Accuracy Goal Tracking</h3>
+              <h3 className={typography.h4}>Accuracy Goal</h3>
             </div>
             <span className="text-sm text-blue-600">+3%</span>
           </div>
           <p className="text-3xl font-bold mt-2">{goalData.accuracy.current}%</p>
-          <p className="text-sm text-gray-500 mt-1">Target: {goalData.accuracy.target}%</p>
+          <p className={typography.small}>Target: {goalData.accuracy.target}%</p>
         </div>
 
         {/* Completeness Score */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+        <div className={`${card.base} ${card.body}`}>
+          <div className={layout.flex.between}>
+            <div className={layout.flex.base}>
               <FiActivity className="text-purple-500 mr-2" />
-              <h3 className="font-medium">Completeness Score</h3>
+              <h3 className={typography.h4}>Completeness Score</h3>
             </div>
             <span className="text-sm text-purple-600">+5%</span>
           </div>
           <p className="text-3xl font-bold mt-2">{goalData.completeness.current}%</p>
-          <p className="text-sm text-gray-500 mt-1">Target: {goalData.completeness.target}%</p>
+          <p className={typography.small}>Target: {goalData.completeness.target}%</p>
         </div>
 
         {/* Overall Progress */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+        <div className={`${card.base} ${card.body}`}>
+          <div className={layout.flex.between}>
+            <div className={layout.flex.base}>
               <FiPieChart className="text-indigo-500 mr-2" />
-              <h3 className="font-medium">Overall Progress</h3>
+              <h3 className={typography.h4}>Overall Progress</h3>
             </div>
             <span className="text-sm text-indigo-600">+6%</span>
           </div>
@@ -373,39 +374,37 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 gap-6">
+      <div className={layout.grid.base}>
         {/* Progress Tracking */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-medium mb-4">Progress Tracking</h3>
+        <div className={`${card.base} ${card.body}`}>
+          <h3 className={typography.h3}>Progress Tracking</h3>
           <ProgressTracker goal={goalData.affinityExpansion} />
         </div>
 
         {/* Accuracy Metrics */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-medium mb-4">Accuracy Metrics</h3>
+        <div className={`${card.base} ${card.body}`}>
+          <h3 className={typography.h3}>Accuracy Metrics</h3>
           <AccuracyMetrics goal={goalData.accuracy} />
         </div>
 
         {/* Recently Viewed */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-medium mb-4">Recently Viewed</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className={`${card.base} ${card.body}`}>
+          <h3 className={typography.h3}>Recently Viewed</h3>
+          <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
             {recentlyViewedItems.map((item, index) => (
               <div 
                 key={index}
                 onClick={() => handleAffinityClick(item)}
-                className="p-4 border border-gray-200 rounded-lg hover:border-blue-500 cursor-pointer transition-colors"
+                className={`${card.base} ${card.body} ${card.interactive} ${card.hover} border border-gray-200 hover:border-blue-500 hover:-translate-y-1`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">{item.name}</h4>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    item.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                <div className="flex items-center justify-between w-full">
+                  <h4 className={typography.h4}>{item.name}</h4>
+                  <span className={`${badge.base} ${badge.info}`}>
                     {item.status}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                <div className="flex justify-between text-sm">
+                <p className={`${typography.body} mt-2`}>{item.description}</p>
+                <div className={`${layout.flex.between} ${typography.small} mt-2`}>
                   <span>Score: {item.score}</span>
                   <span>Coverage: {item.coverage}</span>
                 </div>
@@ -415,31 +414,26 @@ const Dashboard = () => {
         </div>
 
         {/* Favorite Collections */}
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-medium mb-4">Favorite Collections</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className={`${card.base} ${card.body}`}>
+          <h3 className={typography.h3}>Favorite Collections</h3>
+          <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
             {favoriteCollections.map((collection, index) => (
               <div 
                 key={index}
                 onClick={() => handleCollectionClick(collection)}
-                className="p-4 border border-gray-200 rounded-lg hover:border-blue-500 cursor-pointer transition-colors"
+                className={`${card.base} ${card.body} ${card.interactive} ${card.hover} border border-gray-200 hover:border-blue-500 hover:-translate-y-1`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium">{collection.name}</h4>
-                  <button
-                    onClick={(e) => handleFavoriteClick(collection, e)}
-                    className={`p-1 rounded-full ${
-                      collection.isFavorite ? 'text-yellow-500 hover:text-yellow-600' : 'text-gray-400 hover:text-gray-500'
-                    }`}
-                  >
-                    <FiStar className={collection.isFavorite ? 'fill-current' : ''} />
-                  </button>
+                <div className="flex items-center justify-between w-full">
+                  <h4 className={typography.h4}>{collection.name}</h4>
+                  <span className={`${badge.base} ${badge.info}`}>
+                    Active
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {collection.affinities.map((affinity, i) => (
                     <span 
                       key={i}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm"
+                      className={`${badge.base} ${badge.neutral}`}
                       title={affinity.description}
                     >
                       {affinity.name}

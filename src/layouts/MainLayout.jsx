@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import styled from 'styled-components';
+import { layout } from '../styles/design-system';
 import Sidebar from '../components/navigation/Sidebar';
 import Header from '../components/navigation/Header';
 import MobileNavOverlay from '../components/navigation/MobileNavOverlay';
@@ -19,38 +19,20 @@ const MainLayout = () => {
   };
   
   return (
-    <LayoutContainer>
+    <div className={layout.mainLayout.container}>
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       
-      <MainContent>
+      <main className={layout.mainLayout.content}>
         <Header onMenuClick={toggleSidebar} />
         
-        <ContentWrapper>
+        <div className={layout.mainLayout.wrapper}>
           <Outlet />
-        </ContentWrapper>
-      </MainContent>
+        </div>
+      </main>
       
       <MobileNavOverlay isOpen={sidebarOpen} onClose={closeSidebar} />
-    </LayoutContainer>
+    </div>
   );
 };
 
-const LayoutContainer = styled.div`
-  display: flex;
-  min-height: 100vh;
-`;
-
-const MainContent = styled.main`
-  flex: 1;
-  margin-left: 260px;
-  
-  @media (max-width: 768px) {
-    margin-left: 0;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  padding: 1.5rem;
-`;
-
-export default MainLayout; 
+export default MainLayout;

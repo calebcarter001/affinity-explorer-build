@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { FiSun, FiMoon } from 'react-icons/fi';
+import { button, layout, typography } from '../../styles/design-system';
 import { useAppContext } from '../../contexts/AppContext';
 
 /**
@@ -10,38 +10,27 @@ const ThemeToggle = () => {
   const { theme, toggleTheme } = useAppContext();
   
   return (
-    <ToggleButton onClick={toggleTheme} theme={theme}>
-      {theme === 'light' ? <FiMoon /> : <FiSun />}
-      <ToggleText>
+    <button 
+      onClick={toggleTheme} 
+      className={`
+        ${button.base}
+        ${layout.flex.base}
+        ${layout.flex.itemsCenter}
+        ${layout.flex.gap}
+        ${layout.fullWidth}
+        ${theme === 'dark' ? button.darkMode : button.lightMode}
+      `}
+    >
+      {theme === 'light' ? (
+        <FiMoon className={button.icon} />
+      ) : (
+        <FiSun className={button.icon} />
+      )}
+      <span className={typography.small}>
         {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-      </ToggleText>
-    </ToggleButton>
+      </span>
+    </button>
   );
 };
 
-const ToggleButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md);
-  background-color: ${props => props.theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
-  color: inherit;
-  font-weight: var(--font-weight-medium);
-  transition: var(--transition-normal);
-  
-  &:hover {
-    background-color: ${props => props.theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'};
-  }
-  
-  svg {
-    font-size: 1.25rem;
-  }
-`;
-
-const ToggleText = styled.span`
-  font-size: var(--font-size-sm);
-`;
-
-export default ThemeToggle; 
+export default ThemeToggle;

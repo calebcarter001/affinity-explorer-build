@@ -11,6 +11,7 @@ import {
   FiSettings,
   FiHome
 } from 'react-icons/fi';
+import { layout, typography, button } from '../../styles/design-system';
 
 const EMPTY_STATE_TYPES = {
   NO_RESULTS: {
@@ -115,54 +116,53 @@ const EmptyStateStyled = ({
   className = '',
   compact = false
 }) => {
-  // Use preset if type is provided, otherwise use custom props
-  const preset = type ? EMPTY_STATE_TYPES[type] : null;
-  const finalIcon = icon || (preset?.icon ?? 'inbox');
-  const finalTitle = title || preset?.title;
-  const finalDescription = description || preset?.description;
-  const finalSuggestions = suggestions || preset?.suggestions;
-
   const getIcon = () => {
-    switch (finalIcon) {
+    const iconSize = compact ? 'text-3xl' : 'text-4xl';
+    const iconClass = `${iconSize} text-gray-400`;
+    
+    switch(icon || (type && EMPTY_STATE_TYPES[type]?.icon)) {
       case 'search':
-        return <FiSearch className="w-12 h-12 text-gray-400" />;
-      case 'alert':
-        return <FiAlertCircle className="w-12 h-12 text-red-400" />;
-      case 'filter':
-        return <FiFilter className="w-12 h-12 text-gray-400" />;
-      case 'offline':
-        return <FiWifiOff className="w-12 h-12 text-gray-400" />;
-      case 'lock':
-        return <FiLock className="w-12 h-12 text-gray-400" />;
-      case 'file':
-        return <FiFileText className="w-12 h-12 text-gray-400" />;
-      case 'settings':
-        return <FiSettings className="w-12 h-12 text-gray-400" />;
-      case 'refresh':
-        return <FiRefreshCw className="w-12 h-12 text-gray-400" />;
-      case 'building':
-        return <FiHome className="w-12 h-12 text-gray-400" />;
+        return <FiSearch className={iconClass} />;
       case 'inbox':
+        return <FiInbox className={iconClass} />;
+      case 'alert':
+        return <FiAlertCircle className={iconClass} />;
+      case 'filter':
+        return <FiFilter className={iconClass} />;
+      case 'refresh':
+        return <FiRefreshCw className={iconClass} />;
+      case 'offline':
+        return <FiWifiOff className={iconClass} />;
+      case 'lock':
+        return <FiLock className={iconClass} />;
+      case 'file':
+        return <FiFileText className={iconClass} />;
+      case 'settings':
+        return <FiSettings className={iconClass} />;
       default:
-        return <FiInbox className="w-12 h-12 text-gray-400" />;
+        return <FiHome className={iconClass} />;
     }
   };
 
+  const finalTitle = title || (type && EMPTY_STATE_TYPES[type]?.title);
+  const finalDescription = description || (type && EMPTY_STATE_TYPES[type]?.description);
+  const finalSuggestions = suggestions || (type && EMPTY_STATE_TYPES[type]?.suggestions);
+
   return (
-    <div className={`text-center p-8 ${compact ? 'py-4' : ''} ${className}`}>
-      <div className="flex justify-center mb-4">
+    <div className={`${layout.flex.col} ${layout.flex.center} p-8 ${compact ? 'py-4' : ''} ${className}`}>
+      <div className={layout.flex.center}>
         {getIcon()}
       </div>
-      <h3 className="text-lg font-medium text-gray-900 mb-2">
+      <h3 className={`${typography.h3} ${typography.textCenter} mt-4`}>
         {finalTitle}
       </h3>
-      <p className="text-gray-500 mb-4">
+      <p className={`${typography.body} ${typography.textCenter} ${typography.textSecondary} mt-2`}>
         {finalDescription}
       </p>
       {finalSuggestions && (
-        <ul className="text-sm text-gray-500 mb-4">
+        <ul className={`${typography.small} ${typography.textSecondary} mt-4 space-y-1`}>
           {finalSuggestions.map((suggestion, index) => (
-            <li key={index} className="mb-1">
+            <li key={index} className={typography.textCenter}>
               {suggestion}
             </li>
           ))}
@@ -171,7 +171,7 @@ const EmptyStateStyled = ({
       {actionButton && (
         <button
           onClick={actionButton.onClick}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className={`${button.primary} ${button.medium} mt-6`}
         >
           {actionButton.label}
         </button>

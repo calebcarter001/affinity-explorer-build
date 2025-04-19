@@ -1,7 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import NavigationItem from './NavigationItem';
+import { navigation } from '../../styles/design-system';
 import { 
   FiHome, 
   FiBook, 
@@ -75,7 +75,7 @@ const NavigationMenu = () => {
   ];
   
   return (
-    <MenuContainer>
+    <nav className={navigation.menu.container}>
       {navigationItems.map(item => (
         <NavigationItem 
           key={item.path}
@@ -89,15 +89,8 @@ const NavigationMenu = () => {
           }
         />
       ))}
-    </MenuContainer>
+    </nav>
   );
 };
-
-const MenuContainer = styled.nav`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-`;
 
 export default NavigationMenu; 
