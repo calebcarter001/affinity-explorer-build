@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Affinity Explorer Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Removed FontAwesome and using Material Icons instead -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -196,46 +197,46 @@
         <div class="p-4 flex items-center justify-between">
             <h1 class="text-xl font-bold whitespace-nowrap sidebar-text">Affinity Explorer</h1>
             <button id="toggleSidebar" class="text-white focus:outline-none">
-                <i class="fas fa-bars"></i>
+                <i class="material-icons">menu</i>
             </button>
         </div>
         <div class="mt-6">
             <div class="nav-item active" data-tab="dashboard">
-                <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <div class="nav-icon"><i class="material-icons">dashboard</i></div>
                 <span class="sidebar-text">Dashboard</span>
             </div>
             <div class="nav-item" data-tab="library">
-                <div class="nav-icon"><i class="fas fa-book"></i></div>
+                <div class="nav-icon"><i class="material-icons">book</i></div>
                 <span class="sidebar-text">Affinity Library</span>
             </div>
             <div class="nav-item" data-tab="scoring">
-                <div class="nav-icon"><i class="fas fa-chart-bar"></i></div>
+                <div class="nav-icon"><i class="material-icons">bar_chart</i></div>
                 <span class="sidebar-text">Affinity Scores</span>
             </div>
             <div class="nav-item" data-tab="lifecycle">
-                <div class="nav-icon"><i class="fas fa-project-diagram"></i></div>
+                <div class="nav-icon"><i class="material-icons">timeline</i></div>
                 <span class="sidebar-text">Lifecycle Tracker</span>
             </div>
             <div class="nav-item" data-tab="combine">
-                <div class="nav-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="nav-icon"><i class="material-icons">layers</i></div>
                 <span class="sidebar-text">Affinity Combination</span>
             </div>
             <div class="nav-item" data-tab="agent">
-                <div class="nav-icon"><i class="fas fa-brain"></i></div>
+                <div class="nav-icon"><i class="material-icons">brain</i></div>
                 <span class="sidebar-text">Agent View</span>
             </div>
             <div class="nav-item" data-tab="implementation">
-                <div class="nav-icon"><i class="fas fa-code"></i></div>
+                <div class="nav-icon"><i class="material-icons">code</i></div>
                 <span class="sidebar-text">Implementation Guide</span>
             </div>
             <div class="nav-item" data-tab="reports">
-                <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="nav-icon"><i class="material-icons">file_alt</i></div>
                 <span class="sidebar-text">Reports & Analytics</span>
             </div>
         </div>
         <div class="mt-auto pt-8 absolute bottom-0 w-full">
             <div class="nav-item" data-tab="settings">
-                <div class="nav-icon"><i class="fas fa-cog"></i></div>
+                <div class="nav-icon"><i class="material-icons">settings</i></div>
                 <span class="sidebar-text">Settings</span>
             </div>
             <div class="nav-item" data-tab="help">

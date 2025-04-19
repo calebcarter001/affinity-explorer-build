@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FiStar, FiHeart } from 'react-icons/fi';
+import { FiStar } from 'react-icons/fi';
 import { useAppContext } from '../../contexts/AppContext';
 
 const AffinityCard = ({ affinity }) => {
@@ -21,12 +21,6 @@ const AffinityCard = ({ affinity }) => {
       <CardHeader>
         <IconContainer>{affinity.icon || '📋'}</IconContainer>
         <StatusBadge status={affinity.status}>{affinity.status}</StatusBadge>
-        <FavoriteButton 
-          isFavorite={isFavorite} 
-          onClick={handleFavoriteClick}
-        >
-          <FiHeart fill={isFavorite ? 'currentColor' : 'none'} />
-        </FavoriteButton>
       </CardHeader>
       
       <CardTitle>{affinity.name}</CardTitle>
@@ -126,23 +120,6 @@ case 'Proposed':
         `;
     }
   }}
-`;
-
-const FavoriteButton = styled.button`
-  background: transparent;
-  border: none;
-  padding: 0.25rem;
-  margin-left: auto;
-  color: ${props => props.isFavorite ? 'var(--danger-color)' : 'var(--secondary-color)'};
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: scale(1.1);
-  }
 `;
 
 const CardTitle = styled.h3`

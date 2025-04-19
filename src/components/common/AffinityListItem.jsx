@@ -1,19 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FiHeart } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi';
 import { useAppContext } from '../../contexts/AppContext';
 
 const AffinityListItem = ({ affinity }) => {
-  const { favorites, toggleFavorite, addToRecentlyViewed } = useAppContext();
-  const isFavorite = favorites.includes(affinity.id);
+  const { addToRecentlyViewed } = useAppContext();
   
   const handleClick = () => {
     addToRecentlyViewed(affinity);
-  };
-  
-  const handleFavoriteClick = (e) => {
-    e.stopPropagation();
-    toggleFavorite(affinity.id);
   };
   
   return (
@@ -52,13 +46,6 @@ const AffinityListItem = ({ affinity }) => {
       </ScoreContainer>
       
       <StatusBadge status={affinity.status}>{affinity.status}</StatusBadge>
-      
-      <FavoriteButton 
-        isFavorite={isFavorite} 
-        onClick={handleFavoriteClick}
-      >
-        <FiHeart fill={isFavorite ? 'currentColor' : 'none'} />
-      </FavoriteButton>
     </ListItemContainer>
   );
 };
@@ -213,22 +200,6 @@ const StatusBadge = styled.span`
   
   @media (max-width: 768px) {
     margin-right: 0;
-  }
-`;
-
-const FavoriteButton = styled.button`
-  background: transparent;
-  border: none;
-  padding: 0.5rem;
-  color: ${props => props.isFavorite ? 'var(--danger-color)' : 'var(--secondary-color)'};
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: scale(1.1);
   }
 `;
 

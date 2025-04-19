@@ -11,9 +11,7 @@ import {
   FiBarChart2,
   FiStar,
   FiLayers,
-  FiRefreshCw,
-  FiPlus,
-  FiEdit2
+  FiRefreshCw
 } from 'react-icons/fi';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
@@ -131,21 +129,19 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      setLoading(true);
       try {
         const data = await getDashboardStats();
-        if (!data) throw new Error('No data received');
         setStats(data);
       } catch (err) {
         console.error('Failed to fetch dashboard stats:', err);
-        setStats(null);
+        showToast('error', 'Failed to fetch dashboard statistics');
       } finally {
         setLoading(false);
       }
     };
     
     fetchStats();
-  }, []);
+  }, [showToast]);
 
   const handleAffinityClick = async (affinity) => {
     try {
@@ -240,7 +236,7 @@ const Dashboard = () => {
 
   if (!stats) {
     return (
-      <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50" data-testid="error-state">
+      <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50">
         <div className="text-center">
           <FiAlertTriangle className="mx-auto h-12 w-12 text-red-500" />
           <h3 className="mt-2 text-lg font-medium text-gray-900">Error loading dashboard data</h3>
@@ -263,9 +259,9 @@ const Dashboard = () => {
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50">
         <div className="text-center">
-          <FiTarget className="mx-auto h-12 w-12 text-gray-400" />
+          <FiLayers className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-lg font-medium text-gray-900">No affinities found</h3>
-          <p className="mt-1 text-sm text-gray-500">Start by creating your first affinity</p>
+          <p className="mt-1 text-sm text-gray-500">Start by creating your first affinity to begin tracking metrics.</p>
           <div className="mt-6">
             <button
               onClick={() => navigate('/affinities/new')}
@@ -278,25 +274,6 @@ const Dashboard = () => {
       </div>
     );
   }
-
-  // Full completion state
-  if (stats.total > 0 && stats.completed === stats.total) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50">
-        <div className="text-center">
-          <FiCheckCircle className="mx-auto h-12 w-12 text-green-500" />
-          <h3 className="mt-2 text-lg font-medium text-gray-900">Congratulations!</h3>
-          <p className="text-gray-600 mt-2">All affinities completed!</p>
-          <div className="mt-4">
-            <span className="text-3xl font-bold text-green-500">100%</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Calculate completion percentage
-  const completionPercentage = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
 
   return (
     <div className="h-full flex flex-col p-6 space-y-6 bg-gray-50">
@@ -373,23 +350,23 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Progress Tracking */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h3 className="text-lg font-medium mb-4">Progress Tracking</h3>
-          <ProgressTracker goal={goalData.affinityExpansion} />
+          <ProgressTracker goalData={goalData} />
         </div>
 
         {/* Accuracy Metrics */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h3 className="text-lg font-medium mb-4">Accuracy Metrics</h3>
-          <AccuracyMetrics goal={goalData.accuracy} />
+          <AccuracyMetrics goalData={goalData} />
         </div>
 
         {/* Recently Viewed */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h3 className="text-lg font-medium mb-4">Recently Viewed</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="space-y-4">
             {recentlyViewedItems.map((item, index) => (
               <div 
                 key={index}
@@ -417,7 +394,7 @@ const Dashboard = () => {
         {/* Favorite Collections */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h3 className="text-lg font-medium mb-4">Favorite Collections</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="space-y-4">
             {favoriteCollections.map((collection, index) => (
               <div 
                 key={index}
@@ -453,12 +430,14 @@ const Dashboard = () => {
       </div>
 
       {/* Celebration Modal for 100% completion */}
-      {completionPercentage === 100 && (
+      {stats.completed === stats.total && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white rounded-xl p-8 max-w-md text-center">
             <FiCheckCircle className="mx-auto h-16 w-16 text-green-500" />
             <h2 className="text-2xl font-bold mt-4">Congratulations!</h2>
-            <p className="text-gray-600 mt-2">All affinities completed!</p>
+            <p className="text-gray-600 mt-2">
+              All affinities have been completed. Great job on reaching this milestone!
+            </p>
             <button
               onClick={() => navigate('/reports')}
               className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"

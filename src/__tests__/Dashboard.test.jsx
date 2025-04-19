@@ -5,7 +5,23 @@ import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { AppProvider } from '../contexts/AppContext';
+import { ToastProvider } from '../contexts/ToastContext';
 import * as apiService from '../services/apiService';
+
+// Mock Chart.js
+vi.mock('chart.js', () => ({
+  Chart: {
+    register: vi.fn()
+  },
+  ArcElement: vi.fn(),
+  Tooltip: vi.fn(),
+  Legend: vi.fn()
+}));
+
+// Mock react-chartjs-2
+vi.mock('react-chartjs-2', () => ({
+  Pie: () => null
+}));
 
 // Mock the API calls
 vi.mock('../services/apiService', () => ({
@@ -16,10 +32,12 @@ vi.mock('../services/apiService', () => ({
 
 const renderDashboard = () => {
   return render(
-    <BrowserRouter>
-      <AppProvider>
-        <Dashboard />
-      </AppProvider>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ToastProvider>
+        <AppProvider>
+          <Dashboard />
+        </AppProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 };
@@ -28,11 +46,12 @@ describe('Dashboard Component', () => {
   describe('Empty State', () => {
     beforeEach(() => {
       // Mock successful API responses with empty data
-      vi.mocked(apiService.getAffinityStats).mockResolvedValue({
+      vi.mocked(apiService.getDashboardStats).mockResolvedValue({
         total: 0,
         completed: 0,
         inProgress: 0,
-        pending: 0
+        pending: 0,
+        recentActivity: []
       });
       vi.mocked(apiService.getRecentActivity).mockResolvedValue([]);
     });
@@ -59,16 +78,17 @@ describe('Dashboard Component', () => {
 
   describe('Partial Completion State', () => {
     beforeEach(() => {
-      vi.mocked(apiService.getAffinityStats).mockResolvedValue({
+      vi.mocked(apiService.getDashboardStats).mockResolvedValue({
         total: 10,
         completed: 3,
         inProgress: 5,
-        pending: 2
+        pending: 2,
+        recentActivity: [
+          { id: 1, type: 'affinity_created', timestamp: new Date().toISOString() },
+          { id: 2, type: 'affinity_updated', timestamp: new Date().toISOString() }
+        ]
       });
-      vi.mocked(apiService.getRecentActivity).mockResolvedValue([
-        { id: 1, type: 'affinity_created', timestamp: new Date().toISOString() },
-        { id: 2, type: 'affinity_updated', timestamp: new Date().toISOString() }
-      ]);
+      vi.mocked(apiService.getRecentActivity).mockResolvedValue([]);
     });
 
     it('should display correct progress indicators for partial completion', async () => {
@@ -94,15 +114,16 @@ describe('Dashboard Component', () => {
 
   describe('Full Completion State', () => {
     beforeEach(() => {
-      vi.mocked(apiService.getAffinityStats).mockResolvedValue({
+      vi.mocked(apiService.getDashboardStats).mockResolvedValue({
         total: 10,
         completed: 10,
         inProgress: 0,
-        pending: 0
+        pending: 0,
+        recentActivity: [
+          { id: 1, type: 'affinity_completed', timestamp: new Date().toISOString() }
+        ]
       });
-      vi.mocked(apiService.getRecentActivity).mockResolvedValue([
-        { id: 1, type: 'affinity_completed', timestamp: new Date().toISOString() }
-      ]);
+      vi.mocked(apiService.getRecentActivity).mockResolvedValue([]);
     });
 
     it('should display 100% completion state', async () => {
@@ -125,7 +146,7 @@ describe('Dashboard Component', () => {
 
   describe('Error State', () => {
     beforeEach(() => {
-      vi.mocked(apiService.getAffinityStats).mockRejectedValue(new Error('Failed to fetch stats'));
+      vi.mocked(apiService.getDashboardStats).mockRejectedValue(new Error('Failed to fetch stats'));
       vi.mocked(apiService.getRecentActivity).mockRejectedValue(new Error('Failed to fetch activity'));
     });
 
@@ -133,6 +154,7 @@ describe('Dashboard Component', () => {
       renderDashboard();
       
       await waitFor(() => {
+        expect(screen.getByTestId('error-state')).toBeInTheDocument();
         expect(screen.getByText(/Error loading dashboard data/i)).toBeInTheDocument();
       });
     });

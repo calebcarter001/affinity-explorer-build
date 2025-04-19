@@ -513,4 +513,160 @@ export const getRecentActivity = async () => {
       }
     }
   ];
+};
+
+export const updateFavorites = async (collectionName, isFavorite) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Simulate API call
+  return {
+    success: true,
+    data: {
+      name: collectionName,
+      isFavorite
+    }
+  };
+};
+
+export const updateRecentlyViewed = async (affinityName) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Simulate API call
+  return {
+    success: true,
+    data: {
+      name: affinityName,
+      timestamp: new Date().toISOString()
+    }
+  };
+};
+
+export const deleteCollection = async (collectionName) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // In a real app, this would make an API call to delete the collection
+  // For now, we just simulate a successful deletion
+  return { success: true };
+};
+
+export const getCollections = async () => {
+  const cacheKey = cacheService.generateKey('collections');
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return mock data
+  const collections = [
+    {
+      name: 'Summer Getaway Collection',
+      description: 'Perfect properties for summer vacations',
+      affinities: [
+        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
+        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
+        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
+        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
+        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' }
+      ],
+      isFavorite: true,
+      lastUpdated: '2024-03-20'
+    },
+    {
+      name: 'Urban Exploration Bundle',
+      description: 'City-focused properties and experiences',
+      affinities: [
+        { name: 'Historical', description: 'Properties with historical significance' },
+        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
+        { name: 'Romantic', description: 'Properties suitable for couples' }
+      ],
+      isFavorite: true,
+      lastUpdated: '2024-03-19'
+    },
+    {
+      name: 'Family Trip Essentials',
+      description: 'Family-friendly accommodations and activities',
+      affinities: [
+        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
+        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
+        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' },
+        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' }
+      ],
+      isFavorite: true,
+      lastUpdated: '2024-03-18'
+    }
+  ];
+  
+  cacheService.set(cacheKey, collections);
+  return collections;
+};
+
+export const updateCollection = async (collectionName, updates) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Get current collections
+  const collections = await getCollections();
+  const collectionIndex = collections.findIndex(c => c.name === collectionName);
+  
+  if (collectionIndex === -1) {
+    throw new Error('Collection not found');
+  }
+  
+  // Update the collection
+  const updatedCollection = {
+    ...collections[collectionIndex],
+    ...updates,
+    lastUpdated: new Date().toISOString()
+  };
+  
+  // In a real implementation, this would be an API call
+  // For now, we'll just return the updated collection
+  return updatedCollection;
+};
+
+export const createCollection = async (collectionData) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Create a new collection with default values
+  const newCollection = {
+    ...collectionData,
+    affinities: [],
+    isFavorite: false,
+    lastUpdated: new Date().toISOString()
+  };
+  
+  // In a real implementation, this would be an API call
+  // For now, we'll just return the new collection
+  return newCollection;
+};
+
+// Get tagged properties count for an affinity
+export const getAffinityTaggedProperties = async (affinityId) => {
+  const cacheKey = cacheService.generateKey('affinity_tagged_properties', { affinityId });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Mock data for tagged properties count
+  const mockTaggedPropertiesCount = {
+    "Pet-Friendly": { tagged: 3, withScore: 3 },
+    "Romantic": { tagged: 2, withScore: 2 },
+    "Family-Friendly": { tagged: 2, withScore: 2 },
+    "Luxury": { tagged: 3, withScore: 3 },
+    "Beach Access": { tagged: 1, withScore: 1 },
+    "Privacy": { tagged: 2, withScore: 2 },
+    "Nature Retreat": { tagged: 1, withScore: 1 },
+    "Historical": { tagged: 1, withScore: 1 }
+  };
+
+  const data = mockTaggedPropertiesCount[affinityId] || { tagged: 0, withScore: 0 };
+  cacheService.set(cacheKey, data);
+  return data;
 }; 

@@ -1,80 +1,58 @@
 import React from 'react';
-import { FiCheckCircle, FiClock, FiAlertTriangle } from 'react-icons/fi';
+import { FiTrendingUp, FiTarget } from 'react-icons/fi';
 
-const ProgressTracker = ({ 
-  completed, 
-  total, 
-  inProgress, 
-  notStarted,
-  lastUpdated 
-}) => {
-  const progress = (completed / total) * 100;
-  
-  const getStatusColor = (value) => {
-    if (value >= 75) return 'bg-green-500';
-    if (value >= 50) return 'bg-yellow-500';
+const ProgressTracker = ({ goal }) => {
+  const getStatusColor = (progress) => {
+    if (progress >= 75) return 'bg-green-500';
+    if (progress >= 50) return 'bg-yellow-500';
     return 'bg-red-500';
   };
 
-  return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium">Progress Tracker</h3>
-        <span className="text-sm text-gray-500">Last updated: {lastUpdated}</span>
-      </div>
+  const progress = (goal.current / goal.target) * 100;
+  const statusColor = getStatusColor(progress);
 
-      {/* Progress Bar */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">Overall Progress</span>
-          <span className="text-sm font-medium">{completed}/{total}</span>
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <FiTrendingUp className="text-blue-500 mr-2" size={20} />
+          <h3 className="text-lg font-semibold">Affinity Expansion Goal</h3>
         </div>
-        <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-300 ${getStatusColor(progress)}`}
+        <div className="flex items-center">
+          <FiTarget className="text-gray-500 mr-2" size={16} />
+          <span className="text-sm text-gray-500">Target: {goal.target}</span>
+        </div>
+      </div>
+      
+      <div className="mb-4">
+        <div className="flex justify-between mb-1">
+          <span className="text-sm font-medium text-gray-700">Progress</span>
+          <span className="text-sm font-medium text-gray-700">{Math.round(progress)}%</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className={`${statusColor} h-2 rounded-full transition-all duration-300`}
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
-      {/* Status Indicators */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="flex items-center p-3 bg-green-50 rounded-lg">
-          <FiCheckCircle className="text-green-500 text-xl mr-3" />
-          <div>
-            <p className="text-sm text-gray-600">Completed</p>
-            <p className="text-xl font-semibold">{completed}</p>
-          </div>
+      <div className="flex justify-between text-sm">
+        <div>
+          <span className="text-gray-500">Current:</span>
+          <span className="ml-1 font-medium">{goal.current}</span>
         </div>
-
-        <div className="flex items-center p-3 bg-blue-50 rounded-lg">
-          <FiClock className="text-blue-500 text-xl mr-3" />
-          <div>
-            <p className="text-sm text-gray-600">In Progress</p>
-            <p className="text-xl font-semibold">{inProgress}</p>
-          </div>
+        <div>
+          <span className="text-gray-500">Last Updated:</span>
+          <span className="ml-1 font-medium">{new Date(goal.lastUpdated).toLocaleDateString()}</span>
         </div>
-
-        <div className="flex items-center p-3 bg-red-50 rounded-lg">
-          <FiAlertTriangle className="text-red-500 text-xl mr-3" />
-          <div>
-            <p className="text-sm text-gray-600">Not Started</p>
-            <p className="text-xl font-semibold">{notStarted}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Summary Stats */}
-      <div className="mt-6 pt-6 border-t">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-500">Completion Rate</p>
-            <p className="text-lg font-semibold">{Math.round((completed / total) * 100)}%</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Remaining</p>
-            <p className="text-lg font-semibold">{total - completed}</p>
-          </div>
+        <div>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
+            ${goal.status === 'completed' ? 'bg-green-100 text-green-800' :
+              goal.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+              'bg-yellow-100 text-yellow-800'}`}>
+            {goal.status.replace('_', ' ')}
+          </span>
         </div>
       </div>
     </div>

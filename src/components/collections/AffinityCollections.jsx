@@ -1,63 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiLayers, FiEdit2, FiTrash2, FiX, FiAlertCircle, FiSearch, FiCheck, FiPackage } from 'react-icons/fi';
-import { getAffinities } from '../../services/apiService';
+import { FiStar, FiLayers, FiEdit2, FiTrash2, FiX, FiChevronLeft, FiPlus } from 'react-icons/fi';
+import { useToast } from '../../contexts/ToastContext';
+import { useNavigate } from 'react-router-dom';
+import { getCollections, updateFavorites, deleteCollection, updateCollection, createCollection, getAffinities } from '../../services/apiService';
+import EmptyStateStyled from '../common/EmptyStateStyled';
+import CreateCollectionModal from './CreateCollectionModal';
 
 const AffinityCollections = ({ selectedCollectionName }) => {
-  const [collections, setCollections] = useState([
-    {
-      id: 1,
-      name: 'Summer Getaway Collection',
-      description: 'Perfect for summer vacation properties',
-      affinities: ['Beach Access', 'Pool', 'Outdoor Dining', 'Air Conditioning', 'BBQ'],
-      createdAt: '2024-03-20',
-      lastUpdated: '2024-03-20'
-    },
-    {
-      id: 2,
-      name: 'Urban Exploration Bundle',
-      description: 'City-centered properties with cultural access',
-      affinities: ['City Center', 'Public Transport', 'Cultural Sites'],
-      createdAt: '2024-03-19',
-      lastUpdated: '2024-02-15'
-    },
-    {
-      id: 3,
-      name: 'Family Trip Essentials',
-      description: 'Family-friendly properties with kid amenities',
-      affinities: ['Kid-Friendly', 'Safety Features', 'Entertainment', 'Kitchen'],
-      createdAt: '2024-03-18',
-      lastUpdated: '2024-03-18'
-    }
-  ]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('create'); // 'create' or 'edit'
+  const showToast = useToast();
+  const navigate = useNavigate();
+  const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [editingCollection, setEditingCollection] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [collectionToDelete, setCollectionToDelete] = useState(null);
-  const [availableAffinities, setAvailableAffinities] = useState([]);
-  const [affinitySearchTerm, setAffinitySearchTerm] = useState('');
-  const [isLoadingAffinities, setIsLoadingAffinities] = useState(false);
-  const [showAffinitySearch, setShowAffinitySearch] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', description: '', affinities: [] });
   const [selectedCollection, setSelectedCollection] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [availableAffinities, setAvailableAffinities] = useState([]);
+  const [loadingAffinities, setLoadingAffinities] = useState(false);
 
   useEffect(() => {
-    const loadAffinities = async () => {
-      setIsLoadingAffinities(true);
-      try {
-        const data = await getAffinities();
-        setAvailableAffinities(data);
-      } catch (err) {
-        console.error('Failed to load affinities:', err);
-      } finally {
-        setIsLoadingAffinities(false);
-      }
-    };
-
-    if (showAffinitySearch) {
-      loadAffinities();
-    }
-  }, [showAffinitySearch]);
+    fetchCollections();
+  }, []);
 
   useEffect(() => {
     if (selectedCollectionName) {
@@ -65,419 +29,374 @@ const AffinityCollections = ({ selectedCollectionName }) => {
       if (collection) {
         setSelectedCollection(collection);
       }
+    } else {
+      setSelectedCollection(null);
     }
   }, [selectedCollectionName, collections]);
 
-  const handleCreateCollection = () => {
-    setModalMode('create');
-    setEditingCollection({
-      name: '',
-      description: '',
-      affinities: []
-    });
-    setIsModalOpen(true);
+  const fetchCollections = async () => {
+    try {
+      const data = await getCollections();
+      setCollections(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching collections:', error);
+      showToast('error', 'Failed to load collections');
+      setLoading(false);
+    }
   };
 
-  const handleEditCollection = (collection) => {
-    setModalMode('edit');
-    setEditingCollection({ ...collection });
-    setIsModalOpen(true);
+  const fetchAvailableAffinities = async () => {
+    setLoadingAffinities(true);
+    try {
+      const response = await getAffinities();
+      setAvailableAffinities(response.data || []);
+    } catch (error) {
+      console.error('Error fetching affinities:', error);
+      showToast('error', 'Failed to load affinities');
+      setAvailableAffinities([]);
+    }
+    setLoadingAffinities(false);
   };
 
-  const handleSaveCollection = () => {
-    if (editingCollection.name.trim()) {
-      if (modalMode === 'create') {
-        setCollections(prev => [...prev, {
-          id: Date.now(),
-          ...editingCollection,
-          createdAt: new Date().toISOString().split('T')[0]
-        }]);
-      } else {
-        setCollections(prev => prev.map(c => 
-          c.id === editingCollection.id ? editingCollection : c
-        ));
+  const handleFavoriteToggle = async (collection) => {
+    try {
+      // Optimistic update
+      const updatedCollections = collections.map(c => 
+        c.name === collection.name 
+          ? { ...c, isFavorite: !c.isFavorite }
+          : c
+      );
+      setCollections(updatedCollections);
+
+      await updateFavorites(collection.name, !collection.isFavorite);
+      showToast('success', `${collection.name} ${!collection.isFavorite ? 'added to' : 'removed from'} favorites`);
+    } catch (error) {
+      // Revert on failure
+      setCollections(collections);
+      showToast('error', 'Failed to update favorite status');
+    }
+  };
+
+  const handleDelete = async (collection) => {
+    if (window.confirm(`Are you sure you want to delete "${collection.name}"?`)) {
+      try {
+        await deleteCollection(collection.name);
+        setCollections(collections.filter(c => c.name !== collection.name));
+        showToast('success', `${collection.name} deleted successfully`);
+      } catch (error) {
+        showToast('error', 'Failed to delete collection');
       }
-      setIsModalOpen(false);
-      setEditingCollection(null);
-      setShowAffinitySearch(false);
-      setAffinitySearchTerm('');
     }
   };
 
-  const handleDeletePrompt = (collection) => {
-    setCollectionToDelete(collection);
-    setIsDeleteModalOpen(true);
+  const handleEdit = (collection) => {
+    setEditingCollection(collection);
+    setEditForm({
+      name: collection.name,
+      description: collection.description || '',
+      affinities: collection.affinities || []
+    });
+    fetchAvailableAffinities();
   };
 
-  const handleConfirmDelete = () => {
-    setCollections(prev => prev.filter(c => c.id !== collectionToDelete.id));
-    setIsDeleteModalOpen(false);
-    setCollectionToDelete(null);
-  };
-
-  const handleAddAffinity = (affinity) => {
-    if (!editingCollection.affinities.includes(affinity.name)) {
-      setEditingCollection(prev => ({
+  const handleAffinityToggle = (affinity) => {
+    setEditForm(prev => {
+      const isSelected = prev.affinities.some(a => a.name === affinity.name);
+      return {
         ...prev,
-        affinities: [...prev.affinities, affinity.name]
-      }));
-    }
+        affinities: isSelected
+          ? prev.affinities.filter(a => a.name !== affinity.name)
+          : [...prev.affinities, affinity]
+      };
+    });
   };
 
-  const filteredAffinities = availableAffinities.filter(affinity => {
-    const searchTerm = affinitySearchTerm.toLowerCase();
-    return (
-      affinity.name.toLowerCase().includes(searchTerm) ||
-      affinity.definition.toLowerCase().includes(searchTerm) ||
-      affinity.category.toLowerCase().includes(searchTerm)
-    );
-  });
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedCollection = await updateCollection(editingCollection.name, editForm);
+      setCollections(collections.map(c => 
+        c.name === editingCollection.name ? updatedCollection : c
+      ));
+      setEditingCollection(null);
+      showToast('success', 'Collection updated successfully');
+    } catch (error) {
+      showToast('error', 'Failed to update collection');
+    }
+  };
 
   const handleCollectionClick = (collection) => {
     setSelectedCollection(collection);
   };
 
-  return (
-    <div className="p-4 md:p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">My Collections</h2>
+  const handleCreateSubmit = async (formData) => {
+    try {
+      const newCollection = await createCollection(formData);
+      setCollections([...collections, newCollection]);
+      setIsCreateModalOpen(false);
+      showToast('success', 'Collection created successfully');
+    } catch (error) {
+      showToast('error', 'Failed to create collection');
+    }
+  };
+
+  const handleEditClick = (collection) => {
+    setIsEditing(true);
+    setEditingCollection(collection);
+    setEditForm({
+      name: collection.name,
+      description: collection.description || '',
+      affinities: collection.affinities || []
+    });
+    fetchAvailableAffinities();
+  };
+
+  const handleEditSubmitClick = async () => {
+    try {
+      const updatedCollection = await updateCollection(editForm.id, editForm);
+      setCollections(collections.map(c => 
+        c.id === updatedCollection.id ? updatedCollection : c
+      ));
+      setSelectedCollection(updatedCollection);
+      setIsEditing(false);
+      setEditForm(null);
+      showToast('success', 'Collection updated successfully');
+    } catch (error) {
+      showToast('error', 'Failed to update collection');
+    }
+  };
+
+  const handleDeleteCollection = async (id) => {
+    try {
+      await deleteCollection(id);
+      setCollections(collections.filter(c => c.id !== id));
+      if (selectedCollection?.id === id) {
+        setSelectedCollection(null);
+        setIsEditing(false);
+        setEditForm(null);
+      }
+      showToast('success', 'Collection deleted successfully');
+    } catch (error) {
+      showToast('error', 'Failed to delete collection');
+    }
+  };
+
+  if (loading) {
+    return <div className="p-4">Loading collections...</div>;
+  }
+
+  if (collections.length === 0) {
+    return (
+      <EmptyStateStyled
+        icon={<FiLayers size={40} />}
+        title="No Collections Found"
+        description="Create your first collection to organize your affinities"
+        actionButton={
           <button
-            onClick={handleCreateCollection}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            <FiPlus /> New Collection
+            Create Collection
+          </button>
+        }
+      />
+    );
+  }
+
+  return (
+    <div className="flex h-full">
+      {/* Collections List - Left Side */}
+      <div className="w-1/3 border-r border-gray-200 p-4 overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold">Collections</h2>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors text-blue-500"
+          >
+            <FiPlus size={20} />
           </button>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Collections Grid */}
-        <div className={`${selectedCollection ? 'lg:col-span-2' : 'lg:col-span-3'} grid grid-cols-1 md:grid-cols-2 gap-4`}>
-          {collections.map(collection => (
-            <div 
-              key={collection.id} 
+        <div className="space-y-4">
+          {collections.map((collection) => (
+            <div
+              key={collection.name}
               onClick={() => handleCollectionClick(collection)}
-              className={`bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-all cursor-pointer border ${
-                selectedCollection?.id === collection.id ? 'border-blue-500' : 'border-gray-200'
-              }`}
+              className={`bg-white rounded-lg shadow-sm p-4 cursor-pointer transition-all
+                ${selectedCollection?.name === collection.name ? 'border-2 border-blue-500' : 'border border-gray-200'}`}
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <FiLayers className="text-blue-500" />
-                  <h3 className="font-semibold text-lg">{collection.name}</h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <FiLayers className="text-blue-500 mr-2" size={20} />
+                  <h3 className="font-semibold">{collection.name}</h3>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button 
-                    className="text-gray-500 hover:text-blue-600 p-1"
+                <div className="flex space-x-2">
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEditCollection(collection);
+                      handleEditClick(collection);
                     }}
+                    className="p-1 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
                   >
-                    <FiEdit2 />
+                    <FiEdit2 size={16} />
                   </button>
-                  <button 
-                    className="text-gray-500 hover:text-red-600 p-1"
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDeletePrompt(collection);
+                      handleDelete(collection);
                     }}
+                    className="p-1 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
                   >
-                    <FiTrash2 />
+                    <FiTrash2 size={16} />
                   </button>
                 </div>
               </div>
-              
-              <p className="text-gray-600 text-sm mb-4">{collection.description}</p>
-              
-              <div className="space-y-2">
-                <div className="text-sm text-gray-500">Affinities ({collection.affinities.length})</div>
-                <div className="flex flex-wrap gap-2">
-                  {collection.affinities.slice(0, 3).map((affinity, index) => (
-                    <span 
-                      key={index}
-                      className="px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded-full"
-                    >
-                      {affinity}
-                    </span>
-                  ))}
-                  {collection.affinities.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-50 text-gray-600 text-sm rounded-full">
-                      +{collection.affinities.length - 3} more
-                    </span>
-                  )}
-                </div>
-              </div>
-              
-              <div className="mt-4 pt-4 border-t">
-                <div className="text-sm text-gray-500">
-                  Last Updated: {collection.lastUpdated}
-                </div>
+              <p className="text-sm text-gray-600 mt-2">{collection.description || 'No description'}</p>
+              <div className="text-sm text-gray-500 mt-2">
+                {Array.isArray(collection.affinities) ? collection.affinities.length : 0} affinities
               </div>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Collection Details Panel */}
-        {selectedCollection && (
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <FiPackage className="text-blue-500 text-xl" />
-                  <h3 className="text-xl font-bold">{selectedCollection.name}</h3>
-                </div>
+      {/* Collection Detail/Edit - Right Side */}
+      <div className="flex-1 p-4 overflow-y-auto">
+        {selectedCollection ? (
+          editingCollection?.name === selectedCollection.name ? (
+            // Edit Form
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Edit Collection</h2>
                 <button
-                  onClick={() => setSelectedCollection(null)}
-                  className="text-gray-500 hover:text-gray-700"
+                  onClick={() => setEditingCollection(null)}
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  <FiX />
+                  <FiX size={20} />
                 </button>
               </div>
-
-              <div className="space-y-6">
+              <form onSubmit={handleEditSubmit} className="space-y-4">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
-                  <p className="text-gray-600">{selectedCollection.description}</p>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
-
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Affinities</h4>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCollection.affinities.map((affinity, index) => (
-                        <span 
-                          key={index}
-                          className="px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded-full"
-                        >
-                          {affinity}
-                        </span>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea
+                    value={editForm.description}
+                    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Affinities
+                  </label>
+                  {loadingAffinities ? (
+                    <div className="text-sm text-gray-500">Loading affinities...</div>
+                  ) : availableAffinities.length > 0 ? (
+                    <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-md p-2">
+                      {availableAffinities.map(affinity => (
+                        <div key={affinity.id} className="flex items-center p-2 hover:bg-gray-50">
+                          <input
+                            type="checkbox"
+                            checked={editForm.affinities.some(a => a.name === affinity.name)}
+                            onChange={() => handleAffinityToggle(affinity)}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 text-sm text-gray-700">
+                            {affinity.name}
+                          </label>
+                        </div>
                       ))}
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-sm text-gray-500">No affinities available</div>
+                  )}
                 </div>
-
-                <div className="pt-4 border-t space-y-2">
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>Created</span>
-                    <span>{selectedCollection.createdAt}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>Last Updated</span>
-                    <span>{selectedCollection.lastUpdated}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>Total Affinities</span>
-                    <span>{selectedCollection.affinities.length}</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
+                <div className="flex justify-end space-x-2">
                   <button
-                    onClick={() => handleEditCollection(selectedCollection)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    type="button"
+                    onClick={() => setEditingCollection(null)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                   >
-                    <FiEdit2 /> Edit Collection
+                    Cancel
                   </button>
                   <button
-                    onClick={() => handleDeletePrompt(selectedCollection)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 text-red-600 hover:text-red-700"
+                    type="submit"
+                    className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
                   >
-                    <FiTrash2 />
+                    Save Changes
                   </button>
+                </div>
+              </form>
+            </div>
+          ) : (
+            // Collection Detail View
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold">{selectedCollection.name}</h2>
+                  <p className="text-gray-600">{selectedCollection.description}</p>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditClick(selectedCollection);
+                    }}
+                    className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
+                  >
+                    <FiEdit2 size={18} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(selectedCollection)}
+                    className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-400"
+                  >
+                    <FiTrash2 size={18} />
+                  </button>
+                </div>
+              </div>
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold mb-4">Affinities</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Array.isArray(selectedCollection.affinities) && selectedCollection.affinities.length > 0 ? 
+                    selectedCollection.affinities.map((affinity, index) => (
+                      <div 
+                        key={index}
+                        className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => navigate('/affinities', { state: { selectedAffinity: affinity.name } })}
+                      >
+                        <h4 className="font-semibold">{affinity.name}</h4>
+                        <p className="text-sm text-gray-600">{affinity.description}</p>
+                      </div>
+                    )) : 
+                    <div className="col-span-2 text-center text-gray-500">
+                      No affinities in this collection
+                    </div>
+                  }
                 </div>
               </div>
             </div>
+          )
+        ) : (
+          <div className="flex items-center justify-center h-full text-gray-500">
+            Select a collection to view details
           </div>
         )}
       </div>
 
-      {/* Create/Edit Collection Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">
-                {modalMode === 'create' ? 'Create New Collection' : 'Edit Collection'}
-              </h3>
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setShowAffinitySearch(false);
-                  setAffinitySearchTerm('');
-                }}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <FiX />
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Collection Name
-                </label>
-                <input
-                  type="text"
-                  value={editingCollection?.name || ''}
-                  onChange={(e) => setEditingCollection(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                  placeholder="Enter collection name"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  value={editingCollection?.description || ''}
-                  onChange={(e) => setEditingCollection(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                  placeholder="Enter collection description"
-                  rows={3}
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Affinities
-                  </label>
-                  <button
-                    onClick={() => setShowAffinitySearch(!showAffinitySearch)}
-                    className="text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    {showAffinitySearch ? 'Hide Search' : 'Add Affinities'}
-                  </button>
-                </div>
-
-                {showAffinitySearch && (
-                  <div className="mb-3">
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={affinitySearchTerm}
-                        onChange={(e) => setAffinitySearchTerm(e.target.value)}
-                        placeholder="Search affinities..."
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                      />
-                      <div className="absolute left-3 top-2.5 text-gray-400">
-                        <FiSearch />
-                      </div>
-                    </div>
-
-                    {isLoadingAffinities ? (
-                      <div className="text-center py-4 text-gray-500">Loading affinities...</div>
-                    ) : (
-                      <div className="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-lg">
-                        {filteredAffinities.map(affinity => (
-                          <button
-                            key={affinity.id}
-                            onClick={() => handleAddAffinity(affinity)}
-                            className={`w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center justify-between ${
-                              editingCollection.affinities.includes(affinity.name)
-                                ? 'text-gray-400'
-                                : 'text-gray-700'
-                            }`}
-                            disabled={editingCollection.affinities.includes(affinity.name)}
-                          >
-                            <div>
-                              <div className="font-medium">{affinity.name}</div>
-                              <div className="text-sm text-gray-500">{affinity.category}</div>
-                            </div>
-                            {editingCollection.affinities.includes(affinity.name) && (
-                              <FiCheck className="text-green-500" />
-                            )}
-                          </button>
-                        ))}
-                        {filteredAffinities.length === 0 && (
-                          <div className="p-3 text-center text-gray-500">
-                            No matching affinities found
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg min-h-[100px]">
-                  {editingCollection?.affinities.map((affinity, index) => (
-                    <span 
-                      key={index}
-                      className="px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded-full flex items-center gap-1"
-                    >
-                      {affinity}
-                      <button
-                        onClick={() => setEditingCollection(prev => ({
-                          ...prev,
-                          affinities: prev.affinities.filter((_, i) => i !== index)
-                        }))}
-                        className="text-blue-700 hover:text-blue-900"
-                      >
-                        <FiX size={14} />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setShowAffinitySearch(false);
-                  setAffinitySearchTerm('');
-                }}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveCollection}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                {modalMode === 'create' ? 'Create Collection' : 'Save Changes'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <div className="flex items-center gap-3 mb-4 text-red-600">
-              <FiAlertCircle size={24} />
-              <h3 className="text-lg font-semibold">Delete Collection</h3>
-            </div>
-            
-            <p className="text-gray-600 mb-4">
-              Are you sure you want to delete "{collectionToDelete?.name}"? This action cannot be undone.
-            </p>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              >
-                Delete Collection
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreateCollectionModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateSubmit}
+      />
     </div>
   );
 };

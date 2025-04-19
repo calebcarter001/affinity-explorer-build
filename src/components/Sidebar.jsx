@@ -1,23 +1,35 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { 
+  FiHome, 
+  FiBook, 
+  FiBarChart2, 
+  FiActivity, 
+  FiCpu, 
+  FiLayers, 
+  FiCode, 
+  FiFileText,
+  FiSettings,
+  FiHelpCircle
+} from 'react-icons/fi';
 
 const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', icon: 'tachometer-alt', text: 'Dashboard' },
-    { path: '/affinity-library', icon: 'book', text: 'Affinity Library' },
-    { path: '/scoring-explorer', icon: 'chart-bar', text: 'Property Affinity Scores' },
-    { path: '/lifecycle-tracker', icon: 'project-diagram', text: 'Lifecycle Tracker' },
-    { path: '/agent-view', icon: 'brain', text: 'Agent View' },
-    { path: '/combine', icon: 'layer-group', text: 'Affinity Combination' },
-    { path: '/implementation', icon: 'code', text: 'Implementation Guide' },
-    { path: '/reports', icon: 'file-alt', text: 'Reports & Analytics' },
+    { path: '/', icon: <FiHome size={20} />, text: 'Dashboard' },
+    { path: '/affinities', icon: <FiBook size={20} />, text: 'Affinity Library' },
+    { path: '/scoring', icon: <FiBarChart2 size={20} />, text: 'Property Affinity Scores' },
+    { path: '/lifecycle-tracker', icon: <FiActivity size={20} />, text: 'Lifecycle Tracker' },
+    { path: '/agents', icon: <FiCpu size={20} />, text: 'Agent View' },
+    { path: '/combine', icon: <FiLayers size={20} />, text: 'Affinity Combination' },
+    { path: '/implementation', icon: <FiCode size={20} />, text: 'Implementation Guide' },
+    { path: '/reports', icon: <FiFileText size={20} />, text: 'Reports & Analytics' },
   ];
 
   const bottomNavItems = [
-    { path: '/settings', icon: 'cog', text: 'Settings' },
-    { path: '/help', icon: 'question-circle', text: 'Help & Support' },
+    { path: '/settings', icon: <FiSettings size={20} />, text: 'Settings' },
+    { path: '/help', icon: <FiHelpCircle size={20} />, text: 'Help & Support' },
   ];
 
   return (
@@ -35,7 +47,7 @@ const Sidebar = () => {
               location.pathname === item.path ? 'bg-white/20 text-white' : ''
             }`}
           >
-            <i className={`fas fa-${item.icon} w-5`}></i>
+            <span className="text-white">{item.icon}</span>
             <span>{item.text}</span>
           </Link>
         ))}
@@ -50,7 +62,7 @@ const Sidebar = () => {
               location.pathname === item.path ? 'bg-white/20 text-white' : ''
             }`}
           >
-            <i className={`fas fa-${item.icon} w-5`}></i>
+            <span className="text-white">{item.icon}</span>
             <span>{item.text}</span>
           </Link>
         ))}

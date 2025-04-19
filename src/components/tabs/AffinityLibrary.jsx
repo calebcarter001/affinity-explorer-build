@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus, FiChevronLeft, FiChevronRight, FiLayers, FiBook } from 'react-icons/fi';
-import { getAffinities } from '../../services/apiService';
+import { getAffinities, getAffinityTaggedProperties } from '../../services/apiService';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import SkeletonLoader from '../common/SkeletonLoader';
 import AffinityCollections from '../collections/AffinityCollections';
@@ -21,6 +21,8 @@ const AffinityLibrary = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [taggedPropertiesCount, setTaggedPropertiesCount] = useState(0);
+  const [propertiesWithScoreCount, setPropertiesWithScoreCount] = useState(0);
 
   // Load affinities when component mounts or filters change
   useEffect(() => {
@@ -156,8 +158,17 @@ const AffinityLibrary = () => {
     setStatusFilter(e.target.value);
   };
 
-  const handleAffinityClick = (affinity) => {
+  const handleAffinityClick = async (affinity) => {
     setSelectedAffinity(affinity);
+    try {
+      const data = await getAffinityTaggedProperties(affinity.name);
+      setTaggedPropertiesCount(data.tagged || 0);
+      setPropertiesWithScoreCount(data.withScore || 0);
+    } catch (error) {
+      console.error('Error fetching tagged properties count:', error);
+      setTaggedPropertiesCount(0);
+      setPropertiesWithScoreCount(0);
+    }
   };
 
   const getStatusBadge = (status) => {
@@ -326,35 +337,56 @@ const AffinityLibrary = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               <div>
                 <h4 className="font-semibold mb-2">Metadata</h4>
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                    <div className="font-medium">Category:</div>
-                    <div>{selectedAffinity.category}</div>
+                <div className="bg-gray-50 p-4 rounded-md h-[156px]">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <div className="font-medium">Category:</div>
+                      <div>{selectedAffinity.category}</div>
+                    </div>
                     
-                    <div className="font-medium">Type:</div>
-                    <div>{selectedAffinity.type}</div>
+                    <div className="flex justify-between">
+                      <div className="font-medium">Type:</div>
+                      <div>{selectedAffinity.type}</div>
+                    </div>
                     
-                    <div className="font-medium">Applicable Entities:</div>
-                    <div>{selectedAffinity.applicableEntities.join(', ')}</div>
+                    <div className="flex justify-between">
+                      <div className="font-medium">Applicable Entities:</div>
+                      <div>{selectedAffinity.applicableEntities.join(', ')}</div>
+                    </div>
                     
                     {selectedAffinity.scoreAvailable && (
-                      <>
+                      <div className="flex justify-between">
                         <div className="font-medium">Average Score:</div>
                         <div className={getScoreClass(selectedAffinity.avgScore)}>
                           {selectedAffinity.avgScore.toFixed(1)}/10
                         </div>
-                      </>
+                      </div>
                     )}
-                    
-                    <div className="font-medium">Coverage:</div>
-                    <div>{selectedAffinity.coverage}%</div>
+                  </div>
+                </div>
+
+                <h4 className="font-semibold mb-2 mt-4">Coverage</h4>
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <div className="font-medium">Coverage:</div>
+                      <div>{selectedAffinity.coverage}%</div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="font-medium">Tagged Properties:</div>
+                      <div>{taggedPropertiesCount}</div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="font-medium">Properties with Score:</div>
+                      <div>{propertiesWithScoreCount}</div>
+                    </div>
                   </div>
                 </div>
               </div>
               
               <div>
                 <h4 className="font-semibold mb-2">Usage Guidelines</h4>
-                <div className="bg-gray-50 p-4 rounded-md">
+                <div className="bg-gray-50 p-4 rounded-md h-[156px]">
                   <p className="text-sm">
                     This affinity can be used to score {selectedAffinity.applicableEntities.join(', ')} entities. 
                     {selectedAffinity.scoreAvailable 
