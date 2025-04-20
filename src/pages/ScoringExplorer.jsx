@@ -164,11 +164,17 @@ const ScoringExplorer = () => {
                       <ScoreFill 
                         style={{ 
                           width: `${score.score * 10}%`,
-                          backgroundColor: score.score > 7 ? '#27ae60' : score.score > 5 ? '#f39c12' : '#e74c3c'
+                          backgroundColor: score.score >= 8 ? '#34a853' : 
+                                         score.score >= 6 ? '#fbbc04' : '#ea4335'
                         }} 
                       />
                     </ScoreBar>
-                    <ScoreValue>{score.score.toFixed(1)}/10</ScoreValue>
+                    <ScoreValue className={`${
+                      score.score >= 8 ? 'text-green-600' : 
+                      score.score >= 6 ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
+                      {score.score.toFixed(1)}/10
+                    </ScoreValue>
                   </ScoreCard>
                 ))}
               </ScoresList>
@@ -449,15 +455,18 @@ const ScoreBar = styled.div`
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
+  width: 100%;
 `;
 
 const ScoreFill = styled.div`
   height: 100%;
   transition: width 0.3s ease;
+  border-radius: 4px;
 `;
 
 const ScoreValue = styled.div`
   font-size: 0.9rem;
+  font-weight: 500;
   color: var(--secondary-color);
 `;
 
