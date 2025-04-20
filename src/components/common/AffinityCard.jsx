@@ -54,7 +54,7 @@ const AffinityCard = ({ affinity }) => {
           <span className="text-sm text-gray-500 dark:text-gray-400 mb-1">
             Score:
           </span>
-          <span className="font-semibold">
+          <span className="font-semibold text-gray-900 dark:text-gray-100">
             {affinity.score ? `${affinity.score.toFixed(1)}/10` : 'N/A'}
           </span>
         </div>

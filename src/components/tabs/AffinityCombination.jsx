@@ -74,8 +74,8 @@ const AffinityCombination = () => {
   };
 
   const getScoreClass = (score) => {
-    if (score >= 8) return 'text-green-600';
-    if (score >= 6) return 'text-yellow-600';
+    if (score >= 0.8) return 'text-green-600';
+    if (score >= 0.6) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -226,7 +226,7 @@ const AffinityCombination = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Average Score:</span>
                     <span className={`text-sm font-bold ${getScoreClass(property.avgScore)}`}>
-                      {property.avgScore.toFixed(1)}/10
+                      {property.avgScore.toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -239,4 +239,4 @@ const AffinityCombination = () => {
   );
 };
 
-export default AffinityCombination; 
+export default AffinityCombination;

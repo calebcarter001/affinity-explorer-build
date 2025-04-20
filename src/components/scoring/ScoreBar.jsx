@@ -27,10 +27,7 @@ const ScoreBar = ({
   };
 
   const getColorClasses = () => {
-    if (score >= 8) return scoring.bar.success;
-    if (score >= 6) return scoring.bar.primary;
-    if (score >= 4) return scoring.bar.warning;
-    return scoring.bar.danger;
+    return scoring.bar.primary;
   };
   
   return (
@@ -46,7 +43,7 @@ const ScoreBar = ({
         />
       </div>
       {showValue && (
-        <div className={`${typography.semibold} ${scoring.bar.value}`}>
+        <div className={`${typography.semibold} text-gray-900 dark:text-gray-100 ${scoring.bar.value}`}>
           {score.toFixed(1)}
         </div>
       )}

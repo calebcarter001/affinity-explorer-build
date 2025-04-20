@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import { FiSearch, FiMapPin, FiDownload, FiStar, FiDollarSign, FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiSearch, FiMapPin, FiDownload, FiStar, FiDollarSign, FiCalendar, FiChevronLeft, FiChevronRight, FiRefreshCw } from 'react-icons/fi';
 import { searchProperties } from '../../services/apiService';
 import { cacheService } from '../../services/cacheService';
 import Chart from 'chart.js/auto';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import PropertyCard from '../common/PropertyCard';
+import { withRetry } from '../../utils/errorHandling';
 
 const ITEMS_PER_PAGE = 10;
+const MAX_RETRIES = 3;
 
 const ScoringExplorer = () => {
   const [properties, setProperties] = useState([]);
@@ -21,7 +23,7 @@ const ScoringExplorer = () => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
   
-  // Load all properties with pagination
+  // Enhanced loadAllProperties with retry logic
   const loadAllProperties = async (page = 1) => {
     try {
       setLoading(true);
@@ -38,12 +40,16 @@ const ScoringExplorer = () => {
         return;
       }
 
-      const response = await searchProperties('', page, ITEMS_PER_PAGE);
-      setProperties(response.data);
-      setTotalPages(response.totalPages);
-      
-      // Cache the results
-      cacheService.set(cacheKey, response);
+      const loadData = async () => {
+        const response = await searchProperties('', page, ITEMS_PER_PAGE);
+        setProperties(response.data);
+        setTotalPages(response.totalPages);
+        
+        // Cache the results
+        cacheService.set(cacheKey, response);
+      };
+
+      await withRetry(loadData, MAX_RETRIES);
     } catch (err) {
       setError('Failed to load properties. Please try again.');
       console.error('Error loading properties:', err);
@@ -52,7 +58,7 @@ const ScoringExplorer = () => {
     }
   };
 
-  // Handle search with debouncing
+  // Enhanced handleSearch with retry logic
   const handleSearch = useCallback(async () => {
     if (!searchTerm.trim()) {
       loadAllProperties(currentPage);
@@ -78,12 +84,16 @@ const ScoringExplorer = () => {
         return;
       }
 
-      const response = await searchProperties(searchTerm, currentPage, ITEMS_PER_PAGE);
-      setProperties(response.data);
-      setTotalPages(response.totalPages);
-      
-      // Cache the results
-      cacheService.set(cacheKey, response);
+      const performSearch = async () => {
+        const response = await searchProperties(searchTerm, currentPage, ITEMS_PER_PAGE);
+        setProperties(response.data);
+        setTotalPages(response.totalPages);
+        
+        // Cache the results
+        cacheService.set(cacheKey, response);
+      };
+
+      await withRetry(performSearch, MAX_RETRIES);
     } catch (err) {
       setError('Search failed. Please try again.');
       console.error('Search error:', err);
@@ -198,14 +208,6 @@ const ScoringExplorer = () => {
                     <div className="h-4 bg-gray-200 rounded w-4"></div>
                     <div className="h-4 bg-gray-200 rounded w-2/3"></div>
                   </div>
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="h-3 bg-gray-200 rounded w-3"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-                  </div>
-                  <div className="flex items-center space-x-2 mt-2">
-                    <div className="h-4 bg-gray-200 rounded w-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -220,7 +222,13 @@ const ScoringExplorer = () => {
           type="ERROR"
           actionButton={{
             label: 'Try Again',
-            onClick: handleSearch
+            onClick: () => {
+              if (searchTerm) {
+                handleSearch();
+              } else {
+                loadAllProperties(currentPage);
+              }
+            }
           }}
           suggestions={[
             'Check your internet connection',
@@ -415,7 +423,7 @@ const ScoringExplorer = () => {
                         score.score >= 8 ? 'bg-green-600' : 
                         score.score >= 6 ? 'bg-yellow-600' : 'bg-red-600'
                       }`}
-                      style={{ width: `${score.score * 10}%` }}
+                      style={{ width: `${(score.score / 10) * 100}%` }}
                     ></div>
                   </div>
                 </div>
