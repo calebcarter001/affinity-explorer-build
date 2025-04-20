@@ -6,33 +6,31 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    strictPort: true,
-    host: true,
     open: true,
+    cors: true,
+    hmr: {
+      overlay: true,
+      clientPort: 3000
+    },
     watch: {
       usePolling: true,
-      interval: 100
-    },
-    hmr: {
-      overlay: true
+      interval: 1000
     }
   },
-  resolve: {
-    alias: {
-      '@': '/src'
-    }
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.js',
-    css: true,
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/setupTests.js',
-      ],
+  clearScreen: false,
+  logLevel: 'info',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
     },
-  }
+  },
+  preview: {
+    port: 5173,
+    strictPort: true,
+  },
+  base: '/',
 }) 
