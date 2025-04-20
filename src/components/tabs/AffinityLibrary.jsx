@@ -187,9 +187,7 @@ const AffinityLibrary = () => {
   };
 
   const getScoreClass = (score) => {
-    if (score >= 8) return 'text-green-600';
-    if (score >= 6) return 'text-yellow-600';
-    return 'text-red-600';
+    return 'text-gray-900';
   };
 
   const renderContent = () => {
@@ -314,7 +312,7 @@ const AffinityLibrary = () => {
                   <div>
                     <span className="font-medium">Avg Score:</span>
                     <span className={`ml-1 ${getScoreClass(affinity.avgScore)}`}>
-                      {affinity.avgScore.toFixed(1)}/10
+                      {affinity.avgScore}
                     </span>
                   </div>
                 )}
@@ -357,8 +355,8 @@ const AffinityLibrary = () => {
                     {selectedAffinity.scoreAvailable && (
                       <div className="flex justify-between">
                         <div className="font-medium">Average Score:</div>
-                        <div className={getScoreClass(selectedAffinity.avgScore)}>
-                          {selectedAffinity.avgScore.toFixed(1)}/10
+                        <div>
+                          {selectedAffinity.avgScore}
                         </div>
                       </div>
                     )}
@@ -379,6 +377,18 @@ const AffinityLibrary = () => {
                     <div className="flex justify-between">
                       <div className="font-medium">Properties with Score:</div>
                       <div>{propertiesWithScoreCount}</div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="font-medium">Highest Score:</div>
+                      <div className={getScoreClass(selectedAffinity.highestScore)}>
+                        {selectedAffinity.highestScore?.toFixed(2) || 'N/A'}
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="font-medium">Lowest Score:</div>
+                      <div className={getScoreClass(selectedAffinity.lowestScore)}>
+                        {selectedAffinity.lowestScore?.toFixed(2) || 'N/A'}
+                      </div>
                     </div>
                   </div>
                 </div>

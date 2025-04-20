@@ -26,11 +26,29 @@ const AccuracyMetrics = ({ goal }) => {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: 'right',
+        align: 'center',
+        labels: {
+          padding: 20,
+          boxWidth: 12,
+          font: {
+            size: 12
+          }
+        }
       },
-    },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const label = context.label || '';
+            const value = context.parsed || 0;
+            return `${label}: ${value}%`;
+          }
+        }
+      }
+    }
   };
 
   const progress = (goal.current / goal.target) * 100;
@@ -68,18 +86,10 @@ const AccuracyMetrics = ({ goal }) => {
               <span className="text-gray-500">Last Updated:</span>
               <span className="ml-1 font-medium">{new Date(goal.lastUpdated).toLocaleDateString()}</span>
             </div>
-            <div>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
-                ${goal.status === 'completed' ? 'bg-green-100 text-green-800' :
-                  goal.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                  'bg-yellow-100 text-yellow-800'}`}>
-                {goal.status.replace('_', ' ')}
-              </span>
-            </div>
           </div>
         </div>
 
-        <div className="relative h-48">
+        <div className="h-[200px] relative">
           <Pie data={chartData} options={chartOptions} />
         </div>
       </div>
