@@ -72,7 +72,7 @@ const AffinityDetailView = ({
                 <div className="flex justify-between">
                   <div className="font-medium">Average Score:</div>
                   <div>
-                    <ScoreDisplay label="Average Score" score={affinity.avgScore} />
+                    <ScoreDisplay label="Average Score" score={affinity.averageScore} />
                   </div>
                 </div>
               )}
@@ -150,7 +150,7 @@ const AffinityDetailView = ({
       </div>
 
       <div className="grid grid-cols-3 gap-8 p-6 bg-white rounded-lg shadow mb-6">
-        <ScoreDisplay label="Average Score" score={affinity.avgScore} />
+        <ScoreDisplay label="Average Score" score={affinity.averageScore} />
         <ScoreDisplay label="Highest Score" score={affinity.highestScore} />
         <ScoreDisplay label="Lowest Score" score={affinity.lowestScore} />
       </div>
@@ -167,7 +167,7 @@ AffinityDetailView.propTypes = {
     type: PropTypes.string,
     applicableEntities: PropTypes.arrayOf(PropTypes.string),
     scoreAvailable: PropTypes.bool,
-    avgScore: PropTypes.number,
+    averageScore: PropTypes.number,
     coverage: PropTypes.number,
     highestScore: PropTypes.number,
     lowestScore: PropTypes.number,

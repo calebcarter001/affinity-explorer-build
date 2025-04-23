@@ -29,12 +29,45 @@ export const formatDate = (dateString, options = {}) => {
  * @returns {string} Formatted number
  */
 export const formatNumber = (number, decimals = 0) => {
-  if (number === null || number === undefined) return '';
+  if (number === null || number === undefined) return 'N/A';
   
   return Number(number).toLocaleString(undefined, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
   });
+};
+
+/**
+ * Format a number as a percentage
+ * @param {number} value - Number to format as percentage
+ * @param {number} decimals - Number of decimal places
+ * @returns {string} Formatted percentage
+ */
+export const formatPercentage = (value, decimals = 1) => {
+  if (value === null || value === undefined) return 'N/A';
+  
+  const percentage = value * 100;
+  return `${Number(percentage).toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  })}%`;
+};
+
+/**
+ * Format a score as a percentage
+ * @param {number} score - Score value
+ * @param {number} maxScore - Maximum possible score
+ * @param {number} decimals - Number of decimal places
+ * @returns {string} Formatted percentage
+ */
+export const scoreToPercentage = (score, maxScore = 10, decimals = 1) => {
+  if (score === null || score === undefined) return 'N/A';
+  
+  const percentage = (score / maxScore) * 100;
+  return `${Number(percentage).toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  })}%`;
 };
 
 /**
@@ -64,17 +97,4 @@ export const toTitleCase = (text) => {
     .replace(/\w\S*/g, (word) => {
       return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
     });
-};
-
-/**
- * Format a score as a percentage
- * @param {number} score - Score value
- * @param {number} maxScore - Maximum possible score
- * @returns {string} Formatted percentage
- */
-export const scoreToPercentage = (score, maxScore = 10) => {
-  if (score === null || score === undefined) return '';
-  
-  const percentage = (score / maxScore) * 100;
-  return `${Math.round(percentage)}%`;
 }; 

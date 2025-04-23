@@ -147,9 +147,12 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Amenities",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.72,
+      averageScore: 0.72,
       highestScore: 0.95,
       lowestScore: 0.48,
+      totalProperties: 100,
+      activeProperties: 72,
+      inactiveProperties: 28,
       status: "Active",
       coverage: 72,
       definition: "Properties that offer comprehensive all-inclusive packages."
@@ -161,9 +164,12 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Value",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.68,
+      averageScore: 0.68,
       highestScore: 0.92,
       lowestScore: 0.35,
+      totalProperties: 85,
+      activeProperties: 55,
+      inactiveProperties: 30,
       status: "Active",
       coverage: 65,
       definition: "Properties that offer good value for budget-conscious travelers."
@@ -175,9 +181,12 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Family",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.79,
+      averageScore: 0.79,
       highestScore: 0.98,
       lowestScore: 0.52,
+      totalProperties: 120,
+      activeProperties: 97,
+      inactiveProperties: 23,
       status: "Active",
       coverage: 81,
       definition: "Properties that welcome pets with amenities or policies that accommodate animals."
@@ -189,12 +198,15 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Location",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.82,
+      averageScore: 0.87,
       highestScore: 0.99,
-      lowestScore: 0.61,
+      lowestScore: 0.65,
+      totalProperties: 95,
+      activeProperties: 82,
+      inactiveProperties: 13,
       status: "Active",
-      coverage: 45,
-      definition: "Properties located near or with access to beaches."
+      coverage: 38,
+      definition: "Properties with direct or convenient access to beaches."
     },
     {
       id: 5,
@@ -203,25 +215,31 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Amenities",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.87,
-      highestScore: 1.00,
-      lowestScore: 0.70,
+      averageScore: 0.75,
+      highestScore: 0.96,
+      lowestScore: 0.45,
+      totalProperties: 80,
+      activeProperties: 65,
+      inactiveProperties: 15,
       status: "Active",
-      coverage: 38,
+      coverage: 62,
       definition: "Properties featuring outdoor swimming pools."
     },
     {
       id: 6,
       name: "ocean view",
-      type: "Feature Score",
-      category: "Views",
+      type: "Location Score",
+      category: "Location",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.75,
-      highestScore: 0.93,
-      lowestScore: 0.55,
+      averageScore: 0.82,
+      highestScore: 0.97,
+      lowestScore: 0.58,
+      totalProperties: 90,
+      activeProperties: 75,
+      inactiveProperties: 15,
       status: "Active",
-      coverage: 62,
+      coverage: 45,
       definition: "Properties offering views of the ocean."
     },
     {
@@ -231,12 +249,15 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Accommodation",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.78,
-      highestScore: 0.96,
-      lowestScore: 0.58,
+      averageScore: 0.78,
+      highestScore: 0.94,
+      lowestScore: 0.48,
+      totalProperties: 70,
+      activeProperties: 55,
+      inactiveProperties: 15,
       status: "Active",
       coverage: 41,
-      definition: "Properties that are cabins or cabin-style accommodations."
+      definition: "Properties classified as cabin accommodations."
     },
     {
       id: 8,
@@ -245,9 +266,12 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Family",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.69,
+      averageScore: 0.69,
       highestScore: 0.91,
       lowestScore: 0.42,
+      totalProperties: 110,
+      activeProperties: 85,
+      inactiveProperties: 25,
       status: "Active",
       coverage: 33,
       definition: "Properties suitable for families with children."
@@ -259,9 +283,12 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Premium",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.82,
+      averageScore: 0.82,
       highestScore: 0.99,
       lowestScore: 0.61,
+      totalProperties: 75,
+      activeProperties: 60,
+      inactiveProperties: 15,
       status: "Active",
       coverage: 45,
       definition: "High-end properties offering premium amenities and services."
@@ -273,9 +300,12 @@ export const getAffinities = async (page = 1, limit = 10) => {
       category: "Accommodation",
       scoreAvailable: true,
       applicableEntities: ["Property"],
-      avgScore: 0.75,
+      averageScore: 0.75,
       highestScore: 0.93,
       lowestScore: 0.55,
+      totalProperties: 65,
+      activeProperties: 50,
+      inactiveProperties: 15,
       status: "Active",
       coverage: 62,
       definition: "Private residential properties available for vacation rentals."
@@ -418,7 +448,7 @@ const affinityConcepts = [
     category: "Family",
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination"],
-    avgScore: 7.2,
+    averageScore: 7.2,
     status: "Active",
     coverage: 72,
     definition: "Properties that welcome pets with amenities or policies that accommodate animals."
@@ -430,7 +460,7 @@ const affinityConcepts = [
     category: "Adults",
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination", "POI"],
-    avgScore: 6.8,
+    averageScore: 6.8,
     status: "Active",
     coverage: 65,
     definition: "Properties suitable for couples seeking a romantic experience."
@@ -442,7 +472,7 @@ const affinityConcepts = [
     category: "Family",
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination"],
-    avgScore: 7.9,
+    averageScore: 7.9,
     status: "Active",
     coverage: 81,
     definition: "Properties that cater to families with children offering suitable amenities and activities."
@@ -454,7 +484,7 @@ const affinityConcepts = [
     category: "Premium",
     scoreAvailable: true,
     applicableEntities: ["Property"],
-    avgScore: 8.2,
+    averageScore: 8.2,
     status: "Active",
     coverage: 45,
     definition: "High-end properties offering premium amenities, services, and experiences."
@@ -466,7 +496,7 @@ const affinityConcepts = [
     category: "Location",
     scoreAvailable: true,
     applicableEntities: ["Property"],
-    avgScore: 8.7,
+    averageScore: 8.7,
     status: "Active",
     coverage: 38,
     definition: "Properties with direct or convenient access to beaches."
@@ -717,53 +747,4 @@ export const createCollection = async (collectionData) => {
   // In a real implementation, this would be an API call
   // For now, we'll just return the new collection
   return newCollection;
-};
-
-// Get tagged properties count for an affinity
-export const getAffinityTaggedProperties = async (affinityId) => {
-  const cacheKey = cacheService.generateKey('affinity_tagged_properties', { affinityId });
-  const cachedData = cacheService.get(cacheKey);
-  if (cachedData) return cachedData;
-
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // Mock data for tagged properties count by ID
-  const mockTaggedPropertiesCount = {
-    // IDs corresponding to performance data
-    1: { tagged: 4, withScore: 4 },  // all inclusive
-    2: { tagged: 5, withScore: 5 },  // budget
-    3: { tagged: 3, withScore: 3 },  // pet friendly
-    4: { tagged: 4, withScore: 4 },  // beach
-    5: { tagged: 2, withScore: 2 },  // outdoor pool
-    6: { tagged: 3, withScore: 3 },  // ocean view
-    7: { tagged: 2, withScore: 2 },  // cabin
-    8: { tagged: 4, withScore: 4 },  // family friendly
-    9: { tagged: 5, withScore: 5 },  // luxury
-    10: { tagged: 2, withScore: 2 }, // private vacation homes
-    11: { tagged: 3, withScore: 3 }, // hot tub
-    12: { tagged: 4, withScore: 4 }, // spa
-    13: { tagged: 3, withScore: 3 }, // apartments
-    14: { tagged: 5, withScore: 5 }, // kitchen
-    15: { tagged: 2, withScore: 2 }, // adult
-    16: { tagged: 4, withScore: 4 }, // free breakfast
-    17: { tagged: 2, withScore: 2 }, // casino
-    18: { tagged: 3, withScore: 3 }, // free airport transportation
-    19: { tagged: 4, withScore: 4 }, // romantic
-    20: { tagged: 2, withScore: 2 }, // waterpark
-    21: { tagged: 3, withScore: 3 }, // villas
-    22: { tagged: 2, withScore: 2 }, // cottages
-    23: { tagged: 3, withScore: 3 }, // lgbt welcoming
-    24: { tagged: 5, withScore: 5 }, // parking
-    25: { tagged: 2, withScore: 2 }, // lake
-    26: { tagged: 3, withScore: 3 }, // indoor pool
-    27: { tagged: 2, withScore: 2 }, // golf
-    28: { tagged: 2, withScore: 2 }, // waterslide
-    29: { tagged: 4, withScore: 4 }, // balcony
-    30: { tagged: 3, withScore: 3 }  // early check in
-  };
-
-  const data = mockTaggedPropertiesCount[affinityId] || { tagged: 0, withScore: 0 };
-  cacheService.set(cacheKey, data);
-  return data;
 }; 

@@ -1,9 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiBarChart2, FiLayers, FiTrendingUp } from 'react-icons/fi';
+import { getAffinities } from '../../services/apiService';
 import PerformanceTab from './workbench/PerformanceTab';
+import CompareTab from './workbench/CompareTab';
 
 const Workbench = () => {
   const [activeTab, setActiveTab] = useState('performance');
+  const [affinities, setAffinities] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [periodState, setPeriodState] = useState({
+    mode: 'quarter',
+    year: new Date().getFullYear(),
+    quarter: 1
+  });
+
+  useEffect(() => {
+    const loadAffinities = async () => {
+      if (activeTab === 'compare') {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await getAffinities();
+          setAffinities(response.data);
+        } catch (err) {
+          console.error('Failed to load affinities:', err);
+          setError('Failed to load affinities');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAffinities();
+  }, [activeTab]);
 
   const tabs = [
     { id: 'performance', label: 'Performance', icon: <FiBarChart2 /> },
@@ -42,14 +72,15 @@ const Workbench = () => {
       {/* Tab Content */}
       <div className="mt-2">
         {activeTab === 'performance' && <PerformanceTab />}
-
         {activeTab === 'compare' && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold mb-4">Compare Affinities</h2>
-            <p className="text-gray-600">Compare tab content will be implemented here</p>
-          </div>
+          <CompareTab
+            affinities={affinities}
+            loading={loading}
+            error={error}
+            periodState={periodState}
+            onPeriodChange={setPeriodState}
+          />
         )}
-
         {activeTab === 'forecast' && (
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Forecast Analysis</h2>

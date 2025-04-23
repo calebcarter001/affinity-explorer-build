@@ -45,9 +45,9 @@ const AffinityCombination = () => {
             const relevantScores = property.affinityScores.filter(score => 
               selectedAffinities.some(aff => aff.name === score.name)
             );
-            const avgScore = relevantScores.reduce((sum, score) => sum + score.score, 0) / relevantScores.length;
-            return { ...property, avgScore };
-          }).sort((a, b) => b.avgScore - a.avgScore);
+            const averageScore = relevantScores.reduce((sum, score) => sum + score.score, 0) / relevantScores.length;
+            return { ...property, averageScore };
+          }).sort((a, b) => b.averageScore - a.averageScore);
 
           setMatchingProperties(sorted);
         } catch (err) {
@@ -225,8 +225,8 @@ const AffinityCombination = () => {
                 <div className="mt-3 pt-3 border-t">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Average Score:</span>
-                    <span className={`text-sm font-bold ${getScoreClass(property.avgScore)}`}>
-                      {property.avgScore.toFixed(2)}
+                    <span className={`text-sm font-bold ${getScoreClass(property.averageScore)}`}>
+                      {property.averageScore.toFixed(2)}
                     </span>
                   </div>
                 </div>

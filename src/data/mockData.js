@@ -1,4 +1,3 @@
-
         // Mock data for the application
         const affinityConcepts = [
             {
@@ -8,7 +7,7 @@
                 category: "Family",
                 scoreAvailable: true,
                 applicableEntities: ["Property", "Destination"],
-                avgScore: 7.2,
+                averageScore: 0.72,
                 status: "Validated",
                 coverage: 72,
                 definition: "Properties that welcome pets with amenities or policies that accommodate animals."
@@ -20,7 +19,7 @@
                 category: "Adults",
                 scoreAvailable: true,
                 applicableEntities: ["Property", "Destination", "POI"],
-                avgScore: 6.8,
+                averageScore: 0.68,
                 status: "Validated",
                 coverage: 65,
                 definition: "Properties suitable for couples seeking a romantic experience."
@@ -32,7 +31,7 @@
                 category: "Family",
                 scoreAvailable: true,
                 applicableEntities: ["Property", "Destination"],
-                avgScore: 7.9,
+                averageScore: 0.79,
                 status: "Validated",
                 coverage: 81,
                 definition: "Properties that cater to families with children offering suitable amenities and activities."
@@ -44,7 +43,7 @@
                 category: "Premium",
                 scoreAvailable: true,
                 applicableEntities: ["Property"],
-                avgScore: 8.2,
+                averageScore: 0.82,
                 status: "Validated",
                 coverage: 45,
                 definition: "High-end properties offering premium amenities, services, and experiences."
@@ -56,7 +55,7 @@
                 category: "Location",
                 scoreAvailable: true,
                 applicableEntities: ["Property"],
-                avgScore: 8.7,
+                averageScore: 0.87,
                 status: "Validated",
                 coverage: 38,
                 definition: "Properties with direct or convenient access to beaches."
@@ -68,7 +67,7 @@
                 category: "Adults",
                 scoreAvailable: true,
                 applicableEntities: ["Property"],
-                avgScore: 7.5,
+                averageScore: 0.75,
                 status: "In Enrichment",
                 coverage: 62,
                 definition: "Properties offering secluded or private accommodations away from crowds."
@@ -80,7 +79,7 @@
                 category: "Outdoors",
                 scoreAvailable: true,
                 applicableEntities: ["Property", "Destination"],
-                avgScore: 7.8,
+                averageScore: 0.78,
                 status: "In Enrichment",
                 coverage: 41,
                 definition: "Properties situated in natural surroundings with minimal urban development."
@@ -92,7 +91,7 @@
                 category: "Cultural",
                 scoreAvailable: true,
                 applicableEntities: ["Property", "Destination", "POI"],
-                avgScore: 6.9,
+                averageScore: 0.69,
                 status: "Validated",
                 coverage: 33,
                 definition: "Properties with historical significance or located in historical areas."
@@ -105,13 +104,14 @@
                 name: "Oceanview Resort & Spa",
                 location: "Miami Beach, FL",
                 propertyType: "Hotel",
+                averageScore: 0.82,
                 affinityScores: [
-                    { name: "Pet-Friendly", score: 7.2 },
-                    { name: "Romantic", score: 8.5 },
-                    { name: "Luxury", score: 9.1 },
-                    { name: "Beach Access", score: 9.5 },
-                    { name: "Privacy", score: 8.2 },
-                    { name: "Family-Friendly", score: 6.7 }
+                    { name: "Pet-Friendly", score: 0.72 },
+                    { name: "Romantic", score: 0.85 },
+                    { name: "Luxury", score: 0.91 },
+                    { name: "Beach Access", score: 0.95 },
+                    { name: "Privacy", score: 0.82 },
+                    { name: "Family-Friendly", score: 0.67 }
                 ]
             },
             {
@@ -119,12 +119,13 @@
                 name: "Mountain Lodge",
                 location: "Aspen, CO",
                 propertyType: "Resort",
+                averageScore: 0.85,
                 affinityScores: [
-                    { name: "Pet-Friendly", score: 8.7 },
-                    { name: "Family-Friendly", score: 7.6 },
-                    { name: "Nature Retreat", score: 9.3 },
-                    { name: "Privacy", score: 8.8 },
-                    { name: "Luxury", score: 8.1 }
+                    { name: "Pet-Friendly", score: 0.87 },
+                    { name: "Family-Friendly", score: 0.76 },
+                    { name: "Nature Retreat", score: 0.93 },
+                    { name: "Privacy", score: 0.88 },
+                    { name: "Luxury", score: 0.81 }
                 ]
             },
             {
@@ -132,11 +133,12 @@
                 name: "City Center Suites",
                 location: "New York, NY",
                 propertyType: "Hotel",
+                averageScore: 0.73,
                 affinityScores: [
-                    { name: "Luxury", score: 8.3 },
-                    { name: "Pet-Friendly", score: 6.1 },
-                    { name: "Historical", score: 7.5 },
-                    { name: "Romantic", score: 7.2 }
+                    { name: "Luxury", score: 0.83 },
+                    { name: "Pet-Friendly", score: 0.61 },
+                    { name: "Historical", score: 0.75 },
+                    { name: "Romantic", score: 0.72 }
                 ]
             }
         ];
@@ -290,7 +292,7 @@
                         </div>
                         <p class="text-sm text-gray-600 mb-3">${affinity.definition}</p>
                         <div class="flex justify-between text-xs text-gray-500">
-                            <span>Score: ${affinity.avgScore}/10</span>
+                            <span>Score: ${(affinity.averageScore * 100).toFixed(0)}%</span>
                             <span>Coverage: ${affinity.coverage}%</span>
                         </div>
                     `;
@@ -326,7 +328,7 @@
                 document.getElementById('detail-category').textContent = affinity.category;
                 document.getElementById('detail-type').textContent = affinity.type;
                 document.getElementById('detail-entities').textContent = affinity.applicableEntities.join(', ');
-                document.getElementById('detail-score').textContent = `${affinity.avgScore}/10`;
+                document.getElementById('detail-score').textContent = `${(affinity.averageScore * 100).toFixed(0)}%`;
                 document.getElementById('detail-coverage').textContent = `${affinity.coverage}%`;
                 
                 // Populate related concepts
@@ -509,14 +511,14 @@
                 if (analysisContainer) {
                     const highestScore = sortedScores[0].score;
                     const highestScoreName = sortedScores[0].name;
-                    const avgScore = (property.affinityScores.reduce((sum, score) => sum + score.score, 0) / property.affinityScores.length).toFixed(1);
+                    const averageScore = (property.affinityScores.reduce((sum, score) => sum + score.score, 0) / property.affinityScores.length).toFixed(1);
                     
                     analysisContainer.innerHTML = `
                         <li>
                             <strong>Highest Score:</strong> ${highestScore.toFixed(1)}/10 (${highestScoreName})
                         </li>
                         <li>
-                            <strong>Average Score:</strong> ${avgScore}/10
+                            <strong>Average Score:</strong> ${averageScore}/10
                         </li>
                         <li>
                             <strong>Total Affinities:</strong> ${property.affinityScores.length}

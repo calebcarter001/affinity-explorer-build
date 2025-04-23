@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus, FiChevronLeft, FiChevronRight, FiLayers, FiBook } from 'react-icons/fi';
-import { getAffinities, getAffinityTaggedProperties } from '../../services/apiService';
+import { getAffinities } from '../../services/apiService';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import SkeletonLoader from '../common/SkeletonLoader';
 import AffinityCollections from '../collections/AffinityCollections';
@@ -19,8 +19,6 @@ const AffinityLibrary = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [taggedPropertiesCount, setTaggedPropertiesCount] = useState(0);
-  const [propertiesWithScoreCount, setPropertiesWithScoreCount] = useState(0);
 
   // Load specific affinity if navigated from dashboard
   useEffect(() => {
@@ -31,11 +29,6 @@ const AffinityLibrary = () => {
           if (location.state.affinity) {
             // Use the passed affinity data immediately
             setSelectedAffinity(location.state.affinity);
-            
-            // Fetch tagged properties data
-            const taggedData = await getAffinityTaggedProperties(location.state.affinity.id);
-            setTaggedPropertiesCount(taggedData.tagged || 0);
-            setPropertiesWithScoreCount(taggedData.withScore || 0);
             
             // Load the first page of affinities
             const response = await getAffinities(1, itemsPerPage);
@@ -66,10 +59,6 @@ const AffinityLibrary = () => {
               
               setCurrentPage(targetPage);
               setSelectedAffinity(targetAffinity);
-              
-              const taggedData = await getAffinityTaggedProperties(targetAffinity.id);
-              setTaggedPropertiesCount(taggedData.tagged || 0);
-              setPropertiesWithScoreCount(taggedData.withScore || 0);
             }
           }
         } catch (err) {
@@ -122,17 +111,8 @@ const AffinityLibrary = () => {
     setFilteredAffinities(filtered);
   }, [affinities, searchTerm]);
 
-  const handleAffinityClick = async (affinity) => {
+  const handleAffinityClick = (affinity) => {
     setSelectedAffinity(affinity);
-    try {
-      const taggedData = await getAffinityTaggedProperties(affinity.id);
-      setTaggedPropertiesCount(taggedData.tagged || 0);
-      setPropertiesWithScoreCount(taggedData.withScore || 0);
-    } catch (err) {
-      console.error('Failed to load tagged properties:', err);
-      setTaggedPropertiesCount(0);
-      setPropertiesWithScoreCount(0);
-    }
   };
 
   const getStatusBadge = (status) => {
@@ -214,8 +194,8 @@ const AffinityLibrary = () => {
                       {affinity.scoreAvailable && (
                         <div>
                           <span className="font-medium">Avg Score:</span>
-                          <span className={`ml-1 ${getScoreClass(affinity.avgScore)}`}>
-                            {affinity.avgScore}
+                          <span className={`ml-1 ${getScoreClass(affinity.averageScore)}`}>
+                            {affinity.averageScore}
                           </span>
                         </div>
                       )}
@@ -277,8 +257,8 @@ const AffinityLibrary = () => {
           ) : (
             <AffinityDetailView
               affinity={selectedAffinity}
-              taggedPropertiesCount={taggedPropertiesCount}
-              propertiesWithScoreCount={propertiesWithScoreCount}
+              taggedPropertiesCount={selectedAffinity.totalProperties}
+              propertiesWithScoreCount={selectedAffinity.activeProperties}
               showImplementation={true}
               showUsageGuidelines={true}
             />

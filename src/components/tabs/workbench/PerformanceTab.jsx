@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { FiChevronDown, FiChevronUp, FiMoreVertical, FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import AffinityDetailView from '../../common/AffinityDetailView';
-import { getAffinities, getAffinityTaggedProperties } from '../../../services/apiService';
+import { getAffinities } from '../../../services/apiService';
 import SkeletonLoader from '../../common/SkeletonLoader';
 
 const PerformanceTab = () => {
@@ -15,256 +15,140 @@ const PerformanceTab = () => {
   });
   const [selectedAffinityDetails, setSelectedAffinityDetails] = useState(null);
   const [loadingAffinityDetails, setLoadingAffinityDetails] = useState(false);
-  const [taggedPropertiesCount, setTaggedPropertiesCount] = useState(0);
-  const [propertiesWithScoreCount, setPropertiesWithScoreCount] = useState(0);
 
   const ITEMS_PER_PAGE = 6;
 
-  // Mock data structure based on the provided spreadsheet
-  const performanceData = [
-    {
-      affinityId: 1,
-      affinityName: 'all inclusive',
-      clicks: 3931335,
-      impressions: 56890607,
-      transactions: 5504,
-      gpNet: 926886
-    },
-    {
-      affinityId: 2,
-      affinityName: 'budget',
-      clicks: 2933713,
-      impressions: 86325301,
-      transactions: 60882,
-      gpNet: 1826208
-    },
-    {
-      affinityId: 3,
-      affinityName: 'pet friendly',
-      clicks: 1382166,
-      impressions: 8560654,
-      transactions: 17092,
-      gpNet: 1017573
-    },
-    {
-      affinityId: 4,
-      affinityName: 'beach',
-      clicks: 1375225,
-      impressions: 38214417,
-      transactions: 5654,
-      gpNet: 798911
-    },
-    {
-      affinityId: 5,
-      affinityName: 'outdoor pool',
-      clicks: 1062738,
-      impressions: 18847512,
-      transactions: 4310,
-      gpNet: 498842
-    },
-    {
-      affinityId: 6,
-      affinityName: 'ocean view',
-      clicks: 783521,
-      impressions: 9142716,
-      transactions: 5656,
-      gpNet: 889168
-    },
-    {
-      affinityId: 7,
-      affinityName: 'cabin',
-      clicks: 776463,
-      impressions: 9855561,
-      transactions: 3223,
-      gpNet: 495552
-    },
-    {
-      affinityId: 8,
-      affinityName: 'family friendly',
-      clicks: 697507,
-      impressions: 8581996,
-      transactions: 2302,
-      gpNet: 172081
-    },
-    {
-      affinityId: 9,
-      affinityName: 'luxury',
-      clicks: 663849,
-      impressions: 15107144,
-      transactions: 4685,
-      gpNet: 310475
-    },
-    {
-      affinityId: 10,
-      affinityName: 'private vacation homes',
-      clicks: 601389,
-      impressions: 23478380,
-      transactions: 3151,
-      gpNet: 812902
-    },
-    {
-      affinityId: 11,
-      affinityName: 'hot tub',
-      clicks: 567153,
-      impressions: 1989279,
-      transactions: 3171,
-      gpNet: 120253
-    },
-    {
-      affinityId: 12,
-      affinityName: 'spa',
-      clicks: 514927,
-      impressions: 5594406,
-      transactions: 1015,
-      gpNet: 47913
-    },
-    {
-      affinityId: 13,
-      affinityName: 'apartments',
-      clicks: 404886,
-      impressions: 10203298,
-      transactions: 1198,
-      gpNet: 264573
-    },
-    {
-      affinityId: 14,
-      affinityName: 'kitchen',
-      clicks: 395730,
-      impressions: 3357168,
-      transactions: 2731,
-      gpNet: 222386
-    },
-    {
-      affinityId: 15,
-      affinityName: 'adult',
-      clicks: 374613,
-      impressions: 627987,
-      transactions: 643,
-      gpNet: 89232
-    },
-    {
-      affinityId: 16,
-      affinityName: 'free breakfast',
-      clicks: 355306,
-      impressions: 4469131,
-      transactions: 2791,
-      gpNet: 111207
-    },
-    {
-      affinityId: 17,
-      affinityName: 'casino',
-      clicks: 331673,
-      impressions: 2071452,
-      transactions: 1392,
-      gpNet: 52411
-    },
-    {
-      affinityId: 18,
-      affinityName: 'free airport transportation',
-      clicks: 288416,
-      impressions: 1031076,
-      transactions: 8221,
-      gpNet: 197189
-    },
-    {
-      affinityId: 19,
-      affinityName: 'romantic',
-      clicks: 275930,
-      impressions: 1160335,
-      transactions: 791,
-      gpNet: 34019
-    },
-    {
-      affinityId: 20,
-      affinityName: 'waterpark',
-      clicks: 268288,
-      impressions: 1037138,
-      transactions: 461,
-      gpNet: 26031
-    },
-    {
-      affinityId: 21,
-      affinityName: 'villas',
-      clicks: 260809,
-      impressions: 9090130,
-      transactions: 396,
-      gpNet: 193476
-    },
-    {
-      affinityId: 22,
-      affinityName: 'cottages',
-      clicks: 256755,
-      impressions: 9637532,
-      transactions: 665,
-      gpNet: 109539
-    },
-    {
-      affinityId: 23,
-      affinityName: 'lgbt welcoming',
-      clicks: 247521,
-      impressions: 491267,
-      transactions: 336,
-      gpNet: 17789
-    },
-    {
-      affinityId: 24,
-      affinityName: 'parking',
-      clicks: 221537,
-      impressions: 5289284,
-      transactions: 2281,
-      gpNet: 80483
-    },
-    {
-      affinityId: 25,
-      affinityName: 'lake',
-      clicks: 219909,
-      impressions: 2490731,
-      transactions: 778,
-      gpNet: 145087
-    },
-    {
-      affinityId: 26,
-      affinityName: 'indoor pool',
-      clicks: 187015,
-      impressions: 460315,
-      transactions: 2906,
-      gpNet: 87880
-    },
-    {
-      affinityId: 27,
-      affinityName: 'golf',
-      clicks: 128955,
-      impressions: 415269,
-      transactions: 422,
-      gpNet: 20861
-    },
-    {
-      affinityId: 28,
-      affinityName: 'waterslide',
-      clicks: 120347,
-      impressions: 149960,
-      transactions: 622,
-      gpNet: 22911
-    },
-    {
-      affinityId: 29,
-      affinityName: 'balcony',
-      clicks: 118718,
-      impressions: 588227,
-      transactions: 1055,
-      gpNet: 52000
-    },
-    {
-      affinityId: 30,
-      affinityName: 'early check in',
-      clicks: 115563,
-      impressions: 241595,
-      transactions: 1185,
-      gpNet: 33206
-    }
-  ];
+  // Create yearly performance data with historical trends
+  const yearlyPerformanceData = {
+    '2024': [
+      {
+        affinityId: 1,
+        affinityName: 'all inclusive',
+        clicks: 3931335,
+        impressions: 56890607,
+        transactions: 5504,
+        gpNet: 926886
+      },
+      {
+        affinityId: 2,
+        affinityName: 'budget',
+        clicks: 2933713,
+        impressions: 86325301,
+        transactions: 60882,
+        gpNet: 1826208
+      },
+      {
+        affinityId: 3,
+        affinityName: 'pet friendly',
+        clicks: 1382166,
+        impressions: 8560654,
+        transactions: 17092,
+        gpNet: 1017573
+      },
+      {
+        affinityId: 4,
+        affinityName: 'beach',
+        clicks: 1375225,
+        impressions: 38214417,
+        transactions: 5654,
+        gpNet: 798911
+      },
+      {
+        affinityId: 5,
+        affinityName: 'outdoor pool',
+        clicks: 1062738,
+        impressions: 18847512,
+        transactions: 4310,
+        gpNet: 498842
+      }
+    ],
+    '2023': [
+      {
+        affinityId: 1,
+        affinityName: 'all inclusive',
+        clicks: 3245782,
+        impressions: 48356016,
+        transactions: 4623,
+        gpNet: 845221
+      },
+      {
+        affinityId: 2,
+        affinityName: 'budget',
+        clicks: 2456892,
+        impressions: 72563421,
+        transactions: 52345,
+        gpNet: 1623456
+      },
+      {
+        affinityId: 3,
+        affinityName: 'pet friendly',
+        clicks: 1156234,
+        impressions: 7234567,
+        transactions: 14567,
+        gpNet: 876543
+      },
+      {
+        affinityId: 4,
+        affinityName: 'beach',
+        clicks: 1234567,
+        impressions: 32456789,
+        transactions: 4789,
+        gpNet: 678234
+      },
+      {
+        affinityId: 5,
+        affinityName: 'outdoor pool',
+        clicks: 987654,
+        impressions: 15678234,
+        transactions: 3876,
+        gpNet: 423456
+      }
+    ],
+    '2022': [
+      {
+        affinityId: 1,
+        affinityName: 'all inclusive',
+        clicks: 2876543,
+        impressions: 42345678,
+        transactions: 3987,
+        gpNet: 756432
+      },
+      {
+        affinityId: 2,
+        affinityName: 'budget',
+        clicks: 2123456,
+        impressions: 65432198,
+        transactions: 45678,
+        gpNet: 1432198
+      },
+      {
+        affinityId: 3,
+        affinityName: 'pet friendly',
+        clicks: 987654,
+        impressions: 6543219,
+        transactions: 12345,
+        gpNet: 765432
+      },
+      {
+        affinityId: 4,
+        affinityName: 'beach',
+        clicks: 1098765,
+        impressions: 28765432,
+        transactions: 4123,
+        gpNet: 587654
+      },
+      {
+        affinityId: 5,
+        affinityName: 'outdoor pool',
+        clicks: 876543,
+        impressions: 13456789,
+        transactions: 3234,
+        gpNet: 376543
+      }
+    ]
+  };
 
-  const years = ['2024', '2023', '2022', '2021'];
+  const years = ['2024', '2023', '2022'];
 
   const formatNumber = (num) => {
     return new Intl.NumberFormat('en-US').format(num);
@@ -280,7 +164,8 @@ const PerformanceTab = () => {
   };
 
   const filteredAndSortedData = useMemo(() => {
-    let filtered = [...performanceData];
+    // Get data for the selected year
+    let filtered = [...yearlyPerformanceData[selectedYear]];
     
     // Apply search filter
     if (searchTerm) {
@@ -303,7 +188,7 @@ const PerformanceTab = () => {
     }
 
     return filtered;
-  }, [performanceData, searchTerm, sortConfig]);
+  }, [yearlyPerformanceData, selectedYear, searchTerm, sortConfig]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredAndSortedData.length / ITEMS_PER_PAGE);
@@ -341,7 +226,7 @@ const PerformanceTab = () => {
     setLoadingAffinityDetails(true);
     
     try {
-      const performanceData = filteredAndSortedData[rowIndex];
+      const performanceData = yearlyPerformanceData[selectedYear][rowIndex];
       console.log('Selected affinity:', performanceData.affinityId);
       
       // Fetch full affinity details using ID
@@ -349,16 +234,13 @@ const PerformanceTab = () => {
       const affinityDetails = response.data.find(a => a.id === performanceData.affinityId);
       console.log('Found affinity details:', affinityDetails);
       
-      // Fetch tagged properties data using ID
-      const taggedData = await getAffinityTaggedProperties(performanceData.affinityId);
-      console.log('Tagged properties data:', taggedData);
-      setTaggedPropertiesCount(taggedData.tagged || 0);
-      setPropertiesWithScoreCount(taggedData.withScore || 0);
-      
       if (affinityDetails) {
         const details = {
           ...affinityDetails,
-          performance: performanceData
+          performance: {
+            ...performanceData,
+            year: selectedYear
+          }
         };
         console.log('Setting affinity details:', details);
         setSelectedAffinityDetails(details);
@@ -368,8 +250,6 @@ const PerformanceTab = () => {
       }
     } catch (error) {
       console.error('Error in handleAffinityClick:', error);
-      setTaggedPropertiesCount(0);
-      setPropertiesWithScoreCount(0);
       setSelectedAffinityDetails(null);
     } finally {
       setLoadingAffinityDetails(false);
@@ -573,8 +453,8 @@ const PerformanceTab = () => {
             ) : selectedAffinityDetails ? (
               <AffinityDetailView
                 affinity={selectedAffinityDetails}
-                taggedPropertiesCount={taggedPropertiesCount}
-                propertiesWithScoreCount={propertiesWithScoreCount}
+                taggedPropertiesCount={selectedAffinityDetails.totalProperties}
+                propertiesWithScoreCount={selectedAffinityDetails.activeProperties}
                 showImplementation={false}
                 showUsageGuidelines={false}
               />
