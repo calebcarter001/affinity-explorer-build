@@ -138,7 +138,7 @@ const AffinityLibrary = () => {
   const renderAffinityLibrary = () => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-1">
           <div className="bg-white p-4 rounded-lg shadow mb-4">
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
               <div className="relative flex-grow">
@@ -255,16 +255,18 @@ const AffinityLibrary = () => {
           loading ? (
             <SkeletonLoader count={1} height={400} />
           ) : (
-            <AffinityDetailView
-              affinity={selectedAffinity}
-              taggedPropertiesCount={selectedAffinity.totalProperties}
-              propertiesWithScoreCount={selectedAffinity.activeProperties}
-              showImplementation={true}
-              showUsageGuidelines={true}
-            />
+            <div className="lg:col-span-2">
+              <AffinityDetailView
+                affinity={selectedAffinity}
+                taggedPropertiesCount={selectedAffinity.totalProperties}
+                propertiesWithScoreCount={selectedAffinity.activeProperties}
+                showImplementation={true}
+                showUsageGuidelines={true}
+              />
+            </div>
           )
         ) : (
-          <div className="bg-white p-6 rounded-lg shadow flex items-center justify-center h-full">
+          <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow flex items-center justify-center h-full">
             <EmptyStateStyled 
               icon="inbox"
               title="No Affinity Selected"

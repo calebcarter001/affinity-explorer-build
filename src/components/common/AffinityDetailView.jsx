@@ -18,7 +18,7 @@ const ScoreDisplay = ({ label, score }) => {
   return (
     <div className="text-center">
       <div className="text-sm text-gray-600">{label}</div>
-      <div className="text-2xl font-semibold">{formattedScore}</div>
+      <div>{formattedScore}</div>
     </div>
   );
 };
@@ -72,7 +72,7 @@ const AffinityDetailView = ({
                 <div className="flex justify-between">
                   <div className="font-medium">Average Score:</div>
                   <div>
-                    <ScoreDisplay label="Average Score" score={affinity.averageScore} />
+                    <ScoreDisplay score={affinity.averageScore} />
                   </div>
                 </div>
               )}
@@ -102,7 +102,7 @@ const AffinityDetailView = ({
                 <div className="flex justify-between">
                   <div className="font-medium">Highest Score:</div>
                   <div>
-                    <ScoreDisplay label="Highest Score" score={affinity.highestScore} />
+                    <ScoreDisplay score={affinity.highestScore} />
                   </div>
                 </div>
               )}
@@ -110,7 +110,7 @@ const AffinityDetailView = ({
                 <div className="flex justify-between">
                   <div className="font-medium">Lowest Score:</div>
                   <div>
-                    <ScoreDisplay label="Lowest Score" score={affinity.lowestScore} />
+                    <ScoreDisplay score={affinity.lowestScore} />
                   </div>
                 </div>
               )}
@@ -147,12 +147,6 @@ const AffinityDetailView = ({
             </>
           )}
         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-8 p-6 bg-white rounded-lg shadow mb-6">
-        <ScoreDisplay label="Average Score" score={affinity.averageScore} />
-        <ScoreDisplay label="Highest Score" score={affinity.highestScore} />
-        <ScoreDisplay label="Lowest Score" score={affinity.lowestScore} />
       </div>
     </div>
   );
