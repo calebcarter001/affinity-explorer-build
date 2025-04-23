@@ -175,9 +175,9 @@ const ScoringExplorer = () => {
           scales: {
             r: {
               beginAtZero: true,
-              max: 10,
+              max: 1,
               ticks: {
-                stepSize: 2
+                stepSize: 0.2
               }
             }
           }
@@ -392,10 +392,10 @@ const ScoringExplorer = () => {
     }
 
     const getInterpretation = (score) => {
-      if (score >= 9) return 'Exceptional match';
-      if (score >= 8) return 'Strong match';
-      if (score >= 6) return 'Good match';
-      if (score >= 4) return 'Moderate match';
+      if (score >= 0.9) return 'Exceptional match';
+      if (score >= 0.8) return 'Strong match';
+      if (score >= 0.6) return 'Good match';
+      if (score >= 0.4) return 'Moderate match';
       return 'Weak match';
     };
 
@@ -408,22 +408,22 @@ const ScoringExplorer = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {selectedProperty.affinityScores.map(score => (
                 <div key={score.name} className="bg-gray-50 p-4 rounded-md">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center">
                     <h4 className="font-medium">{score.name}</h4>
-                    <span className={`font-semibold ${
-                      score.score >= 8 ? 'text-green-600' : 
-                      score.score >= 6 ? 'text-yellow-600' : 'text-red-600'
+                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                      score.score >= 0.8 ? 'text-green-600' : 
+                      score.score >= 0.6 ? 'text-yellow-600' : 'text-red-600'
                     }`}>
-                      {score.score.toFixed(1)}/10
+                      {score.score.toFixed(2)}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div 
                       className={`h-2.5 rounded-full ${
-                        score.score >= 8 ? 'bg-green-600' : 
-                        score.score >= 6 ? 'bg-yellow-600' : 'bg-red-600'
+                        score.score >= 0.8 ? 'bg-green-600' : 
+                        score.score >= 0.6 ? 'bg-yellow-600' : 'bg-red-600'
                       }`}
-                      style={{ width: `${(score.score / 10) * 100}%` }}
+                      style={{ width: `${score.score * 100}%` }}
                     ></div>
                   </div>
                 </div>
@@ -455,12 +455,12 @@ const ScoringExplorer = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          score.score >= 9 ? 'bg-green-100 text-green-800' :
-                          score.score >= 8 ? 'bg-blue-100 text-blue-800' :
-                          score.score >= 6 ? 'bg-yellow-100 text-yellow-800' :
+                          score.score >= 0.9 ? 'bg-green-100 text-green-800' :
+                          score.score >= 0.8 ? 'bg-blue-100 text-blue-800' :
+                          score.score >= 0.6 ? 'bg-yellow-100 text-yellow-800' :
                           'bg-red-100 text-red-800'
                         }`}>
-                          {score.score.toFixed(1)}/10
+                          {score.score.toFixed(2)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -691,6 +691,10 @@ const NoResults = styled.div`
   margin-top: 1rem;
   text-align: center;
   padding: 2rem;
+`;
+
+const ScoreValue = styled.span`
+  font-weight: 600;
 `;
 
 export default ScoringExplorer;

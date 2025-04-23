@@ -142,49 +142,119 @@ export const getAffinities = async (page = 1, limit = 10) => {
   const mockAffinities = [
     {
       id: 1,
-      name: "Pet-Friendly",
+      name: "all inclusive",
       type: "Platform Score",
-      category: "Family",
+      category: "Amenities",
       scoreAvailable: true,
-      applicableEntities: ["Property", "Destination"],
+      applicableEntities: ["Property"],
       avgScore: 0.72,
       highestScore: 0.95,
       lowestScore: 0.48,
-      status: "Validated",
+      status: "Active",
       coverage: 72,
-      definition: "Properties that welcome pets with amenities or policies that accommodate animals."
+      definition: "Properties that offer comprehensive all-inclusive packages."
     },
     {
       id: 2,
-      name: "Romantic",
+      name: "budget",
       type: "Concept Score",
-      category: "Adults",
+      category: "Value",
       scoreAvailable: true,
-      applicableEntities: ["Property", "Destination", "POI"],
+      applicableEntities: ["Property"],
       avgScore: 0.68,
       highestScore: 0.92,
       lowestScore: 0.35,
-      status: "Validated",
+      status: "Active",
       coverage: 65,
-      definition: "Properties suitable for couples seeking a romantic experience."
+      definition: "Properties that offer good value for budget-conscious travelers."
     },
     {
       id: 3,
-      name: "Family-Friendly",
+      name: "pet friendly",
       type: "Platform Score",
       category: "Family",
       scoreAvailable: true,
-      applicableEntities: ["Property", "Destination"],
+      applicableEntities: ["Property"],
       avgScore: 0.79,
       highestScore: 0.98,
       lowestScore: 0.52,
-      status: "Validated",
+      status: "Active",
       coverage: 81,
-      definition: "Properties that cater to families with children offering suitable amenities and activities."
+      definition: "Properties that welcome pets with amenities or policies that accommodate animals."
     },
     {
       id: 4,
-      name: "Luxury",
+      name: "beach",
+      type: "Location Score",
+      category: "Location",
+      scoreAvailable: true,
+      applicableEntities: ["Property"],
+      avgScore: 0.82,
+      highestScore: 0.99,
+      lowestScore: 0.61,
+      status: "Active",
+      coverage: 45,
+      definition: "Properties located near or with access to beaches."
+    },
+    {
+      id: 5,
+      name: "outdoor pool",
+      type: "Amenity Score",
+      category: "Amenities",
+      scoreAvailable: true,
+      applicableEntities: ["Property"],
+      avgScore: 0.87,
+      highestScore: 1.00,
+      lowestScore: 0.70,
+      status: "Active",
+      coverage: 38,
+      definition: "Properties featuring outdoor swimming pools."
+    },
+    {
+      id: 6,
+      name: "ocean view",
+      type: "Feature Score",
+      category: "Views",
+      scoreAvailable: true,
+      applicableEntities: ["Property"],
+      avgScore: 0.75,
+      highestScore: 0.93,
+      lowestScore: 0.55,
+      status: "Active",
+      coverage: 62,
+      definition: "Properties offering views of the ocean."
+    },
+    {
+      id: 7,
+      name: "cabin",
+      type: "Property Type",
+      category: "Accommodation",
+      scoreAvailable: true,
+      applicableEntities: ["Property"],
+      avgScore: 0.78,
+      highestScore: 0.96,
+      lowestScore: 0.58,
+      status: "Active",
+      coverage: 41,
+      definition: "Properties that are cabins or cabin-style accommodations."
+    },
+    {
+      id: 8,
+      name: "family friendly",
+      type: "Concept Score",
+      category: "Family",
+      scoreAvailable: true,
+      applicableEntities: ["Property"],
+      avgScore: 0.69,
+      highestScore: 0.91,
+      lowestScore: 0.42,
+      status: "Active",
+      coverage: 33,
+      definition: "Properties suitable for families with children."
+    },
+    {
+      id: 9,
+      name: "luxury",
       type: "Concept Score",
       category: "Premium",
       scoreAvailable: true,
@@ -192,80 +262,43 @@ export const getAffinities = async (page = 1, limit = 10) => {
       avgScore: 0.82,
       highestScore: 0.99,
       lowestScore: 0.61,
-      status: "Validated",
+      status: "Active",
       coverage: 45,
-      definition: "High-end properties offering premium amenities, services, and experiences."
+      definition: "High-end properties offering premium amenities and services."
     },
     {
-      id: 5,
-      name: "Beach Access",
-      type: "Amenity Score",
-      category: "Location",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      avgScore: 0.87,
-      highestScore: 1.00,
-      lowestScore: 0.70,
-      status: "Validated",
-      coverage: 38,
-      definition: "Properties with direct or convenient access to beaches."
-    },
-    {
-      id: 6,
-      name: "Privacy",
-      type: "Concept Score",
-      category: "Adults",
+      id: 10,
+      name: "private vacation homes",
+      type: "Property Type",
+      category: "Accommodation",
       scoreAvailable: true,
       applicableEntities: ["Property"],
       avgScore: 0.75,
       highestScore: 0.93,
       lowestScore: 0.55,
-      status: "In Enrichment",
+      status: "Active",
       coverage: 62,
-      definition: "Properties offering secluded or private accommodations away from crowds."
-    },
-    {
-      id: 7,
-      name: "Nature Retreat",
-      type: "Concept Score",
-      category: "Outdoors",
-      scoreAvailable: true,
-      applicableEntities: ["Property", "Destination"],
-      avgScore: 0.78,
-      highestScore: 0.96,
-      lowestScore: 0.58,
-      status: "In Enrichment",
-      coverage: 41,
-      definition: "Properties situated in natural surroundings with minimal urban development."
-    },
-    {
-      id: 8,
-      name: "Historical",
-      type: "Concept Score",
-      category: "Cultural",
-      scoreAvailable: true,
-      applicableEntities: ["Property", "Destination", "POI"],
-      avgScore: 0.69,
-      highestScore: 0.91,
-      lowestScore: 0.42,
-      status: "Validated",
-      coverage: 33,
-      definition: "Properties with historical significance or located in historical areas."
+      definition: "Private residential properties available for vacation rentals."
     }
   ];
 
+  // Calculate pagination
+  const totalCount = mockAffinities.length;
   const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedData = {
-    data: mockAffinities.slice(startIndex, endIndex),
-    total: mockAffinities.length,
-    page,
-    limit,
-    totalPages: Math.ceil(mockAffinities.length / limit)
+  const endIndex = Math.min(startIndex + limit, totalCount);
+  const paginatedData = mockAffinities.slice(startIndex, endIndex);
+
+  const response = {
+    data: paginatedData,
+    totalCount,
+    currentPage: page,
+    totalPages: Math.ceil(totalCount / limit),
+    hasNextPage: endIndex < totalCount,
+    hasPreviousPage: page > 1
   };
-  
-  cacheService.set(cacheKey, paginatedData);
-  return paginatedData;
+
+  cacheService.set(cacheKey, response);
+  return response;
 };
 
 // Mock property search with pagination
@@ -290,11 +323,11 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
       reviewCount: 1250,
       lastUpdated: '2024-03-15',
       affinityScores: [
-        { affinityId: 1, name: 'Business Traveler', score: 8.5 },
-        { affinityId: 2, name: 'Family Friendly', score: 7.2 },
-        { affinityId: 3, name: 'Luxury Experience', score: 9.1 },
-        { affinityId: 4, name: 'Budget Conscious', score: 4.8 },
-        { affinityId: 5, name: 'Local Experience', score: 6.9 }
+        { affinityId: 1, name: 'Business Traveler', score: 0.85 },
+        { affinityId: 2, name: 'Family Friendly', score: 0.72 },
+        { affinityId: 3, name: 'Luxury Experience', score: 0.91 },
+        { affinityId: 4, name: 'Budget Conscious', score: 0.48 },
+        { affinityId: 5, name: 'Local Experience', score: 0.69 }
       ],
       amenities: ['WiFi', 'Pool', 'Spa', 'Restaurant', 'Gym', 'Business Center'],
       images: [
@@ -313,11 +346,11 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
       reviewCount: 980,
       lastUpdated: '2024-03-14',
       affinityScores: [
-        { affinityId: 1, name: 'Business Traveler', score: 6.2 },
-        { affinityId: 2, name: 'Family Friendly', score: 8.7 },
-        { affinityId: 3, name: 'Luxury Experience', score: 7.5 },
-        { affinityId: 4, name: 'Budget Conscious', score: 5.9 },
-        { affinityId: 5, name: 'Local Experience', score: 8.1 }
+        { affinityId: 1, name: 'Business Traveler', score: 0.62 },
+        { affinityId: 2, name: 'Family Friendly', score: 0.87 },
+        { affinityId: 3, name: 'Luxury Experience', score: 0.75 },
+        { affinityId: 4, name: 'Budget Conscious', score: 0.59 },
+        { affinityId: 5, name: 'Local Experience', score: 0.81 }
       ],
       amenities: ['Beach Access', 'Pool', 'Kids Club', 'Restaurant', 'Bar', 'Water Sports'],
       images: [
@@ -386,7 +419,7 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination"],
     avgScore: 7.2,
-    status: "Validated",
+    status: "Active",
     coverage: 72,
     definition: "Properties that welcome pets with amenities or policies that accommodate animals."
   },
@@ -398,7 +431,7 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination", "POI"],
     avgScore: 6.8,
-    status: "Validated",
+    status: "Active",
     coverage: 65,
     definition: "Properties suitable for couples seeking a romantic experience."
   },
@@ -410,7 +443,7 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination"],
     avgScore: 7.9,
-    status: "Validated",
+    status: "Active",
     coverage: 81,
     definition: "Properties that cater to families with children offering suitable amenities and activities."
   },
@@ -422,7 +455,7 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property"],
     avgScore: 8.2,
-    status: "Validated",
+    status: "Active",
     coverage: 45,
     definition: "High-end properties offering premium amenities, services, and experiences."
   },
@@ -434,7 +467,7 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property"],
     avgScore: 8.7,
-    status: "Validated",
+    status: "Active",
     coverage: 38,
     definition: "Properties with direct or convenient access to beaches."
   }
@@ -447,12 +480,12 @@ const properties = [
     location: "Miami Beach, FL",
     propertyType: "Hotel",
     affinityScores: [
-      { name: "Pet-Friendly", score: 7.2 },
-      { name: "Romantic", score: 8.5 },
-      { name: "Luxury", score: 9.1 },
-      { name: "Beach Access", score: 9.5 },
-      { name: "Privacy", score: 8.2 },
-      { name: "Family-Friendly", score: 6.7 }
+      { name: "Pet-Friendly", score: 0.72 },
+      { name: "Romantic", score: 0.85 },
+      { name: "Luxury", score: 0.91 },
+      { name: "Beach Access", score: 0.95 },
+      { name: "Privacy", score: 0.82 },
+      { name: "Family-Friendly", score: 0.67 }
     ]
   },
   {
@@ -461,11 +494,11 @@ const properties = [
     location: "Aspen, CO",
     propertyType: "Resort",
     affinityScores: [
-      { name: "Pet-Friendly", score: 8.7 },
-      { name: "Family-Friendly", score: 7.6 },
-      { name: "Nature Retreat", score: 9.3 },
-      { name: "Privacy", score: 8.8 },
-      { name: "Luxury", score: 8.1 }
+      { name: "Pet-Friendly", score: 0.87 },
+      { name: "Family-Friendly", score: 0.76 },
+      { name: "Nature Retreat", score: 0.93 },
+      { name: "Privacy", score: 0.88 },
+      { name: "Luxury", score: 0.81 }
     ]
   },
   {
@@ -474,10 +507,10 @@ const properties = [
     location: "New York, NY",
     propertyType: "Hotel",
     affinityScores: [
-      { name: "Luxury", score: 8.3 },
-      { name: "Pet-Friendly", score: 6.1 },
-      { name: "Historical", score: 7.5 },
-      { name: "Romantic", score: 7.2 }
+      { name: "Luxury", score: 0.83 },
+      { name: "Pet-Friendly", score: 0.61 },
+      { name: "Historical", score: 0.75 },
+      { name: "Romantic", score: 0.72 }
     ]
   }
 ];
@@ -531,7 +564,7 @@ export const getRecentActivity = async () => {
   ];
 };
 
-export const updateFavorites = async (collectionName, isFavorite) => {
+export const updateFavorites = async (collectionId, isFavorite) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -539,13 +572,13 @@ export const updateFavorites = async (collectionName, isFavorite) => {
   return {
     success: true,
     data: {
-      name: collectionName,
+      id: collectionId,
       isFavorite
     }
   };
 };
 
-export const updateRecentlyViewed = async (affinityName) => {
+export const updateRecentlyViewed = async (affinityId) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -553,13 +586,13 @@ export const updateRecentlyViewed = async (affinityName) => {
   return {
     success: true,
     data: {
-      name: affinityName,
+      id: affinityId,
       timestamp: new Date().toISOString()
     }
   };
 };
 
-export const deleteCollection = async (collectionName) => {
+export const deleteCollection = async (collectionId) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
@@ -569,64 +602,89 @@ export const deleteCollection = async (collectionName) => {
 };
 
 export const getCollections = async () => {
-  const cacheKey = cacheService.generateKey('collections');
-  const cachedData = cacheService.get(cacheKey);
-  if (cachedData) return cachedData;
-
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return mock data
-  const collections = [
-    {
-      name: 'Summer Getaway Collection',
-      description: 'Perfect properties for summer vacations',
-      affinities: [
-        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
-        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
-        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' }
-      ],
-      isFavorite: true,
-      lastUpdated: '2024-03-20'
-    },
-    {
-      name: 'Urban Exploration Bundle',
-      description: 'City-focused properties and experiences',
-      affinities: [
-        { name: 'Historical', description: 'Properties with historical significance' },
-        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
-        { name: 'Romantic', description: 'Properties suitable for couples' }
-      ],
-      isFavorite: true,
-      lastUpdated: '2024-03-19'
-    },
-    {
-      name: 'Family Trip Essentials',
-      description: 'Family-friendly accommodations and activities',
-      affinities: [
-        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' },
-        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' }
-      ],
-      isFavorite: true,
-      lastUpdated: '2024-03-18'
+  try {
+    const cacheKey = cacheService.generateKey('collections');
+    const cachedData = cacheService.get(cacheKey);
+    
+    if (cachedData) {
+      console.log('API: Returning cached collections data');
+      return cachedData;
     }
-  ];
-  
-  cacheService.set(cacheKey, collections);
-  return collections;
+
+    console.log('API: Fetching fresh collections data');
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Define collections with consistent IDs and structure
+    const collections = [
+      {
+        id: 'summer-getaway',
+        name: 'Summer Getaway Collection',
+        description: 'Perfect for summer vacations and beach getaways',
+        affinities: [
+          { id: '1', name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
+          { id: '2', name: 'Family-Friendly', description: 'Properties that cater to families with children' },
+          { id: '3', name: 'Pet-Friendly', description: 'Properties that welcome pets' },
+          { id: '4', name: 'Luxury', description: 'High-end properties offering premium amenities' },
+          { id: '5', name: 'Nature Retreat', description: 'Properties situated in natural surroundings' }
+        ],
+        isFavorite: true,
+        lastUpdated: '2024-03-18'
+      },
+      {
+        id: 'urban-exploration',
+        name: 'Urban Exploration Bundle',
+        description: 'City-based experiences and accommodations',
+        affinities: [
+          { id: '6', name: 'Historical', description: 'Properties with historical significance' },
+          { id: '4', name: 'Luxury', description: 'High-end properties offering premium amenities' },
+          { id: '7', name: 'Romantic', description: 'Properties suitable for couples' }
+        ],
+        isFavorite: true,
+        lastUpdated: '2024-03-18'
+      },
+      {
+        id: 'family-trip',
+        name: 'Family Trip Essentials',
+        description: 'Family-friendly accommodations and activities',
+        affinities: [
+          { id: '2', name: 'Family-Friendly', description: 'Properties that cater to families with children' },
+          { id: '3', name: 'Pet-Friendly', description: 'Properties that welcome pets' },
+          { id: '5', name: 'Nature Retreat', description: 'Properties situated in natural surroundings' },
+          { id: '1', name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' }
+        ],
+        isFavorite: true,
+        lastUpdated: '2024-03-18'
+      }
+    ];
+    
+    console.log('API: Collections data:', collections.map(c => ({ id: c.id, name: c.name })));
+    
+    // Cache the data with a 5-minute expiration
+    cacheService.set(cacheKey, collections, 5 * 60 * 1000);
+    
+    return collections;
+  } catch (error) {
+    console.error('API Error: Failed to fetch collections', error);
+    throw new Error('Failed to fetch collections');
+  }
 };
 
-export const updateCollection = async (collectionName, updates) => {
+// Add a function to clear the collections cache
+export const clearCollectionsCache = () => {
+  const cacheKey = cacheService.generateKey('collections');
+  cacheService.remove(cacheKey);
+  console.log('API: Collections cache cleared');
+};
+
+export const updateCollection = async (collectionId, updates) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   // Get current collections
   const collections = await getCollections();
-  const collectionIndex = collections.findIndex(c => c.name === collectionName);
+  const collectionIndex = collections.findIndex(c => c.id === collectionId);
   
   if (collectionIndex === -1) {
     throw new Error('Collection not found');
@@ -670,16 +728,39 @@ export const getAffinityTaggedProperties = async (affinityId) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
   
-  // Mock data for tagged properties count
+  // Mock data for tagged properties count by ID
   const mockTaggedPropertiesCount = {
-    "Pet-Friendly": { tagged: 3, withScore: 3 },
-    "Romantic": { tagged: 2, withScore: 2 },
-    "Family-Friendly": { tagged: 2, withScore: 2 },
-    "Luxury": { tagged: 3, withScore: 3 },
-    "Beach Access": { tagged: 1, withScore: 1 },
-    "Privacy": { tagged: 2, withScore: 2 },
-    "Nature Retreat": { tagged: 1, withScore: 1 },
-    "Historical": { tagged: 1, withScore: 1 }
+    // IDs corresponding to performance data
+    1: { tagged: 4, withScore: 4 },  // all inclusive
+    2: { tagged: 5, withScore: 5 },  // budget
+    3: { tagged: 3, withScore: 3 },  // pet friendly
+    4: { tagged: 4, withScore: 4 },  // beach
+    5: { tagged: 2, withScore: 2 },  // outdoor pool
+    6: { tagged: 3, withScore: 3 },  // ocean view
+    7: { tagged: 2, withScore: 2 },  // cabin
+    8: { tagged: 4, withScore: 4 },  // family friendly
+    9: { tagged: 5, withScore: 5 },  // luxury
+    10: { tagged: 2, withScore: 2 }, // private vacation homes
+    11: { tagged: 3, withScore: 3 }, // hot tub
+    12: { tagged: 4, withScore: 4 }, // spa
+    13: { tagged: 3, withScore: 3 }, // apartments
+    14: { tagged: 5, withScore: 5 }, // kitchen
+    15: { tagged: 2, withScore: 2 }, // adult
+    16: { tagged: 4, withScore: 4 }, // free breakfast
+    17: { tagged: 2, withScore: 2 }, // casino
+    18: { tagged: 3, withScore: 3 }, // free airport transportation
+    19: { tagged: 4, withScore: 4 }, // romantic
+    20: { tagged: 2, withScore: 2 }, // waterpark
+    21: { tagged: 3, withScore: 3 }, // villas
+    22: { tagged: 2, withScore: 2 }, // cottages
+    23: { tagged: 3, withScore: 3 }, // lgbt welcoming
+    24: { tagged: 5, withScore: 5 }, // parking
+    25: { tagged: 2, withScore: 2 }, // lake
+    26: { tagged: 3, withScore: 3 }, // indoor pool
+    27: { tagged: 2, withScore: 2 }, // golf
+    28: { tagged: 2, withScore: 2 }, // waterslide
+    29: { tagged: 4, withScore: 4 }, // balcony
+    30: { tagged: 3, withScore: 3 }  // early check in
   };
 
   const data = mockTaggedPropertiesCount[affinityId] || { tagged: 0, withScore: 0 };

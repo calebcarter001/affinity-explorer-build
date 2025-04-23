@@ -217,7 +217,7 @@ const AffinityCombination = () => {
                       <div key={score.name} className="flex justify-between items-center">
                         <span className="text-sm">{score.name}</span>
                         <span className={`text-sm font-medium ${getScoreClass(score.score)}`}>
-                          {score.score.toFixed(1)}/10
+                          {score.score.toFixed(2)}
                         </span>
                       </div>
                     ))}

@@ -6,15 +6,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    host: true,
     open: true,
     cors: true,
     hmr: {
       overlay: true,
-      clientPort: 3000
+      clientPort: 3000,
+      timeout: 10000
     },
     watch: {
-      usePolling: true,
-      interval: 1000
+      usePolling: false
     }
   },
   clearScreen: false,
@@ -33,4 +34,4 @@ export default defineConfig({
     strictPort: true,
   },
   base: '/',
-}) 
+})

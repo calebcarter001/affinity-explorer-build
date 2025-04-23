@@ -10,7 +10,8 @@ import {
   FiCode, 
   FiFileText,
   FiSettings,
-  FiHelpCircle
+  FiHelpCircle,
+  FiGrid
 } from 'react-icons/fi';
 
 const Sidebar = () => {
@@ -23,6 +24,7 @@ const Sidebar = () => {
     { path: '/lifecycle-tracker', icon: <FiActivity size={20} />, text: 'Lifecycle Tracker' },
     { path: '/agents', icon: <FiCpu size={20} />, text: 'Agent View' },
     { path: '/combine', icon: <FiLayers size={20} />, text: 'Affinity Combination' },
+    { path: '/workbench', icon: <FiGrid size={20} />, text: 'Workbench' },
     { path: '/implementation', icon: <FiCode size={20} />, text: 'Implementation Guide' },
     { path: '/reports', icon: <FiFileText size={20} />, text: 'Reports & Analytics' },
   ];

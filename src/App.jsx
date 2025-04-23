@@ -19,6 +19,7 @@ import Settings from './components/tabs/Settings';
 import HelpSupport from './components/tabs/HelpSupport';
 import Login from './components/auth/Login';
 import AnalyticsDashboard from './components/admin/AnalyticsDashboard';
+import Workbench from './components/tabs/Workbench';
 
 // Protected route component
 const ProtectedRoute = ({ children, requiredPermissions = [] }) => {
@@ -69,7 +70,7 @@ const AppLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-100">
       {user && <Header />}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-2 pb-8">
         <ErrorBoundary>
           {children}
         </ErrorBoundary>
@@ -172,6 +173,14 @@ const App = () => {
                     <ProtectedRoute>
                       <AppLayout>
                         <HelpSupport />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="/workbench" element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <Workbench />
                       </AppLayout>
                     </ProtectedRoute>
                   } />

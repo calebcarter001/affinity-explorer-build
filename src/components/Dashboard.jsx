@@ -39,6 +39,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [recentlyViewedItems, setRecentlyViewedItems] = useState([
     {
+      id: '1',
       name: 'Pet-Friendly',
       description: 'Properties that welcome pets with amenities or policies that accommodate animals.',
       score: '7.2/10',
@@ -46,6 +47,7 @@ const Dashboard = () => {
       status: 'Active'
     },
     {
+      id: '2',
       name: 'Romantic',
       description: 'Properties suitable for couples seeking a romantic experience.',
       score: '6.8/10',
@@ -53,6 +55,7 @@ const Dashboard = () => {
       status: 'Active'
     },
     {
+      id: '3',
       name: 'Family-Friendly',
       description: 'Properties that cater to families with children offering suitable amenities and activities.',
       score: '7.9/10',
@@ -60,6 +63,7 @@ const Dashboard = () => {
       status: 'Active'
     },
     {
+      id: '4',
       name: 'Luxury',
       description: 'High-end properties offering premium amenities, services, and experiences.',
       score: '8.2/10',
@@ -69,6 +73,7 @@ const Dashboard = () => {
   ]);
   const [favoriteCollections, setFavoriteCollections] = useState([
     {
+      id: 'summer-getaway',
       name: 'Summer Getaway Collection',
       affinities: [
         { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
@@ -80,6 +85,7 @@ const Dashboard = () => {
       isFavorite: true
     },
     {
+      id: 'urban-exploration',
       name: 'Urban Exploration Bundle',
       affinities: [
         { name: 'Historical', description: 'Properties with historical significance' },
@@ -89,6 +95,7 @@ const Dashboard = () => {
       isFavorite: true
     },
     {
+      id: 'family-trip',
       name: 'Family Trip Essentials',
       affinities: [
         { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
@@ -151,19 +158,28 @@ const Dashboard = () => {
   const handleAffinityClick = async (affinity) => {
     try {
       // Optimistically update recently viewed items
-      const updatedItems = [affinity, ...recentlyViewedItems.filter(item => item.name !== affinity.name)].slice(0, 4);
+      const updatedItems = [affinity, ...recentlyViewedItems.filter(item => item.id !== affinity.id)].slice(0, 4);
       setRecentlyViewedItems(updatedItems);
 
       // Navigate to the affinity
       navigate('/affinities', { 
         state: { 
-          selectedAffinity: affinity.name,
-          source: 'dashboard'
+          selectedAffinityId: affinity.id,
+          source: 'dashboard',
+          view: 'library',  // Ensure library tab is active
+          affinity: {  // Pass full affinity data to avoid loading delay
+            id: affinity.id,
+            name: affinity.name,
+            description: affinity.description,
+            score: parseFloat(affinity.score),
+            coverage: parseInt(affinity.coverage),
+            status: affinity.status
+          }
         } 
       });
 
       // Update the backend
-      await updateRecentlyViewed(affinity.name);
+      await updateRecentlyViewed(affinity.id);
     } catch (error) {
       // Revert on failure
       setRecentlyViewedItems(recentlyViewedItems);
@@ -171,16 +187,26 @@ const Dashboard = () => {
     }
   };
 
-  const handleCollectionClick = async (collection) => {
+  const handleCollectionClick = (collection) => {
     try {
-      // Navigate to the collection
+      console.log('Dashboard: Navigating to collection:', collection.name, 'ID:', collection.id);
+      
+      // Ensure the collection has an ID
+      if (!collection.id) {
+        console.error('Collection missing ID:', collection);
+        showToast('error', 'Invalid collection data');
+        return;
+      }
+      
+      // Navigate to the collections view with the selected collection ID
       navigate('/affinities', { 
         state: { 
           view: 'collections',
-          selectedCollection: collection.name
+          selectedCollectionId: collection.id 
         } 
       });
     } catch (error) {
+      console.error('Error navigating to collection:', error);
       showToast('error', 'Failed to navigate to collection');
     }
   };
@@ -190,12 +216,12 @@ const Dashboard = () => {
     try {
       // Optimistically update UI
       const updatedCollections = favoriteCollections.map(c => 
-        c.name === collection.name ? { ...c, isFavorite: !c.isFavorite } : c
+        c.id === collection.id ? { ...c, isFavorite: !c.isFavorite } : c
       );
       setFavoriteCollections(updatedCollections);
 
       // Update backend
-      await updateFavorites(collection.name, !collection.isFavorite);
+      await updateFavorites(collection.id, !collection.isFavorite);
       showToast('success', `Collection ${!collection.isFavorite ? 'added to' : 'removed from'} favorites`);
     } catch (error) {
       // Revert on failure
@@ -404,9 +430,15 @@ const Dashboard = () => {
                   </span>
                 </div>
                 <p className={`${typography.body} mt-2`}>{item.description}</p>
-                <div className={`${layout.flex.between} ${typography.small} mt-2`}>
-                  <span>Score: {item.score}</span>
-                  <span>Coverage: {item.coverage}</span>
+                <div className="flex items-center justify-between mt-4">
+                  <div className="text-sm text-gray-600">
+                    <span>Score: </span>
+                    <span className="font-medium">{item.score}</span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <span>Coverage: </span>
+                    <span className="font-medium">{item.coverage}</span>
+                  </div>
                 </div>
               </div>
             ))}
