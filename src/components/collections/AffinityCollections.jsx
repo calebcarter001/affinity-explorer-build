@@ -55,7 +55,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       console.error('Error loading affinities:', error);
       showToast('error', 'Failed to load affinities');
     } finally {
-      setLoadingAffinities(false);
+    setLoadingAffinities(false);
     }
   }, [showToast]);
 
@@ -127,9 +127,9 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       if (selectedCollection?.id === collection.id) {
         setSelectedCollection(null);
       }
-    } catch (error) {
+      } catch (error) {
       console.error('Error deleting collection:', error);
-      showToast('error', 'Failed to delete collection');
+        showToast('error', 'Failed to delete collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, delete: false }));
     }
@@ -143,16 +143,16 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       }
       
       console.log('Toggling affinity:', affinity.name, 'ID:', affinity.id);
-      setEditForm(prev => {
+    setEditForm(prev => {
         const affinityIds = prev.affinityIds || [];
         const isSelected = affinityIds.includes(affinity.id);
-        return {
-          ...prev,
+      return {
+        ...prev,
           affinityIds: isSelected
             ? affinityIds.filter(id => id !== affinity.id)
             : [...affinityIds, affinity.id]
-        };
-      });
+      };
+    });
     } catch (error) {
       console.error('Error toggling affinity:', error);
       showToast('error', 'Failed to update affinity selection');
@@ -404,13 +404,13 @@ const AffinityCollections = ({ selectedCollectionId }) => {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold">Edit Collection</h2>
-              <button
+                <button
                 onClick={() => setIsEditing(false)}
                 className="text-gray-500 hover:text-gray-700"
-              >
-                <FiX size={20} />
-              </button>
-            </div>
+                >
+                  <FiX size={20} />
+                </button>
+              </div>
 
             <form onSubmit={handleEditSubmit}>
               <div className="space-y-4">
@@ -483,54 +483,54 @@ const AffinityCollections = ({ selectedCollectionId }) => {
                     {operationLoading.edit ? 'Saving...' : 'Save Changes'}
                   </button>
                 </div>
-              </div>
-            </form>
-          </div>
+                </div>
+              </form>
+            </div>
         ) : selectedCollection ? (
-          <div>
+                <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold">{selectedCollection.name}</h2>
-              <div className="flex space-x-2">
-                <button
+                <div className="flex space-x-2">
+                  <button
                   onClick={() => handleEditClick(selectedCollection)}
                   className="text-gray-500 hover:text-gray-700"
-                >
+                  >
                   <FiEdit2 size={20} />
-                </button>
-                <button
+                  </button>
+                  <button
                   onClick={(e) => handleToggleFavorite(selectedCollection, e)}
                   className={`${
                     selectedCollection.isFavorite ? 'text-yellow-500' : 'text-gray-400'
                   }`}
-                >
+                  >
                   <FiStar size={20} />
-                </button>
+                  </button>
+                </div>
               </div>
-            </div>
 
             <p className="text-gray-600 mb-6">{selectedCollection.description}</p>
 
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-4">Affinities</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold mb-4">Affinities</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedCollection.affinities?.length > 0 ? 
                   selectedCollection.affinities.map((affinity) => (
-                    <div 
+                      <div 
                       key={affinity.id}
-                      className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 cursor-pointer"
+                        className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 cursor-pointer"
                       onClick={() => handleCollectionClick(affinity)}
-                    >
-                      <h4 className="font-semibold">{affinity.name}</h4>
-                      <p className="text-sm text-gray-600">{affinity.description}</p>
+                      >
+                        <h4 className="font-semibold">{affinity.name}</h4>
+                        <p className="text-sm text-gray-600">{affinity.description}</p>
+                      </div>
+                    )) : 
+                    <div className="col-span-2 text-center text-gray-500">
+                      No affinities in this collection
                     </div>
-                  )) : 
-                  <div className="col-span-2 text-center text-gray-500">
-                    No affinities in this collection
-                  </div>
-                }
+                  }
+                </div>
               </div>
             </div>
-          </div>
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500">
             Select a collection to view details

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { FiBarChart2, FiLayers, FiTrendingUp } from 'react-icons/fi';
 import { getAffinities } from '../../services/apiService';
+import { useSearchParams } from 'react-router-dom';
 import PerformanceTab from './workbench/PerformanceTab';
 import CompareTab from './workbench/CompareTab';
 
 const Workbench = () => {
-  const [activeTab, setActiveTab] = useState('performance');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultTab = searchParams.get('tab') || 'performance';
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [affinities, setAffinities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,6 +17,12 @@ const Workbench = () => {
     year: new Date().getFullYear(),
     quarter: 1
   });
+
+  // Update URL when tab changes
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId });
+  };
 
   useEffect(() => {
     const loadAffinities = async () => {
@@ -54,7 +63,7 @@ const Workbench = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`
                 flex items-center space-x-2 py-3 px-1 border-b-2 font-medium text-sm
                 ${activeTab === tab.id

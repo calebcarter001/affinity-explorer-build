@@ -1,5 +1,8 @@
 import { cacheService } from './cacheService';
 
+// Utility function for creating delays
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Mock API service with caching and pagination
 export const getDashboardStats = async () => {
   const cacheKey = cacheService.generateKey('dashboard_stats');
@@ -129,206 +132,114 @@ export const getDashboardStats = async () => {
   return data;
 };
 
-// Mock affinity data with pagination
-export const getAffinities = async (page = 1, limit = 10) => {
-  const cacheKey = cacheService.generateKey('affinities', { page, limit });
-  const cachedData = cacheService.get(cacheKey);
-  if (cachedData) return cachedData;
-
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return mock data
-  const mockAffinities = [
-    {
-      id: 1,
-      name: "all inclusive",
-      type: "Platform Score",
-      category: "Amenities",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.72,
-      highestScore: 0.95,
-      lowestScore: 0.48,
-      totalProperties: 100,
-      activeProperties: 72,
-      inactiveProperties: 28,
-      status: "Active",
+const mockAffinityDetails = {
+  "Pet-Friendly": {
+    relatedConcepts: ['Family-Friendly', 'Spacious', 'Outdoor Recreation'],
+    metrics: {
+      accuracy: 0.85,
       coverage: 72,
-      definition: "Properties that offer comprehensive all-inclusive packages."
-    },
-    {
-      id: 2,
-      name: "budget",
-      type: "Concept Score",
-      category: "Value",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.68,
-      highestScore: 0.92,
-      lowestScore: 0.35,
-      totalProperties: 85,
-      activeProperties: 55,
-      inactiveProperties: 30,
-      status: "Active",
-      coverage: 65,
-      definition: "Properties that offer good value for budget-conscious travelers."
-    },
-    {
-      id: 3,
-      name: "pet friendly",
-      type: "Platform Score",
-      category: "Family",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.79,
-      highestScore: 0.98,
-      lowestScore: 0.52,
-      totalProperties: 120,
-      activeProperties: 97,
-      inactiveProperties: 23,
-      status: "Active",
-      coverage: 81,
-      definition: "Properties that welcome pets with amenities or policies that accommodate animals."
-    },
-    {
-      id: 4,
-      name: "beach",
-      type: "Location Score",
-      category: "Location",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.87,
-      highestScore: 0.99,
-      lowestScore: 0.65,
-      totalProperties: 95,
-      activeProperties: 82,
-      inactiveProperties: 13,
-      status: "Active",
-      coverage: 38,
-      definition: "Properties with direct or convenient access to beaches."
-    },
-    {
-      id: 5,
-      name: "outdoor pool",
-      type: "Amenity Score",
-      category: "Amenities",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.75,
-      highestScore: 0.96,
-      lowestScore: 0.45,
-      totalProperties: 80,
-      activeProperties: 65,
-      inactiveProperties: 15,
-      status: "Active",
-      coverage: 62,
-      definition: "Properties featuring outdoor swimming pools."
-    },
-    {
-      id: 6,
-      name: "ocean view",
-      type: "Location Score",
-      category: "Location",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.82,
-      highestScore: 0.97,
-      lowestScore: 0.58,
-      totalProperties: 90,
-      activeProperties: 75,
-      inactiveProperties: 15,
-      status: "Active",
-      coverage: 45,
-      definition: "Properties offering views of the ocean."
-    },
-    {
-      id: 7,
-      name: "cabin",
-      type: "Property Type",
-      category: "Accommodation",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.78,
-      highestScore: 0.94,
-      lowestScore: 0.48,
-      totalProperties: 70,
-      activeProperties: 55,
-      inactiveProperties: 15,
-      status: "Active",
-      coverage: 41,
-      definition: "Properties classified as cabin accommodations."
-    },
-    {
-      id: 8,
-      name: "family friendly",
-      type: "Concept Score",
-      category: "Family",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.69,
-      highestScore: 0.91,
-      lowestScore: 0.42,
-      totalProperties: 110,
-      activeProperties: 85,
-      inactiveProperties: 25,
-      status: "Active",
-      coverage: 33,
-      definition: "Properties suitable for families with children."
-    },
-    {
-      id: 9,
-      name: "luxury",
-      type: "Concept Score",
-      category: "Premium",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.82,
-      highestScore: 0.99,
-      lowestScore: 0.61,
-      totalProperties: 75,
-      activeProperties: 60,
-      inactiveProperties: 15,
-      status: "Active",
-      coverage: 45,
-      definition: "High-end properties offering premium amenities and services."
-    },
-    {
-      id: 10,
-      name: "private vacation homes",
-      type: "Property Type",
-      category: "Accommodation",
-      scoreAvailable: true,
-      applicableEntities: ["Property"],
-      averageScore: 0.75,
-      highestScore: 0.93,
-      lowestScore: 0.55,
-      totalProperties: 65,
-      activeProperties: 50,
-      inactiveProperties: 15,
-      status: "Active",
-      coverage: 62,
-      definition: "Private residential properties available for vacation rentals."
+      completeness: 0.89,
+      lastValidated: '2024-03-15'
     }
-  ];
+  },
+  "Romantic": {
+    relatedConcepts: ['Privacy', 'Luxury', 'Beach Access'],
+    metrics: {
+      accuracy: 0.78,
+      coverage: 65,
+      completeness: 0.82,
+      lastValidated: '2024-03-10'
+    }
+  },
+  "Family-Friendly": {
+    relatedConcepts: ['Pet-Friendly', 'Spacious', 'Safety'],
+    metrics: {
+      accuracy: 0.92,
+      coverage: 81,
+      completeness: 0.95,
+      lastValidated: '2024-03-20'
+    }
+  },
+  "Luxury": {
+    relatedConcepts: ['Premium', 'Upscale Dining', 'Romantic'],
+    metrics: {
+      accuracy: 0.88,
+      coverage: 45,
+      completeness: 0.91,
+      lastValidated: '2024-03-18'
+    }
+  }
+};
 
-  // Calculate pagination
-  const totalCount = mockAffinities.length;
+// Create performance data from affinity details with multiple years and quarters
+const generateMockPerformanceData = () => {
+  const years = [2023, 2024, 2025];
+  const quarters = [1, 2, 3, 4];
+  const result = [];
+  
+  Object.entries(mockAffinityDetails).forEach(([name, data], index) => {
+    // Generate data for each year and quarter
+    years.forEach(year => {
+      quarters.forEach(quarter => {
+        // Create a date for the first day of the quarter
+        const date = new Date(year, (quarter - 1) * 3, 1);
+        
+        // Generate realistic, non-zero values with proper ratios
+        const impressions = Math.floor(Math.random() * 90000) + 10000; // Min 10,000
+        const clicks = Math.floor(impressions * (Math.random() * 0.1 + 0.02)); // 2-12% CTR
+        const transactions = Math.floor(clicks * (Math.random() * 0.08 + 0.02)); // 2-10% conversion
+        const avgOrderValue = Math.floor(Math.random() * 400) + 100; // $100-500 per transaction
+        const gpNet = transactions * avgOrderValue;
+        
+        result.push({
+          id: `perf_${index + 1}_${year}_${quarter}`,
+          affinityId: (index + 1).toString(),
+          name,
+          clicks,
+          impressions,
+          transactions,
+          gpNet,
+          dateCreated: date.toISOString(),
+          lastUpdatedDate: data.metrics.lastValidated
+        });
+      });
+    });
+  });
+  
+  return result;
+};
+
+const mockPerformanceData = generateMockPerformanceData();
+
+// Update getAffinities to use cacheService
+export const getAffinities = async ({ page = 1, limit = 10 } = {}) => {
+  try {
+    const cacheKey = cacheService.generateKey('affinities', { page, limit });
+    const cachedData = cacheService.get(cacheKey);
+    if (cachedData) {
+      console.log('🗄️ Returning cached affinities data');
+      return cachedData;
+    }
+
+    await delay(300);
+
   const startIndex = (page - 1) * limit;
-  const endIndex = Math.min(startIndex + limit, totalCount);
-  const paginatedData = mockAffinities.slice(startIndex, endIndex);
+  const endIndex = startIndex + limit;
+    const paginatedData = affinityConcepts.slice(startIndex, endIndex);
 
-  const response = {
-    data: paginatedData,
-    totalCount,
-    currentPage: page,
-    totalPages: Math.ceil(totalCount / limit),
-    hasNextPage: endIndex < totalCount,
-    hasPreviousPage: page > 1
-  };
+    const response = {
+      data: paginatedData,
+      total: affinityConcepts.length,
+    page,
+    limit,
+      totalPages: Math.ceil(affinityConcepts.length / limit)
+    };
 
-  cacheService.set(cacheKey, response);
-  return response;
+    cacheService.set(cacheKey, response);
+    return response;
+  } catch (error) {
+    throw new Error('Failed to fetch affinities');
+  }
 };
 
 // Mock property search with pagination
@@ -449,6 +360,10 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination"],
     averageScore: 7.2,
+    highestScore: 9.1,
+    lowestScore: 5.4,
+    propertiesTagged: 1250,
+    propertiesWithScore: 980,
     status: "Active",
     coverage: 72,
     definition: "Properties that welcome pets with amenities or policies that accommodate animals."
@@ -461,6 +376,10 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination", "POI"],
     averageScore: 6.8,
+    highestScore: 8.9,
+    lowestScore: 4.7,
+    propertiesTagged: 980,
+    propertiesWithScore: 850,
     status: "Active",
     coverage: 65,
     definition: "Properties suitable for couples seeking a romantic experience."
@@ -473,6 +392,10 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property", "Destination"],
     averageScore: 7.9,
+    highestScore: 9.5,
+    lowestScore: 6.2,
+    propertiesTagged: 1500,
+    propertiesWithScore: 1280,
     status: "Active",
     coverage: 81,
     definition: "Properties that cater to families with children offering suitable amenities and activities."
@@ -485,6 +408,10 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property"],
     averageScore: 8.2,
+    highestScore: 9.8,
+    lowestScore: 6.5,
+    propertiesTagged: 750,
+    propertiesWithScore: 620,
     status: "Active",
     coverage: 45,
     definition: "High-end properties offering premium amenities, services, and experiences."
@@ -497,6 +424,10 @@ const affinityConcepts = [
     scoreAvailable: true,
     applicableEntities: ["Property"],
     averageScore: 8.7,
+    highestScore: 9.9,
+    lowestScore: 7.1,
+    propertiesTagged: 580,
+    propertiesWithScore: 450,
     status: "Active",
     coverage: 38,
     definition: "Properties with direct or convenient access to beaches."
@@ -631,80 +562,30 @@ export const deleteCollection = async (collectionId) => {
   return { success: true };
 };
 
+// Update getCollections to use cacheService
 export const getCollections = async () => {
   try {
-    const cacheKey = cacheService.generateKey('collections');
-    const cachedData = cacheService.get(cacheKey);
-    
+  const cacheKey = cacheService.generateKey('collections');
+  const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
       console.log('API: Returning cached collections data');
       return cachedData;
     }
 
-    console.log('API: Fetching fresh collections data');
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Define collections with consistent IDs and structure
-    const collections = [
-      {
-        id: 'summer-getaway',
-        name: 'Summer Getaway Collection',
-        description: 'Perfect for summer vacations and beach getaways',
-        affinities: [
-          { id: '1', name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
-          { id: '2', name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-          { id: '3', name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-          { id: '4', name: 'Luxury', description: 'High-end properties offering premium amenities' },
-          { id: '5', name: 'Nature Retreat', description: 'Properties situated in natural surroundings' }
-        ],
-        isFavorite: true,
-        lastUpdated: '2024-03-18'
-      },
-      {
-        id: 'urban-exploration',
-        name: 'Urban Exploration Bundle',
-        description: 'City-based experiences and accommodations',
-        affinities: [
-          { id: '6', name: 'Historical', description: 'Properties with historical significance' },
-          { id: '4', name: 'Luxury', description: 'High-end properties offering premium amenities' },
-          { id: '7', name: 'Romantic', description: 'Properties suitable for couples' }
-        ],
-        isFavorite: true,
-        lastUpdated: '2024-03-18'
-      },
-      {
-        id: 'family-trip',
-        name: 'Family Trip Essentials',
-        description: 'Family-friendly accommodations and activities',
-        affinities: [
-          { id: '2', name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-          { id: '3', name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-          { id: '5', name: 'Nature Retreat', description: 'Properties situated in natural surroundings' },
-          { id: '1', name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' }
-        ],
-        isFavorite: true,
-        lastUpdated: '2024-03-18'
-      }
-    ];
-    
-    console.log('API: Collections data:', collections.map(c => ({ id: c.id, name: c.name })));
-    
-    // Cache the data with a 5-minute expiration
-    cacheService.set(cacheKey, collections, 5 * 60 * 1000);
-    
-    return collections;
+    await delay(300);
+    const collections = mockCollections;
+  
+  cacheService.set(cacheKey, collections);
+  return collections;
   } catch (error) {
-    console.error('API Error: Failed to fetch collections', error);
     throw new Error('Failed to fetch collections');
   }
 };
 
-// Add a function to clear the collections cache
+// Update clearCollectionsCache to use cacheService
 export const clearCollectionsCache = () => {
   const cacheKey = cacheService.generateKey('collections');
-  cacheService.remove(cacheKey);
+  cacheService.clear(cacheKey);
   console.log('API: Collections cache cleared');
 };
 
@@ -747,4 +628,342 @@ export const createCollection = async (collectionData) => {
   // In a real implementation, this would be an API call
   // For now, we'll just return the new collection
   return newCollection;
+};
+
+// Update getAffinityPerformance to use cacheService
+export const getAffinityPerformance = async (affinityId, year, quarter, { page = 1, limit = 10 } = {}) => {
+  console.log('⚡ Entering getAffinityPerformance with params:', { affinityId, year, quarter, page, limit });
+  try {
+    console.log('📊 Preparing to fetch performance data');
+    const cacheKey = cacheService.generateKey('performance', { affinityId, year, quarter, page, limit });
+    console.log('🔑 Generated cache key:', cacheKey);
+    
+    const cachedData = cacheService.get(cacheKey);
+    if (cachedData) {
+      console.log('🗄️ Returning cached performance data');
+      return cachedData;
+    }
+
+    console.log('⏳ Adding artificial delay...');
+    await delay(300);
+    console.log('✅ Delay completed');
+
+    console.log('🔍 Filtering performance data...');
+    console.log('📊 Total mock data items:', mockPerformanceData.length);
+    
+    const filteredData = mockPerformanceData.filter(item => {
+      try {
+        if (affinityId && item.affinityId !== affinityId) {
+          console.log(`⏭️ Skipping item ${item.id} - affinityId mismatch`);
+          return false;
+        }
+        
+        console.log(`📅 Processing item ${item.id} with date: ${item.dateCreated}`);
+        const itemDate = new Date(item.dateCreated);
+        
+        if (isNaN(itemDate.getTime())) {
+          console.log(`⚠️ Invalid date for item ${item.id}: ${item.dateCreated}`);
+          return false;
+        }
+        
+        const itemYear = itemDate.getFullYear();
+        const itemQuarter = Math.floor(itemDate.getMonth() / 3) + 1;
+        
+        console.log(`📊 Item ${item.id} date info:`, { 
+          itemYear, 
+          itemQuarter, 
+          targetYear: year, 
+          targetQuarter: quarter 
+        });
+        
+        const matches = itemYear === year && itemQuarter === quarter;
+        console.log(`🔍 Item ${item.id} ${matches ? 'matches' : 'does not match'} filter criteria`);
+        
+        return matches;
+      } catch (err) {
+        console.log(`❌ Error processing item ${item.id}:`, err);
+        return false;
+      }
+    });
+    
+    console.log(`✅ Filtered data: ${filteredData.length} items match criteria`);
+
+    // Enrich the filtered data with affinity details
+    console.log('🔍 Enriching data with affinity details...');
+    const enrichedData = filteredData.map(item => {
+      const affinityDetails = mockAffinityDetails[item.name] || {};
+      return {
+        ...item,
+        affinityName: item.name,
+        affinityType: "Platform Score", // Default value, can be customized based on your needs
+        affinityCategory: "Amenities", // Default value, can be customized based on your needs
+        affinityStatus: "Active", // Default value, can be customized based on your needs
+        affinityMetrics: affinityDetails.metrics || {},
+        relatedConcepts: affinityDetails.relatedConcepts || []
+      };
+    });
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    console.log(`📊 Pagination: ${startIndex} to ${endIndex}`);
+    
+    const paginatedData = enrichedData.slice(startIndex, endIndex);
+    console.log(`📊 Paginated data: ${paginatedData.length} items`);
+
+    const response = {
+      data: paginatedData,
+      total: enrichedData.length,
+      page,
+      limit,
+      totalPages: Math.ceil(enrichedData.length / limit)
+    };
+
+    console.log('💾 Caching response...');
+    cacheService.set(cacheKey, response);
+    console.log('📈 Performance data received:', response);
+    
+    if (!response || !response.data) {
+      console.log('❌ Invalid response structure:', response);
+      throw new Error('Invalid response structure');
+    }
+    
+    console.log('✅ Returning performance data');
+    return response;
+  } catch (error) {
+    console.log('💥 Error in getAffinityPerformance:', {
+      error: error,
+      message: error.message,
+      stack: error.stack
+    });
+    throw error;
+  }
+};
+
+// Mock data constants
+const mockLifecycleData = {
+  "Pet-Friendly": {
+    stages: {
+      "Discovery": { status: "Complete", lastUpdated: "2024-06-15", owner: "Jane Smith" },
+      "Relationship Definition": { status: "Complete", lastUpdated: "2024-07-22", owner: "Jane Smith" },
+      "Concept Enrichment": { status: "Complete", lastUpdated: "2024-08-10", owner: "Alex Johnson" },
+      "Weighting Finalized": { status: "Complete", lastUpdated: "2024-09-05", owner: "Alex Johnson" },
+      "Scoring Implemented": { status: "Complete", lastUpdated: "2024-10-01", owner: "Michael Chang" },
+      "Validation & Distribution": { status: "Complete", lastUpdated: "2024-10-20", owner: "Sarah Wilson" }
+    }
+  },
+  "Romantic": {
+    stages: {
+      "Discovery": { status: "Complete", lastUpdated: "2024-05-10", owner: "Sarah Wilson" },
+      "Relationship Definition": { status: "Complete", lastUpdated: "2024-06-18", owner: "Alex Johnson" },
+      "Concept Enrichment": { status: "Complete", lastUpdated: "2024-07-15", owner: "Jane Smith" },
+      "Weighting Finalized": { status: "Complete", lastUpdated: "2024-08-20", owner: "Alex Johnson" },
+      "Scoring Implemented": { status: "Complete", lastUpdated: "2024-09-12", owner: "Michael Chang" },
+      "Validation & Distribution": { status: "Complete", lastUpdated: "2024-10-05", owner: "Sarah Wilson" }
+    }
+  },
+  "Family-Friendly": {
+    stages: {
+      "Discovery": { status: "Complete", lastUpdated: "2024-07-05", owner: "Jane Smith" },
+      "Relationship Definition": { status: "Complete", lastUpdated: "2024-08-12", owner: "Jane Smith" },
+      "Concept Enrichment": { status: "Complete", lastUpdated: "2024-09-08", owner: "Alex Johnson" },
+      "Weighting Finalized": { status: "In Progress", lastUpdated: "2024-10-20", owner: "Alex Johnson" },
+      "Scoring Implemented": { status: "Not Started", lastUpdated: "", owner: "" },
+      "Validation & Distribution": { status: "Not Started", lastUpdated: "", owner: "" }
+    }
+  },
+  "Luxury": {
+    stages: {
+      "Discovery": { status: "Complete", lastUpdated: "2024-04-10", owner: "Michael Chang" },
+      "Relationship Definition": { status: "Complete", lastUpdated: "2024-05-15", owner: "Sarah Wilson" },
+      "Concept Enrichment": { status: "Complete", lastUpdated: "2024-06-22", owner: "Alex Johnson" },
+      "Weighting Finalized": { status: "Complete", lastUpdated: "2024-07-30", owner: "Alex Johnson" },
+      "Scoring Implemented": { status: "Complete", lastUpdated: "2024-08-25", owner: "Michael Chang" },
+      "Validation & Distribution": { status: "In Progress", lastUpdated: "2024-10-15", owner: "Sarah Wilson" }
+    }
+  }
+};
+
+// New API functions
+export const getLifecycleData = async (affinityName = null) => {
+  const cacheKey = cacheService.generateKey('lifecycle_data', { affinityName });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Return either specific affinity lifecycle or all lifecycles
+  const data = affinityName ? 
+    { [affinityName]: mockLifecycleData[affinityName] } : 
+    mockLifecycleData;
+
+  cacheService.set(cacheKey, data);
+  return data;
+};
+
+export const getRelatedConcepts = async (affinityName) => {
+  const cacheKey = cacheService.generateKey('related_concepts', { affinityName });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Mock related concepts based on the affinity
+  let relatedConcepts = [];
+  switch(affinityName.toLowerCase()) {
+    case 'pet-friendly':
+      relatedConcepts = ['Family-Friendly', 'Spacious', 'Outdoor Recreation'];
+      break;
+    case 'romantic':
+      relatedConcepts = ['Privacy', 'Luxury', 'Beach Access'];
+      break;
+    case 'family-friendly':
+      relatedConcepts = ['Pet-Friendly', 'Spacious', 'Safety'];
+      break;
+    case 'luxury':
+      relatedConcepts = ['Premium', 'Upscale Dining', 'Romantic'];
+      break;
+    case 'beach access':
+      relatedConcepts = ['Ocean View', 'Luxury', 'Romantic'];
+      break;
+    default:
+      relatedConcepts = ['Example Related Concept 1', 'Example Related Concept 2'];
+  }
+
+  const data = {
+    affinityName,
+    relatedConcepts
+  };
+
+  cacheService.set(cacheKey, data);
+  return data;
+};
+
+// Utility functions
+const getStatusClass = (status) => {
+  switch(status) {
+    case 'Validated': return 'badge-validated';
+    case 'In Enrichment': return 'badge-enrichment';
+    case 'Scoring': return 'badge-scoring';
+    case 'Discovery': return 'badge-discovery';
+    default: return '';
+  }
+};
+
+const getScoreClass = (score) => {
+  if (score >= 0.8) return 'text-green-600';
+  if (score >= 0.6) return 'text-yellow-600';
+  return 'text-red-600';
+};
+
+// Additional mock data
+const mockCombinationAnalysis = {
+  compatibility: {
+    "Pet-Friendly + Family-Friendly": 0.95,
+    "Pet-Friendly + Luxury": 0.45,
+    "Romantic + Luxury": 0.85,
+    "Beach Access + Romantic": 0.80,
+    "Family-Friendly + Luxury": 0.55
+  },
+  coverage: {
+    "Pet-Friendly + Family-Friendly": 68,
+    "Pet-Friendly + Luxury": 35,
+    "Romantic + Luxury": 42,
+    "Beach Access + Romantic": 45,
+    "Family-Friendly + Luxury": 38
+  }
+};
+
+// Additional API functions
+export const analyzeCombination = async (affinities) => {
+  const cacheKey = cacheService.generateKey('combination_analysis', { affinities: affinities.sort().join('+') });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Generate combination key
+  const combinationKey = affinities.sort().join(' + ');
+
+  const data = {
+    affinities,
+    compatibility: mockCombinationAnalysis.compatibility[combinationKey] || 0.5,
+    coverage: mockCombinationAnalysis.coverage[combinationKey] || 30,
+    recommendations: [
+      "Consider adding related concepts for better coverage",
+      "Review compatibility scores with similar combinations",
+      "Check for overlapping property characteristics"
+    ],
+    status: "Valid Combination",
+    lastUpdated: new Date().toISOString()
+  };
+
+  cacheService.set(cacheKey, data);
+  return data;
+};
+
+export const getAffinityDetails = async (affinityName) => {
+  const cacheKey = cacheService.generateKey('affinity_details', { affinityName });
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  const details = mockAffinityDetails[affinityName] || {
+    relatedConcepts: [],
+    metrics: {
+      accuracy: 0,
+      coverage: 0,
+      completeness: 0,
+      lastValidated: new Date().toISOString().split('T')[0]
+    }
+  };
+
+  const data = {
+    name: affinityName,
+    ...details,
+    statusClass: getStatusClass(details.status),
+    scoreClass: getScoreClass(details.metrics.accuracy)
+  };
+
+  cacheService.set(cacheKey, data);
+  return data;
+};
+
+// Add getMetrics function
+export const getMetrics = async () => {
+  console.log('📊 Fetching metrics data');
+  try {
+    const cacheKey = cacheService.generateKey('metrics');
+    const cachedData = cacheService.get(cacheKey);
+    if (cachedData) {
+      console.log('🗄️ Returning cached metrics data');
+      return cachedData;
+    }
+
+    await delay(300);
+
+    // Mock metrics data
+    const metricsData = [
+      { id: 1, name: 'Clicks', description: 'Number of clicks on affinity' },
+      { id: 2, name: 'Impressions', description: 'Number of times affinity was shown' },
+      { id: 3, name: 'Transactions', description: 'Number of transactions attributed to affinity' },
+      { id: 4, name: 'GP Net', description: 'Gross profit net for affinity' }
+    ];
+
+    const response = {
+      data: metricsData,
+      total: metricsData.length
+    };
+
+    cacheService.set(cacheKey, response);
+    console.log('✅ Metrics data fetched:', response);
+    return response;
+  } catch (error) {
+    console.log('💥 Error in getMetrics:', error);
+    throw new Error('Failed to fetch metrics');
+  }
 }; 

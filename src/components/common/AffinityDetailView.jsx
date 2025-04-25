@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { affinityShape } from '../../types/affinityTypes';
 
 const getScoreClass = (score) => {
   if (score >= 0.8) return 'text-green-600';
@@ -76,6 +77,16 @@ const AffinityDetailView = ({
                   </div>
                 </div>
               )}
+
+              <div className="flex justify-between">
+                <div className="font-medium">Created:</div>
+                <div>{new Date(affinity.dateCreated).toLocaleDateString()}</div>
+              </div>
+
+              <div className="flex justify-between">
+                <div className="font-medium">Last Updated:</div>
+                <div>{new Date(affinity.lastUpdatedDate).toLocaleDateString()}</div>
+              </div>
             </div>
           </div>
 
@@ -153,20 +164,7 @@ const AffinityDetailView = ({
 };
 
 AffinityDetailView.propTypes = {
-  affinity: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    definition: PropTypes.string,
-    status: PropTypes.string,
-    category: PropTypes.string,
-    type: PropTypes.string,
-    applicableEntities: PropTypes.arrayOf(PropTypes.string),
-    scoreAvailable: PropTypes.bool,
-    averageScore: PropTypes.number,
-    coverage: PropTypes.number,
-    highestScore: PropTypes.number,
-    lowestScore: PropTypes.number,
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  }).isRequired,
+  affinity: affinityShape.isRequired,
   taggedPropertiesCount: PropTypes.number,
   propertiesWithScoreCount: PropTypes.number,
   showImplementation: PropTypes.bool,

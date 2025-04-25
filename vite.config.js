@@ -34,4 +34,4 @@ export default defineConfig({
     strictPort: true,
   },
   base: '/',
-})
+}) 

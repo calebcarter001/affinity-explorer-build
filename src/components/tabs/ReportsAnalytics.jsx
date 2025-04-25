@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiDownload, FiFilter, FiCalendar, FiBarChart2 } from 'react-icons/fi';
+import { getDashboardStats, getAffinities, getAffinityPerformance } from '../../services/apiService';
 import SkeletonLoader from '../common/SkeletonLoader';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 
@@ -10,16 +11,96 @@ const ReportsAnalytics = () => {
   const [affinityFilter, setAffinityFilter] = useState('all');
   const [showPreview, setShowPreview] = useState(false);
   const [error, setError] = useState(null);
-  const [reportPreview, setReportPreview] = useState(null);
+  const [reportData, setReportData] = useState(null);
+  const [availableAffinities, setAvailableAffinities] = useState([]);
 
-  const handleGenerateReport = () => {
+  // Load available affinities for filtering
+  useEffect(() => {
+    const loadAffinities = async () => {
+      try {
+        const response = await getAffinities();
+        setAvailableAffinities(response.data);
+      } catch (err) {
+        setError('Failed to load affinities. Please try again.');
+      }
+    };
+    loadAffinities();
+  }, []);
+
+  const handleGenerateReport = async () => {
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    setError(null);
+    try {
+      let data = {};
+      
+      switch (reportType) {
+        case 'affinity-performance': {
+          const now = new Date();
+          const currentYear = now.getFullYear();
+          const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+          
+          const performanceResponse = await getAffinityPerformance(
+            affinityFilter !== 'all' ? affinityFilter : null,
+            currentYear,
+            currentQuarter
+          );
+          
+          const statsResponse = await getDashboardStats();
+          
+          data = {
+            performance: performanceResponse.data,
+            stats: statsResponse,
+            generatedAt: new Date().toISOString(),
+            type: 'Affinity Performance Report',
+            period: `${currentYear} Q${currentQuarter}`
+          };
+          break;
+        }
+        
+        case 'coverage-analysis': {
+          const statsResponse = await getDashboardStats();
+          data = {
+            stats: statsResponse,
+            generatedAt: new Date().toISOString(),
+            type: 'Coverage Analysis Report',
+            metrics: statsResponse.goals.completeness
+          };
+          break;
+        }
+        
+        case 'implementation-impact': {
+          const statsResponse = await getDashboardStats();
+          data = {
+            stats: statsResponse,
+            generatedAt: new Date().toISOString(),
+            type: 'Implementation Impact Report',
+            metrics: statsResponse.goals.alignment
+          };
+          break;
+        }
+        
+        case 'concept-adoption': {
+          const statsResponse = await getDashboardStats();
+          data = {
+            stats: statsResponse,
+            generatedAt: new Date().toISOString(),
+            type: 'Concept Adoption Trends',
+            metrics: statsResponse.goals.travelConcepts
+          };
+          break;
+        }
+        
+        default:
+          throw new Error('Invalid report type');
+      }
+      
+      setReportData(data);
       setShowPreview(true);
-      setReportPreview(true);
-    }, 1500);
+    } catch (err) {
+      setError('Failed to generate report. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -149,9 +230,14 @@ const ReportsAnalytics = () => {
           />
         ) : (
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-xl font-semibold mb-4">Report Preview</h3>
             <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-              <h3 className="text-lg font-semibold">Report Preview</h3>
+              <div>
+                <h3 className="text-xl font-semibold">{reportData.type}</h3>
+                <p className="text-sm text-gray-500">Generated on {new Date(reportData.generatedAt).toLocaleString()}</p>
+                {reportData.period && (
+                  <p className="text-sm text-gray-500">Period: {reportData.period}</p>
+                )}
+              </div>
               <div className="flex flex-col sm:flex-row gap-2 mt-2 md:mt-0">
                 <button className="btn btn-outline text-sm">Save Report</button>
                 <button className="btn btn-primary text-sm">Download PDF</button>
@@ -159,66 +245,192 @@ const ReportsAnalytics = () => {
             </div>
             
             <div className="border-t border-gray-200 pt-4">
+              {/* Summary Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                {reportType === 'affinity-performance' && (
+                  <>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-medium mb-2">Total Affinities</h4>
-                  <p className="text-2xl md:text-3xl font-bold text-expedia-blue">248</p>
-                  <p className="text-sm text-gray-500">+12% from last month</p>
+                      <p className="text-2xl md:text-3xl font-bold text-expedia-blue">
+                        {reportData.stats.totalAffinities}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        +{reportData.stats.quarterlyGrowth}% from last quarter
+                      </p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-medium mb-2">Implementation Rate</h4>
-                  <p className="text-2xl md:text-3xl font-bold text-green-600">78%</p>
-                  <p className="text-sm text-gray-500">+5% from last month</p>
+                      <p className="text-2xl md:text-3xl font-bold text-green-600">
+                        {reportData.stats.implementationRate}%
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        +{reportData.stats.quarterlyGrowthImplementation}% from last quarter
+                      </p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Average Coverage</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-purple-600">
+                        {reportData.stats.avgCoverage}%
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        +{reportData.stats.yearlyGrowthCoverage}% year over year
+                      </p>
+                    </div>
+                  </>
+                )}
+
+                {reportType === 'coverage-analysis' && (
+                  <>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Overall Completeness</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-expedia-blue">
+                        {reportData.metrics.overall.percentage}%
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {reportData.metrics.overall.complete} of {reportData.metrics.overall.total} complete
+                      </p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">High Priority Items</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-yellow-600">
+                        {reportData.metrics.priority.high}
+                      </p>
+                      <p className="text-sm text-gray-500">Need immediate attention</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Required Attributes</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-green-600">
+                        {Math.round((reportData.metrics.subScores.attributes.complete / 
+                          (reportData.metrics.subScores.attributes.complete + 
+                           reportData.metrics.subScores.attributes.incomplete)) * 100)}%
+                      </p>
+                      <p className="text-sm text-gray-500">Completion rate</p>
+                    </div>
+                  </>
+                )}
+
+                {reportType === 'implementation-impact' && (
+                  <>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Quarterly Target</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-expedia-blue">
+                        {reportData.metrics.quarterly.current}%
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Gap: {reportData.metrics.quarterly.gap}%
+                      </p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium mb-2">API Calls</h4>
-                  <p className="text-2xl md:text-3xl font-bold text-purple-600">1.2M</p>
-                  <p className="text-sm text-gray-500">Last 30 days</p>
+                      <h4 className="font-medium mb-2">Yearly Projection</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-purple-600">
+                        {reportData.metrics.yearly.projected}%
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Target: {reportData.metrics.yearly.target}%
+                      </p>
                 </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Risk Level</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-yellow-600">
+                        {reportData.metrics.yearly.riskLevel}
+                      </p>
+                      <p className="text-sm text-gray-500">Current assessment</p>
+              </div>
+                  </>
+                )}
+
+                {reportType === 'concept-adoption' && (
+                  <>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Total Concepts</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-expedia-blue">
+                        {reportData.metrics.total}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Target: {reportData.metrics.yearlyTarget}
+                      </p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Progress Rate</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-green-600">
+                        {reportData.metrics.progressRate}%
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {reportData.metrics.completed} completed
+                      </p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <h4 className="font-medium mb-2">Validation Status</h4>
+                      <p className="text-2xl md:text-3xl font-bold text-purple-600">
+                        {reportData.metrics.breakdown.validated}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {reportData.metrics.breakdown.inValidation} in validation
+                      </p>
+                </div>
+                  </>
+                )}
               </div>
               
+              {/* Performance Trends */}
+              {reportType === 'affinity-performance' && reportData.performance && (
               <div className="mt-6">
-                <h4 className="font-medium mb-3">Performance Trends</h4>
-                <div className="bg-gray-50 p-4 rounded-lg h-64 flex items-center justify-center">
-                  <p className="text-gray-500">Chart visualization would appear here</p>
-                </div>
-              </div>
-              
-              <div className="mt-6">
-                <h4 className="font-medium mb-3">Top Performing Affinities</h4>
+                  <h4 className="font-medium mb-3">Performance Details</h4>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Affinity</th>
-                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Impressions</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transactions</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GP Net</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      <tr>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Luxury</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Premium</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">9.2</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+0.3</td>
+                        {reportData.performance.map((item) => (
+                          <tr key={item.id}>
+                            <td className="px-4 py-3 text-sm text-gray-900">{item.affinityId}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{item.clicks.toLocaleString()}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{item.impressions.toLocaleString()}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{item.transactions.toLocaleString()}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">${item.gpNet.toLocaleString()}</td>
                       </tr>
-                      <tr>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Family-Friendly</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Family</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">8.7</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600">+0.2</td>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Coverage Breakdown */}
+              {reportType === 'coverage-analysis' && (
+                <div className="mt-6">
+                  <h4 className="font-medium mb-3">Coverage Breakdown</h4>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attribute</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Complete</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Incomplete</th>
+                          <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required</th>
                       </tr>
-                      <tr>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">Beachfront</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Location</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">8.5</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-red-600">-0.1</td>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {Object.entries(reportData.metrics.subScores).map(([key, value]) => (
+                          <tr key={key}>
+                            <td className="px-4 py-3 text-sm text-gray-900 capitalize">{key}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{value.complete}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{value.incomplete}</td>
+                            <td className="px-4 py-3 text-sm text-gray-900">{value.required ? 'Yes' : 'No'}</td>
                       </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
               </div>
+              )}
             </div>
           </div>
         )}

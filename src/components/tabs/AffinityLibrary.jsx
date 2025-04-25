@@ -89,25 +89,25 @@ const AffinityLibrary = () => {
         setLoading(false);
       }
     };
-    
+
     fetchAffinities();
   }, [currentPage, itemsPerPage]);
 
   // Filter affinities based on search term
   useEffect(() => {
     let filtered = [...affinities];
-    
+
     // Apply search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(affinity => 
-        affinity.name.toLowerCase().includes(term) ||
+        affinity.name.toLowerCase().includes(term) || 
         affinity.definition?.toLowerCase().includes(term) ||
         affinity.category?.toLowerCase().includes(term) ||
         affinity.type?.toLowerCase().includes(term)
       );
     }
-    
+
     setFilteredAffinities(filtered);
   }, [affinities, searchTerm]);
 
@@ -136,7 +136,7 @@ const AffinityLibrary = () => {
   };
 
   const renderAffinityLibrary = () => {
-    return (
+      return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <div className="bg-white p-4 rounded-lg shadow mb-4">
@@ -156,52 +156,60 @@ const AffinityLibrary = () => {
             {loading ? (
               <SkeletonLoader count={3} height={150} />
             ) : filteredAffinities.length === 0 ? (
-              <EmptyStateStyled
+        <EmptyStateStyled
                 icon="search"
                 title="No Affinities Found"
                 description="Try adjusting your search to find what you're looking for."
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
-                {filteredAffinities.map(affinity => (
-                  <div 
-                    key={affinity.id}
-                    onClick={() => handleAffinityClick(affinity)}
-                    className={`card p-4 cursor-pointer transition-all hover:shadow-md ${
-                      selectedAffinity?.id === affinity.id ? 'border-2 border-blue-500' : ''
-                    }`}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
-                      <h3 className="text-lg font-semibold">{affinity.name}</h3>
-                      {getStatusBadge(affinity.status)}
-                    </div>
-                    
-                    <p className="text-gray-600 text-sm mb-3">{affinity.definition}</p>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
+          {filteredAffinities.map(affinity => (
+            <div 
+              key={affinity.id}
+              onClick={() => handleAffinityClick(affinity)}
+              className={`card p-4 cursor-pointer transition-all hover:shadow-md ${
+                selectedAffinity?.id === affinity.id ? 'border-2 border-blue-500' : ''
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
+                <h3 className="text-lg font-semibold">{affinity.name}</h3>
+                {getStatusBadge(affinity.status)}
+              </div>
+              
+              <p className="text-gray-600 text-sm mb-3">{affinity.definition}</p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="font-medium">Category:</span>
+                  <span className="ml-1">{affinity.category}</span>
+                </div>
+                <div>
+                  <span className="font-medium">Type:</span>
+                  <span className="ml-1">{affinity.type}</span>
+                </div>
                       <div>
-                        <span className="font-medium">Category:</span>
-                        <span className="ml-1">{affinity.category}</span>
+                        <span className="font-medium">Properties Tagged:</span>
+                        <span className="ml-1">{affinity.propertiesTagged}</span>
                       </div>
                       <div>
-                        <span className="font-medium">Type:</span>
-                        <span className="ml-1">{affinity.type}</span>
+                        <span className="font-medium">Properties with Score:</span>
+                        <span className="ml-1">{affinity.propertiesWithScore}</span>
                       </div>
-                      <div>
-                        <span className="font-medium">Coverage:</span>
-                        <span className="ml-1">{affinity.coverage}%</span>
-                      </div>
-                      {affinity.scoreAvailable && (
-                        <div>
-                          <span className="font-medium">Avg Score:</span>
+                <div>
+                  <span className="font-medium">Coverage:</span>
+                  <span className="ml-1">{affinity.coverage}%</span>
+                </div>
+                {affinity.scoreAvailable && (
+                  <div>
+                    <span className="font-medium">Avg Score:</span>
                           <span className={`ml-1 ${getScoreClass(affinity.averageScore)}`}>
                             {affinity.averageScore}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                    </span>
                   </div>
-                ))}
+                )}
+              </div>
+            </div>
+          ))}
               </div>
             )}
           </div>
@@ -258,8 +266,8 @@ const AffinityLibrary = () => {
             <div className="lg:col-span-2">
               <AffinityDetailView
                 affinity={selectedAffinity}
-                taggedPropertiesCount={selectedAffinity.totalProperties}
-                propertiesWithScoreCount={selectedAffinity.activeProperties}
+                taggedPropertiesCount={selectedAffinity.propertiesTagged}
+                propertiesWithScoreCount={selectedAffinity.propertiesWithScore}
                 showImplementation={true}
                 showUsageGuidelines={true}
               />
@@ -282,29 +290,29 @@ const AffinityLibrary = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTab('library')}
+            <button
+              onClick={() => setActiveTab('library')}
             className={`flex items-center gap-1 px-3 py-1.5 rounded-md ${
-              activeTab === 'library'
+                activeTab === 'library'
                 ? 'bg-blue-100 text-blue-800 font-medium'
                 : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
+              }`}
+            >
             <FiBook className="w-4 h-4" />
             <span>Library</span>
-          </button>
+            </button>
           
-          <button
-            onClick={() => setActiveTab('collections')}
+            <button
+              onClick={() => setActiveTab('collections')}
             className={`flex items-center gap-1 px-3 py-1.5 rounded-md ${
-              activeTab === 'collections'
+                activeTab === 'collections'
                 ? 'bg-blue-100 text-blue-800 font-medium'
                 : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
+              }`}
+            >
             <FiLayers className="w-4 h-4" />
             <span>Collections</span>
-          </button>
+            </button>
         </div>
         
         <button className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700">

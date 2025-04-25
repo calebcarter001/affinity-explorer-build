@@ -28,7 +28,7 @@ const CreateCollectionModal = ({ isOpen, onClose, onSubmit }) => {
       console.error('Error loading affinities:', error);
       showToast('error', 'Failed to load affinities');
     } finally {
-      setLoading(false);
+    setLoading(false);
     }
   };
 
@@ -72,56 +72,56 @@ const CreateCollectionModal = ({ isOpen, onClose, onSubmit }) => {
 
         <form onSubmit={handleSubmit} className="p-4">
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                value={form.name}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              value={form.name}
                 onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                required
-              />
-            </div>
+              required
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
-              </label>
-              <textarea
-                value={form.description}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              value={form.description}
                 onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                rows={3}
-              />
-            </div>
+              rows={3}
+            />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Affinities
-              </label>
-              {loading ? (
-                <div className="text-sm text-gray-500">Loading affinities...</div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Affinities
+            </label>
+            {loading ? (
+              <div className="text-sm text-gray-500">Loading affinities...</div>
               ) : availableAffinities.length > 0 ? (
-                <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-md p-2">
-                  {availableAffinities.map(affinity => (
-                    <div key={affinity.id} className="flex items-center p-2 hover:bg-gray-50">
-                      <input
-                        type="checkbox"
+              <div className="max-h-48 overflow-y-auto border border-gray-300 rounded-md p-2">
+                {availableAffinities.map(affinity => (
+                  <div key={affinity.id} className="flex items-center p-2 hover:bg-gray-50">
+                    <input
+                      type="checkbox"
                         checked={form.affinityIds.includes(affinity.id)}
-                        onChange={() => handleAffinityToggle(affinity)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label className="ml-2 text-sm text-gray-700">
-                        {affinity.name}
-                      </label>
-                    </div>
-                  ))}
-                </div>
+                      onChange={() => handleAffinityToggle(affinity)}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <label className="ml-2 text-sm text-gray-700">
+                      {affinity.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
               ) : (
                 <div className="text-sm text-gray-500">No affinities available</div>
-              )}
+            )}
             </div>
           </div>
 
