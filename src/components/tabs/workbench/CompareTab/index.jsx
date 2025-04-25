@@ -144,7 +144,7 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
 CompareTab.propTypes = {
   affinities: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       category: PropTypes.string
     })

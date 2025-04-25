@@ -63,7 +63,7 @@ const PrintableView = ({ affinities, periodState }) => {
 PrintableView.propTypes = {
   affinities: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       category: PropTypes.string,
       averageScore: PropTypes.number,

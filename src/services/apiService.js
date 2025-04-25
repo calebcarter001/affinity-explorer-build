@@ -217,7 +217,6 @@ export const getAffinities = async ({ page = 1, limit = 10 } = {}) => {
     const cacheKey = cacheService.generateKey('affinities', { page, limit });
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
-      console.log('🗄️ Returning cached affinities data');
       return cachedData;
     }
 
@@ -353,84 +352,124 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
 // Mock data for the application
 const affinityConcepts = [
   {
-    id: 1,
+    id: "1",
     name: "Pet-Friendly",
-    type: "Platform Score",
-    category: "Family",
+    type: "travel",
+    category: "amenity",
     scoreAvailable: true,
-    applicableEntities: ["Property", "Destination"],
-    averageScore: 7.2,
-    highestScore: 9.1,
-    lowestScore: 5.4,
-    propertiesTagged: 1250,
-    propertiesWithScore: 980,
-    status: "Active",
+    definition: "Properties that welcome pets and provide pet-friendly amenities",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "vacation_rental"],
+    metrics: {
+      accuracy: 0.85,
+      coverage: 72,
+      completeness: 0.89,
+      lastValidated: "2024-03-15"
+    },
+    averageScore: 0.82,
+    highestScore: 0.95,
+    lowestScore: 0.65,
     coverage: 72,
-    definition: "Properties that welcome pets with amenities or policies that accommodate animals."
+    propertiesTagged: 156,
+    propertiesWithScore: 142,
+    dateCreated: "2024-01-15",
+    lastUpdatedDate: "2024-03-15"
   },
   {
-    id: 2,
+    id: "2",
     name: "Romantic",
-    type: "Concept Score",
-    category: "Adults",
+    type: "travel",
+    category: "experience",
     scoreAvailable: true,
-    applicableEntities: ["Property", "Destination", "POI"],
-    averageScore: 6.8,
-    highestScore: 8.9,
-    lowestScore: 4.7,
-    propertiesTagged: 980,
-    propertiesWithScore: 850,
-    status: "Active",
+    definition: "Properties ideal for romantic getaways and couples",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "boutique"],
+    metrics: {
+      accuracy: 0.78,
+      coverage: 65,
+      completeness: 0.82,
+      lastValidated: "2024-03-10"
+    },
+    averageScore: 0.75,
+    highestScore: 0.88,
+    lowestScore: 0.62,
     coverage: 65,
-    definition: "Properties suitable for couples seeking a romantic experience."
+    propertiesTagged: 142,
+    propertiesWithScore: 128,
+    dateCreated: "2024-01-16",
+    lastUpdatedDate: "2024-03-10"
   },
   {
-    id: 3,
+    id: "3",
     name: "Family-Friendly",
-    type: "Platform Score",
-    category: "Family",
+    type: "travel",
+    category: "amenity",
     scoreAvailable: true,
-    applicableEntities: ["Property", "Destination"],
-    averageScore: 7.9,
-    highestScore: 9.5,
-    lowestScore: 6.2,
-    propertiesTagged: 1500,
-    propertiesWithScore: 1280,
-    status: "Active",
+    definition: "Properties suitable for families with children",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "vacation_rental"],
+    metrics: {
+      accuracy: 0.92,
+      coverage: 81,
+      completeness: 0.95,
+      lastValidated: "2024-03-20"
+    },
+    averageScore: 0.89,
+    highestScore: 0.98,
+    lowestScore: 0.75,
     coverage: 81,
-    definition: "Properties that cater to families with children offering suitable amenities and activities."
+    propertiesTagged: 178,
+    propertiesWithScore: 165,
+    dateCreated: "2024-01-17",
+    lastUpdatedDate: "2024-03-20"
   },
   {
-    id: 4,
+    id: "4",
     name: "Luxury",
-    type: "Concept Score",
-    category: "Premium",
+    type: "travel",
+    category: "experience",
     scoreAvailable: true,
-    applicableEntities: ["Property"],
-    averageScore: 8.2,
-    highestScore: 9.8,
-    lowestScore: 6.5,
-    propertiesTagged: 750,
-    propertiesWithScore: 620,
-    status: "Active",
+    definition: "High-end properties offering premium amenities and services",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "boutique"],
+    metrics: {
+      accuracy: 0.88,
+      coverage: 45,
+      completeness: 0.91,
+      lastValidated: "2024-03-18"
+    },
+    averageScore: 0.85,
+    highestScore: 0.92,
+    lowestScore: 0.78,
     coverage: 45,
-    definition: "High-end properties offering premium amenities, services, and experiences."
+    propertiesTagged: 98,
+    propertiesWithScore: 92,
+    dateCreated: "2024-01-18",
+    lastUpdatedDate: "2024-03-18"
   },
   {
-    id: 5,
-    name: "Beach Access",
-    type: "Amenity Score",
-    category: "Location",
+    id: "5",
+    name: "Business",
+    type: "travel",
+    category: "purpose",
     scoreAvailable: true,
-    applicableEntities: ["Property"],
-    averageScore: 8.7,
-    highestScore: 9.9,
-    lowestScore: 7.1,
-    propertiesTagged: 580,
-    propertiesWithScore: 450,
-    status: "Active",
-    coverage: 38,
-    definition: "Properties with direct or convenient access to beaches."
+    definition: "Properties suitable for business travelers",
+    status: "active",
+    applicableEntities: ["hotel", "resort"],
+    metrics: {
+      accuracy: 0.86,
+      coverage: 68,
+      completeness: 0.88,
+      lastValidated: "2024-03-12"
+    },
+    averageScore: 0.83,
+    highestScore: 0.90,
+    lowestScore: 0.70,
+    coverage: 68,
+    propertiesTagged: 148,
+    propertiesWithScore: 135,
+    dateCreated: "2024-01-19",
+    lastUpdatedDate: "2024-03-12"
   }
 ];
 
@@ -562,22 +601,49 @@ export const deleteCollection = async (collectionId) => {
   return { success: true };
 };
 
-// Update getCollections to use cacheService
+// Mock collections data
+const mockCollections = [
+  {
+    id: '1',
+    name: 'My First Collection',
+    description: 'A collection of my favorite affinities',
+    isFavorite: true,
+    affinities: [
+      { id: 'aff1', name: 'Urban Living' },
+      { id: 'aff2', name: 'Tech Enthusiasts' }
+    ],
+    createdAt: '2023-01-15T10:30:00Z',
+    lastUpdated: '2023-02-20T14:45:00Z'
+  },
+  {
+    id: '2',
+    name: 'Market Research',
+    description: 'Collections for market research purposes',
+    isFavorite: false,
+    affinities: [
+      { id: 'aff3', name: 'Fitness Enthusiasts' },
+      { id: 'aff4', name: 'Home Improvement' }
+    ],
+    createdAt: '2023-03-10T09:15:00Z',
+    lastUpdated: '2023-04-05T11:20:00Z'
+  }
+];
+
 export const getCollections = async () => {
   try {
-  const cacheKey = cacheService.generateKey('collections');
-  const cachedData = cacheService.get(cacheKey);
+    const cacheKey = cacheService.generateKey('collections');
+    const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
-      console.log('API: Returning cached collections data');
       return cachedData;
     }
 
     await delay(300);
     const collections = mockCollections;
   
-  cacheService.set(cacheKey, collections);
-  return collections;
+    cacheService.set(cacheKey, collections);
+    return collections;
   } catch (error) {
+    console.error('Error fetching collections:', error);
     throw new Error('Failed to fetch collections');
   }
 };
@@ -586,7 +652,6 @@ export const getCollections = async () => {
 export const clearCollectionsCache = () => {
   const cacheKey = cacheService.generateKey('collections');
   cacheService.clear(cacheKey);
-  console.log('API: Collections cache cleared');
 };
 
 export const updateCollection = async (collectionId, updates) => {
@@ -632,37 +697,26 @@ export const createCollection = async (collectionData) => {
 
 // Update getAffinityPerformance to use cacheService
 export const getAffinityPerformance = async (affinityId, year, quarter, { page = 1, limit = 10 } = {}) => {
-  console.log('⚡ Entering getAffinityPerformance with params:', { affinityId, year, quarter, page, limit });
   try {
-    console.log('📊 Preparing to fetch performance data');
     const cacheKey = cacheService.generateKey('performance', { affinityId, year, quarter, page, limit });
-    console.log('🔑 Generated cache key:', cacheKey);
     
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
-      console.log('🗄️ Returning cached performance data');
       return cachedData;
     }
 
-    console.log('⏳ Adding artificial delay...');
     await delay(300);
-    console.log('✅ Delay completed');
 
-    console.log('🔍 Filtering performance data...');
-    console.log('📊 Total mock data items:', mockPerformanceData.length);
     
     const filteredData = mockPerformanceData.filter(item => {
       try {
         if (affinityId && item.affinityId !== affinityId) {
-          console.log(`⏭️ Skipping item ${item.id} - affinityId mismatch`);
           return false;
         }
         
-        console.log(`📅 Processing item ${item.id} with date: ${item.dateCreated}`);
         const itemDate = new Date(item.dateCreated);
         
         if (isNaN(itemDate.getTime())) {
-          console.log(`⚠️ Invalid date for item ${item.id}: ${item.dateCreated}`);
           return false;
         }
         
@@ -677,19 +731,15 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
         });
         
         const matches = itemYear === year && itemQuarter === quarter;
-        console.log(`🔍 Item ${item.id} ${matches ? 'matches' : 'does not match'} filter criteria`);
         
         return matches;
       } catch (err) {
-        console.log(`❌ Error processing item ${item.id}:`, err);
         return false;
       }
     });
     
-    console.log(`✅ Filtered data: ${filteredData.length} items match criteria`);
 
     // Enrich the filtered data with affinity details
-    console.log('🔍 Enriching data with affinity details...');
     const enrichedData = filteredData.map(item => {
       const affinityDetails = mockAffinityDetails[item.name] || {};
       return {
@@ -705,10 +755,8 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
 
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
-    console.log(`📊 Pagination: ${startIndex} to ${endIndex}`);
     
     const paginatedData = enrichedData.slice(startIndex, endIndex);
-    console.log(`📊 Paginated data: ${paginatedData.length} items`);
 
     const response = {
       data: paginatedData,
@@ -718,16 +766,12 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
       totalPages: Math.ceil(enrichedData.length / limit)
     };
 
-    console.log('💾 Caching response...');
     cacheService.set(cacheKey, response);
-    console.log('📈 Performance data received:', response);
     
     if (!response || !response.data) {
-      console.log('❌ Invalid response structure:', response);
       throw new Error('Invalid response structure');
     }
     
-    console.log('✅ Returning performance data');
     return response;
   } catch (error) {
     console.log('💥 Error in getAffinityPerformance:', {
@@ -940,7 +984,6 @@ export const getMetrics = async () => {
     const cacheKey = cacheService.generateKey('metrics');
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
-      console.log('🗄️ Returning cached metrics data');
       return cachedData;
     }
 
@@ -960,10 +1003,8 @@ export const getMetrics = async () => {
     };
 
     cacheService.set(cacheKey, response);
-    console.log('✅ Metrics data fetched:', response);
     return response;
   } catch (error) {
-    console.log('💥 Error in getMetrics:', error);
     throw new Error('Failed to fetch metrics');
   }
 }; 

@@ -84,8 +84,8 @@ describe('Dashboard Component', () => {
         inProgress: 5,
         pending: 2,
         recentActivity: [
-          { id: 1, type: 'affinity_created', timestamp: new Date().toISOString() },
-          { id: 2, type: 'affinity_updated', timestamp: new Date().toISOString() }
+          { id: "1", type: 'affinity_created', timestamp: new Date().toISOString() },
+          { id: "2", type: 'affinity_updated', timestamp: new Date().toISOString() }
         ]
       });
       vi.mocked(apiService.getRecentActivity).mockResolvedValue([]);
@@ -120,7 +120,7 @@ describe('Dashboard Component', () => {
         inProgress: 0,
         pending: 0,
         recentActivity: [
-          { id: 1, type: 'affinity_completed', timestamp: new Date().toISOString() }
+          { id: "1", type: 'affinity_completed', timestamp: new Date().toISOString() }
         ]
       });
       vi.mocked(apiService.getRecentActivity).mockResolvedValue([]);

@@ -13,13 +13,13 @@ const Header = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
     {
-      id: 1,
+      id: "1",
       message: 'New affinity score update available',
       type: 'info',
       timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString()
     },
     {
-      id: 2,
+      id: "2",
       message: 'Property validation completed',
       type: 'success',
       timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString()

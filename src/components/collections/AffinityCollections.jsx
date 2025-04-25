@@ -38,7 +38,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     } catch (error) {
       console.error('Error loading collections:', error);
       setError('Failed to load collections. Please try again.');
-      showToast('error', 'Failed to load collections');
+      showToast.error('Failed to load collections');
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       setAvailableAffinities(response.data);
     } catch (error) {
       console.error('Error loading affinities:', error);
-      showToast('error', 'Failed to load affinities');
+      showToast.error('Failed to load affinities');
     } finally {
     setLoadingAffinities(false);
     }
@@ -75,7 +75,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       } else {
         console.log('Collection not found with ID:', selectedCollectionId);
         setSelectedCollection(null);
-        showToast('warning', `Collection with ID ${selectedCollectionId} not found`);
+        showToast.warning(`Collection with ID ${selectedCollectionId} not found`);
       }
     } else if (!selectedCollectionId) {
       setSelectedCollection(null);
@@ -86,7 +86,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       if (!collection || !collection.id) {
         console.error('Invalid collection data for editing:', collection);
-        showToast('error', 'Invalid collection data');
+        showToast.error('Invalid collection data');
         return;
       }
       
@@ -102,7 +102,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       loadAvailableAffinities();
     } catch (error) {
       console.error('Error handling edit click:', error);
-      showToast('error', 'Failed to edit collection');
+      showToast.error('Failed to edit collection');
     }
   }, [loadAvailableAffinities, showToast]);
 
@@ -110,7 +110,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       if (!collection || !collection.id) {
         console.error('Invalid collection data for deletion:', collection);
-        showToast('error', 'Invalid collection data');
+        showToast.error('Invalid collection data');
         return;
       }
       
@@ -118,7 +118,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       setOperationLoading(prev => ({ ...prev, delete: true }));
       
       await deleteCollection(collection.id);
-      showToast('success', 'Collection deleted successfully');
+      showToast.success('Collection deleted successfully');
       
       clearCollectionsCache();
       
@@ -129,7 +129,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       }
       } catch (error) {
       console.error('Error deleting collection:', error);
-        showToast('error', 'Failed to delete collection');
+        showToast.error('Failed to delete collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, delete: false }));
     }
@@ -155,7 +155,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     });
     } catch (error) {
       console.error('Error toggling affinity:', error);
-      showToast('error', 'Failed to update affinity selection');
+      showToast.error('Failed to update affinity selection');
     }
   }, [showToast]);
 
@@ -164,7 +164,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       if (!editForm.id || !editForm.name) {
         console.error('Invalid edit form data:', editForm);
-        showToast('error', 'Invalid form data');
+        showToast.error('Invalid form data');
         return;
       }
       
@@ -177,7 +177,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
         affinityIds: editForm.affinityIds
       });
       
-      showToast('success', 'Collection updated successfully');
+      showToast.success('Collection updated successfully');
       setEditingCollection(null);
       
       clearCollectionsCache();
@@ -189,7 +189,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       }
     } catch (error) {
       console.error('Error updating collection:', error);
-      showToast('error', 'Failed to update collection');
+      showToast.error('Failed to update collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, edit: false }));
     }
@@ -199,7 +199,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       if (!formData.name) {
         console.error('Invalid create form data:', formData);
-        showToast('error', 'Collection name is required');
+        showToast.error('Collection name is required');
         return;
       }
       
@@ -212,7 +212,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
         affinityIds: formData.affinityIds || []
       });
       
-      showToast('success', 'Collection created successfully');
+      showToast.success('Collection created successfully');
       setIsCreateModalOpen(false);
       
       clearCollectionsCache();
@@ -220,7 +220,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       loadCollections();
     } catch (error) {
       console.error('Error creating collection:', error);
-      showToast('error', 'Failed to create collection');
+      showToast.error('Failed to create collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, create: false }));
     }
@@ -230,7 +230,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       if (!collection || !collection.id) {
         console.error('Invalid collection data for click:', collection);
-        showToast('error', 'Invalid collection data');
+        showToast.error('Invalid collection data');
         return;
       }
       
@@ -246,7 +246,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       });
     } catch (error) {
       console.error('Error handling collection click:', error);
-      showToast('error', 'Failed to select collection');
+      showToast.error('Failed to select collection');
     }
   }, [navigate, showToast]);
 
@@ -255,7 +255,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       if (!collection || !collection.id) {
         console.error('Invalid collection data for favorite toggle:', collection);
-        showToast('error', 'Invalid collection data');
+        showToast.error('Invalid collection data');
         return;
       }
       
@@ -270,7 +270,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       
       // Update backend
       await updateFavorites(collection.id, !collection.isFavorite);
-      showToast('success', `Collection ${!collection.isFavorite ? 'added to' : 'removed from'} favorites`);
+      showToast.success(`Collection ${!collection.isFavorite ? 'added to' : 'removed from'} favorites`);
       
       // Update selected collection if it's the one being toggled
       if (selectedCollection?.id === collection.id) {
@@ -280,7 +280,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       console.error('Error toggling favorite:', error);
       // Revert on failure
       loadCollections();
-      showToast('error', 'Failed to update favorites');
+      showToast.error('Failed to update favorites');
     } finally {
       setOperationLoading(prev => ({ ...prev, toggleFavorite: false }));
     }

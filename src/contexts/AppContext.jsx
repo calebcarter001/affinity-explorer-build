@@ -14,21 +14,21 @@ export const AppProvider = ({ children }) => {
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [affinities, setAffinities] = useState([
     {
-      id: 1,
+      id: "1",
       name: 'Business Traveler',
       description: 'Properties suitable for business travelers',
       score: 4.8,
       status: 'validated'
     },
     {
-      id: 2,
+      id: "2",
       name: 'Family Friendly',
       description: 'Properties ideal for family vacations',
       score: 3.5,
       status: 'enrichment'
     },
     {
-      id: 3,
+      id: "3",
       name: 'Luxury Experience',
       description: 'High-end properties with premium amenities',
       score: 2.1,

@@ -3,7 +3,7 @@ import { FiCheck, FiClock, FiAlertCircle } from 'react-icons/fi';
 
 const mockLifecycles = [
   {
-    id: 1,
+    id: "1",
     name: 'Pet-Friendly',
     status: 'complete',
     stages: [
@@ -15,7 +15,7 @@ const mockLifecycles = [
     ]
   },
   {
-    id: 2,
+    id: "2",
     name: 'Family-Friendly',
     status: 'in-progress',
     stages: [
@@ -27,7 +27,7 @@ const mockLifecycles = [
     ]
   },
   {
-    id: 3,
+    id: "3",
     name: 'Romantic',
     status: 'not-started',
     stages: [
@@ -39,7 +39,7 @@ const mockLifecycles = [
     ]
   },
   {
-    id: 4,
+    id: "4",
     name: 'Luxury',
     status: 'in-progress',
     stages: [
