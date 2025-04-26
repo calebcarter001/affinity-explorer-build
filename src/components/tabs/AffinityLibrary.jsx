@@ -29,6 +29,7 @@ const AffinityLibrary = () => {
   const [usingMockData, setUsingMockData] = useState(false);
   const [mockDataReason, setMockDataReason] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const [advancedContext, setAdvancedContext] = useState('');
 
   // Load specific affinity if navigated from dashboard
   useEffect(() => {
@@ -157,7 +158,7 @@ const AffinityLibrary = () => {
     setIsSearchMode(true);
 
     try {
-      const response = await advancedSearch(advancedQuery);
+      const response = await advancedSearch({ query: advancedQuery, context: advancedContext });
       console.log('Search Response Structure:', {
         fullResponse: response,
         type: typeof response,
@@ -228,12 +229,19 @@ const AffinityLibrary = () => {
             {showAdvanced ? (
               <div className="bg-white p-4 rounded-lg shadow">
                 <div className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="Describe the affinity you're looking for..."
+                  <textarea
+                    placeholder="Describe the affinity you're looking for"
                     value={advancedQuery}
                     onChange={e => setAdvancedQuery(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={5}
+                  />
+                  <textarea
+                    placeholder="Describe the context for this affinity usage (optional)"
+                    value={advancedContext}
+                    onChange={e => setAdvancedContext(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={2}
                   />
                   <button
                     onClick={handleAdvancedSearch}

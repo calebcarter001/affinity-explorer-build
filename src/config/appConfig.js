@@ -5,7 +5,7 @@ const API_CONFIG = {
   
   // Endpoints
   ENDPOINTS: {
-    SEARCH: '/search',
+    SEARCH: '/v1/search',
     // Add other endpoints as needed
   }
 };

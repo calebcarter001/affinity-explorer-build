@@ -9,7 +9,7 @@ const metrics = [
   { key: 'propertiesWithScore', label: 'Active Properties', format: 'number' }
 ];
 
-const ComparisonGrid = ({ affinities, periodState }) => {
+const ComparisonGrid = ({ affinities = [], periodState }) => {
   const formatScore = (score) => {
     return score === undefined || score === null ? 'N/A' : score.toFixed(2);
   };
@@ -27,7 +27,7 @@ const ComparisonGrid = ({ affinities, periodState }) => {
   };
 
   // Validate and provide defaults for required metrics
-  const validatedAffinities = affinities.map(affinity => ({
+  const validatedAffinities = (affinities || []).map(affinity => ({
     ...affinity,
     averageScore: affinity.averageScore ?? null,
     highestScore: affinity.highestScore ?? null,

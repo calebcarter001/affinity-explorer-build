@@ -48,12 +48,11 @@ const PerformanceTab = () => {
         const performance = performanceResponse.data || [];
         
         const enrichedData = performance.map(perf => {
-          const affinityId = parseInt(perf.affinityId, 10);
-          const affinity = affinities.find(a => a.id === affinityId);
-          
+          const affinityId = String(perf.affinityId);
+          const affinity = affinities.find(a => String(a.id) === affinityId);
           return {
             ...perf,
-            affinityName: affinity ? affinity.name : 'Unknown Affinity',
+            affinityName: affinity ? affinity.name : perf.name || 'Unknown Affinity',
             affinity: affinity || null,
             year: selectedYear,
             quarter: selectedQuarter

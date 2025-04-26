@@ -28,22 +28,10 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
     setSelectedAffinityDetails(null);
   }, []);
 
-  // Debug: Log state on render
-  useEffect(() => {
-    console.log('DEBUG: selectedAffinities', selectedAffinities);
-    console.log('DEBUG: selectedAffinityDetails', selectedAffinityDetails);
-  });
-
   // Fetch comparison data when period or selections change
   useEffect(() => {
     const fetchComparisonData = async () => {
       if (selectedAffinities.length === 0) return;
-      
-      console.log('🔄 Fetching comparison data for:', {
-        selectedAffinities: selectedAffinities.map(a => a.name),
-        year: periodState.year,
-        quarter: periodState.quarter
-      });
       
       setLoading(true);
       setError(null);
@@ -58,19 +46,23 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
         );
         
         const results = await Promise.all(promises);
-        console.log('📊 Received performance data:', results);
         
-        const enrichedData = results.map((result, index) => ({
-          ...selectedAffinities[index],
-          ...result.data?.[0], // Get first item since we're querying by specific ID
-          year: periodState.year,
-          quarter: periodState.quarter
-        }));
+        const enrichedData = results.map((result, index) => {
+          const affinity = selectedAffinities[index];
+          const perf = result.data?.[0] || {};
+          const name = affinity.name || perf.affinityName || perf.name || 'Unknown Affinity';
+          return {
+            ...affinity,
+            ...perf,
+            affinityName: name,
+            name,
+            year: periodState.year,
+            quarter: periodState.quarter
+          };
+        });
         
-        console.log('✨ Enriched comparison data:', enrichedData);
         setComparisonData(enrichedData);
       } catch (err) {
-        console.error('❌ Error fetching comparison data:', err);
         setError('Failed to fetch comparison data');
       } finally {
         setLoading(false);
@@ -83,12 +75,9 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
   const handleAffinityClick = (affinity) => {
     // Only allow clicking if the affinity is in the selected affinities list
     if (!selectedAffinities.some(a => a.id === affinity.id)) {
-      console.log('⚠️ Cannot show details for unselected affinity:', affinity.name);
       return;
     }
 
-    console.log('👆 Affinity clicked:', affinity);
-    
     // Ensure all required fields are present with correct types
     const formattedPerformance = {
       id: String(affinity.id),
@@ -107,7 +96,6 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
     // Validate the data before setting state
     const isValid = validatePerformanceData(formattedPerformance);
     if (!isValid) {
-      console.error('❌ Invalid performance data:', formattedPerformance);
       return;
     }
 
@@ -128,7 +116,7 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
     const hasAllFields = requiredFields.every(field => {
       const hasField = field in data;
       if (!hasField) {
-        console.error(`Missing required field: ${field}`);
+        return false;
       }
       return hasField;
     });
@@ -149,7 +137,7 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
 
     const hasValidTypes = Object.entries(typeValidations).every(([field, isValid]) => {
       if (!isValid) {
-        console.error(`Invalid type for field ${field}: expected ${typeof data[field]}`);
+        return false;
       }
       return isValid;
     });
@@ -184,19 +172,16 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
   };
 
   const handleModeChange = (mode) => {
-    console.log('🔄 Mode changed to:', mode);
     onPeriodChange({ ...periodState, mode });
   };
 
   const handleYearChange = (event) => {
     const year = parseInt(event.target.value);
-    console.log('📅 Year changed to:', year);
     onPeriodChange({ ...periodState, year });
   };
 
   const handleQuarterChange = (event) => {
     const quarter = parseInt(event.target.value);
-    console.log('🔢 Quarter changed to:', quarter);
     onPeriodChange({ ...periodState, quarter });
   };
 

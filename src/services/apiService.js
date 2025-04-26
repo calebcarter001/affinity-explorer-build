@@ -645,7 +645,6 @@ export const getCollections = async () => {
     cacheService.set(cacheKey, collections);
     return collections;
   } catch (error) {
-    console.error('Error fetching collections:', error);
     throw new Error('Failed to fetch collections');
   }
 };
@@ -725,13 +724,6 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
         const itemYear = itemDate.getFullYear();
         const itemQuarter = Math.floor(itemDate.getMonth() / 3) + 1;
         
-        console.log(`📊 Item ${item.id} date info:`, { 
-          itemYear, 
-          itemQuarter, 
-          targetYear: year, 
-          targetQuarter: quarter 
-        });
-        
         const matches = itemYear === year && itemQuarter === quarter;
         
         return matches;
@@ -776,11 +768,6 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
     
     return response;
   } catch (error) {
-    console.log('💥 Error in getAffinityPerformance:', {
-      error: error,
-      message: error.message,
-      stack: error.stack
-    });
     throw error;
   }
 };
@@ -981,7 +968,6 @@ export const getAffinityDetails = async (affinityName) => {
 
 // Add getMetrics function
 export const getMetrics = async () => {
-  console.log('📊 Fetching metrics data');
   try {
     const cacheKey = cacheService.generateKey('metrics');
     const cachedData = cacheService.get(cacheKey);
@@ -1017,11 +1003,43 @@ export const getMetrics = async () => {
  * @param {Object} filters - Optional filters for the search
  * @returns {Promise<Object>} - The search results
  */
-export const advancedSearch = async (query, filters = {}) => {
+export async function advancedSearch({ query, context }) {
+  if (typeof query !== 'string') throw new Error('Query must be a string');
+  if (query.trim().toLowerCase() === 'test') {
+    // Mock affinities with platform_scores and all required metadata
+    return {
+      results: [
+        {
+          input_concept: 'Family Friendly',
+          category: 'Lifestyle',
+          platform_scores: 'location_score,amenities_score,review_score',
+          similarity_score: 0.12,
+        },
+        {
+          input_concept: 'Romantic',
+          category: 'Experience',
+          platform_scores: 'ambience_score,privacy_score,service_score',
+          similarity_score: 0.18,
+        },
+        {
+          input_concept: 'Pet Friendly',
+          category: 'Lifestyle',
+          platform_scores: 'pet_policy_score,cleanliness_score,noise_score',
+          similarity_score: 0.22,
+        },
+        {
+          input_concept: 'Business Ready',
+          category: 'Business',
+          platform_scores: 'wifi_score,workspace_score,location_score',
+          similarity_score: 0.27,
+        },
+      ],
+      isMockData: true,
+    };
+  }
   try {
-    console.log('Attempting search with query:', query);
     const response = await axios.post(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SEARCH}`, 
-      { query, filters },
+      { query, context },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -1032,30 +1050,20 @@ export const advancedSearch = async (query, filters = {}) => {
       }
     );
 
-    console.log('Search API Response:', response.data);
     return response.data;
   } catch (error) {
-    console.log('Search error:', error);
-    
-    if (error.code === 'ERR_NETWORK') {
-      console.log('Network error - Search server may be down');
-    } else if (error.code === 'ERR_CORS') {
-      console.log('CORS error - Search server not configured for cross-origin requests');
-    }
-
     // Return mock data with a delay to simulate network latency
     await new Promise(resolve => setTimeout(resolve, 500));
-    return generateMockSearchResults(query, filters);
+    return generateMockSearchResults(query);
   }
-};
+}
 
 /**
  * Generates mock search results for development
  * @param {string} query - The search query
- * @param {Object} filters - Optional filters
  * @returns {Object} - Mock search results
  */
-const generateMockSearchResults = (query, filters) => {
+const generateMockSearchResults = (query) => {
   // Create a delay to simulate network request
   const delay = Math.random() * 500 + 500; // 500-1000ms
   
@@ -1100,7 +1108,6 @@ const generateMockSearchResults = (query, filters) => {
         results: mockResults,
         total: mockResults.length,
         query: query,
-        filters: filters
       });
     }, delay);
   });
