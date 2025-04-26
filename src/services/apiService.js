@@ -594,12 +594,16 @@ export const updateRecentlyViewed = async (affinityId) => {
   };
 };
 
-export const deleteCollection = async (collectionId) => {
+export const deleteCollection = async (collectionId, ownerId) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
-  
   // In a real app, this would make an API call to delete the collection
-  // For now, we just simulate a successful deletion
+  // For now, we just simulate a successful deletion if owned by user
+  const collections = await getCollections(ownerId);
+  const collectionIndex = collections.findIndex(c => c.id === collectionId);
+  if (collectionIndex === -1) {
+    throw new Error('Collection not found or not owned by user');
+  }
   return { success: true };
 };
 
@@ -615,7 +619,8 @@ const mockCollections = [
       { id: 'aff2', name: 'Tech Enthusiasts' }
     ],
     createdAt: '2023-01-15T10:30:00Z',
-    lastUpdated: '2023-02-20T14:45:00Z'
+    lastUpdated: '2023-02-20T14:45:00Z',
+    ownerId: 'demo@example.com'
   },
   {
     id: '2',
@@ -627,21 +632,23 @@ const mockCollections = [
       { id: 'aff4', name: 'Home Improvement' }
     ],
     createdAt: '2023-03-10T09:15:00Z',
-    lastUpdated: '2023-04-05T11:20:00Z'
+    lastUpdated: '2023-04-05T11:20:00Z',
+    ownerId: 'pm1@example.com'
   }
 ];
 
-export const getCollections = async () => {
+export const getCollections = async (ownerId) => {
   try {
-    const cacheKey = cacheService.generateKey('collections');
+    const cacheKey = cacheService.generateKey('collections', { ownerId });
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
+      console.log('[getCollections] Returning cached collections for ownerId:', ownerId, cachedData);
       return cachedData;
     }
 
     await delay(300);
-    const collections = mockCollections;
-  
+    const collections = mockCollections.filter(c => c.ownerId === ownerId);
+    console.log('[getCollections] Fetched collections for ownerId:', ownerId, collections);
     cacheService.set(cacheKey, collections);
     return collections;
   } catch (error) {
@@ -651,20 +658,19 @@ export const getCollections = async () => {
 
 // Update clearCollectionsCache to use cacheService
 export const clearCollectionsCache = () => {
-  const cacheKey = cacheService.generateKey('collections');
-  cacheService.clear(cacheKey);
+  cacheService.clearByPrefix('collections');
 };
 
-export const updateCollection = async (collectionId, updates) => {
+export const updateCollection = async (collectionId, updates, ownerId) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Get current collections
-  const collections = await getCollections();
+  // Get current collections for the user
+  const collections = await getCollections(ownerId);
   const collectionIndex = collections.findIndex(c => c.id === collectionId);
   
   if (collectionIndex === -1) {
-    throw new Error('Collection not found');
+    throw new Error('Collection not found or not owned by user');
   }
   
   // Update the collection
@@ -682,17 +688,22 @@ export const updateCollection = async (collectionId, updates) => {
 export const createCollection = async (collectionData) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Create a new collection with default values
+  // Map affinityIds to full affinity objects
+  let selectedAffinities = [];
+  if (Array.isArray(collectionData.affinityIds) && collectionData.affinityIds.length > 0) {
+    selectedAffinities = affinityConcepts.filter(a => collectionData.affinityIds.includes(a.id));
+  }
+  // Create a new collection with selected affinities
   const newCollection = {
     ...collectionData,
-    affinities: [],
+    affinities: selectedAffinities,
     isFavorite: false,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
+    id: (mockCollections.length + 1).toString()
   };
-  
-  // In a real implementation, this would be an API call
-  // For now, we'll just return the new collection
+  mockCollections.push(newCollection);
+  console.log('[createCollection] New collection created:', newCollection);
+  clearCollectionsCache();
   return newCollection;
 };
 

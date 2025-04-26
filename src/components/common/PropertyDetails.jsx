@@ -10,7 +10,7 @@ const PropertyDetails = ({
   className = ''
 }) => {
   return (
-    <div className={`bg-white rounded-lg shadow p-6 ${className}`}>
+    <div className={`card-prominent ${className}`}>
       <div className="flex justify-between items-start mb-4">
         <div>
           <h2 className="text-xl font-semibold mb-1">{name}</h2>

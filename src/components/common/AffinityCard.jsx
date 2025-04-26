@@ -32,7 +32,7 @@ const AffinityCard = ({ affinity }) => {
   
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+      className={`card-prominent ${className}`}
       onClick={handleClick}
     >
       <div className="flex items-center mb-4">

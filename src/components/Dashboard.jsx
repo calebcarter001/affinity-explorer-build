@@ -23,6 +23,7 @@ import { getDashboardStats, updateFavorites, updateRecentlyViewed } from '../ser
 import SkeletonLoader from './common/SkeletonLoader';
 import { useToast } from '../contexts/ToastContext';
 import { layout, card, typography, spacing, badge, button } from '../styles/design-system';
+import { useAuth } from '../contexts/AuthContext';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -35,6 +36,7 @@ const getStatusColor = (progress) => {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
   const [recentlyViewedItems, setRecentlyViewedItems] = useState([
@@ -251,6 +253,8 @@ const Dashboard = () => {
     );
   };
 
+  const filteredFavoriteCollections = favoriteCollections.filter(c => c.ownerId === user?.email);
+
   if (loading) {
     return (
       <div className="p-6">
@@ -449,7 +453,7 @@ const Dashboard = () => {
         <div className={`${card.base} ${card.body}`}>
           <h3 className={typography.h3}>Favorite Collections</h3>
           <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
-            {favoriteCollections.map((collection, index) => (
+            {filteredFavoriteCollections.map((collection, index) => (
               <div 
                 key={index}
                 onClick={() => handleCollectionClick(collection)}

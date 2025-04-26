@@ -25,9 +25,7 @@ const PropertyCard = ({
   return (
     <div
       key={id}
-      className={`bg-white rounded-lg shadow-sm p-6 cursor-pointer transition-all ${
-        isSelected ? 'border-2 border-blue-500 ring-2 ring-blue-200' : 'border border-gray-200'
-      } hover:shadow-md hover:-translate-y-1 ${className}`}
+      className={`card-prominent ${isSelected ? 'border-2 border-blue-500 ring-2 ring-blue-200' : ''} ${className}`}
       onClick={() => onClick(property)}
     >
       <div className="flex flex-col gap-4">

@@ -207,6 +207,9 @@
   .collapsible-content.expanded {
     max-height: 1000px;
   }
+  .card-prominent {
+    @apply bg-white rounded-xl p-5 shadow-lg border border-blue-100 hover:shadow-2xl hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 cursor-pointer;
+  }
 }
 
 /* Agent View Styles */

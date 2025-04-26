@@ -41,12 +41,7 @@ const Card = ({
 
   return (
     <div 
-      className={`
-        ${getVariantClasses()}
-        ${getPaddingClasses()}
-        ${onClick ? card.interactive : ''}
-        ${className}
-      `}
+      className={`card-prominent ${getVariantClasses()} ${getPaddingClasses()} ${onClick ? card.interactive : ''} ${className}`}
       onClick={onClick}
       {...props}
     >

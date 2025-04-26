@@ -5,11 +5,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { getCollections, updateFavorites, deleteCollection, updateCollection, createCollection, getAffinities, clearCollectionsCache } from '../../services/apiService';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import CreateCollectionModal from './CreateCollectionModal';
+import { useAuth } from '../../contexts/AuthContext';
 
 const AffinityCollections = ({ selectedCollectionId }) => {
   const showToast = useToast();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingCollection, setEditingCollection] = useState(null);
@@ -31,18 +33,15 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     try {
       setLoading(true);
       setError(null);
-      console.log('Loading collections...');
-      const data = await getCollections();
-      console.log('Collections loaded:', data.length);
+      const data = await getCollections(user?.email);
       setCollections(data);
     } catch (error) {
-      console.error('Error loading collections:', error);
       setError('Failed to load collections. Please try again.');
       showToast.error('Failed to load collections');
     } finally {
       setLoading(false);
     }
-  }, [showToast]);
+  }, [showToast, user]);
 
   const loadAvailableAffinities = useCallback(async () => {
     setLoadingAffinities(true);
@@ -76,11 +75,12 @@ const AffinityCollections = ({ selectedCollectionId }) => {
         console.log('Collection not found with ID:', selectedCollectionId);
         setSelectedCollection(null);
         showToast.warning(`Collection with ID ${selectedCollectionId} not found`);
+        navigate('/affinities', { state: { view: 'collections' }, replace: true });
       }
     } else if (!selectedCollectionId) {
       setSelectedCollection(null);
     }
-  }, [selectedCollectionId, collections, loading, showToast]);
+  }, [selectedCollectionId, collections, loading, showToast, navigate]);
 
   const handleEditClick = useCallback((collection) => {
     try {
@@ -109,31 +109,23 @@ const AffinityCollections = ({ selectedCollectionId }) => {
   const handleDelete = useCallback(async (collection) => {
     try {
       if (!collection || !collection.id) {
-        console.error('Invalid collection data for deletion:', collection);
         showToast.error('Invalid collection data');
         return;
       }
-      
-      console.log('Deleting collection:', collection.name, 'ID:', collection.id);
       setOperationLoading(prev => ({ ...prev, delete: true }));
-      
-      await deleteCollection(collection.id);
+      await deleteCollection(collection.id, user?.email);
       showToast.success('Collection deleted successfully');
-      
       clearCollectionsCache();
-      
       loadCollections();
-      
       if (selectedCollection?.id === collection.id) {
         setSelectedCollection(null);
       }
-      } catch (error) {
-      console.error('Error deleting collection:', error);
-        showToast.error('Failed to delete collection');
+    } catch (error) {
+      showToast.error('Failed to delete collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, delete: false }));
     }
-  }, [loadCollections, selectedCollection, showToast]);
+  }, [loadCollections, selectedCollection, showToast, user]);
 
   const handleAffinityToggle = useCallback((affinity) => {
     try {
@@ -163,68 +155,50 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     e.preventDefault();
     try {
       if (!editForm.id || !editForm.name) {
-        console.error('Invalid edit form data:', editForm);
         showToast.error('Invalid form data');
         return;
       }
-      
-      console.log('Submitting edit for collection:', editForm.name, 'ID:', editForm.id);
       setOperationLoading(prev => ({ ...prev, edit: true }));
-      
       const updatedCollection = await updateCollection(editForm.id, {
         name: editForm.name,
         description: editForm.description,
         affinityIds: editForm.affinityIds
-      });
-      
+      }, user?.email);
       showToast.success('Collection updated successfully');
       setEditingCollection(null);
-      
       clearCollectionsCache();
-      
       loadCollections();
-      
       if (selectedCollection?.id === updatedCollection.id) {
         setSelectedCollection(updatedCollection);
       }
     } catch (error) {
-      console.error('Error updating collection:', error);
       showToast.error('Failed to update collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, edit: false }));
     }
-  }, [editForm, loadCollections, selectedCollection, showToast]);
+  }, [editForm, loadCollections, selectedCollection, showToast, user]);
 
   const handleCreateSubmit = useCallback(async (formData) => {
     try {
       if (!formData.name) {
-        console.error('Invalid create form data:', formData);
         showToast.error('Collection name is required');
         return;
       }
-      
-      console.log('Creating new collection:', formData.name);
       setOperationLoading(prev => ({ ...prev, create: true }));
-      
       await createCollection({
-        name: formData.name,
-        description: formData.description,
-        affinityIds: formData.affinityIds || []
+        ...formData,
+        ownerId: user?.email
       });
-      
       showToast.success('Collection created successfully');
       setIsCreateModalOpen(false);
-      
       clearCollectionsCache();
-      
       loadCollections();
     } catch (error) {
-      console.error('Error creating collection:', error);
       showToast.error('Failed to create collection');
     } finally {
       setOperationLoading(prev => ({ ...prev, create: false }));
     }
-  }, [loadCollections, showToast]);
+  }, [loadCollections, showToast, user]);
 
   const handleCollectionClick = useCallback((collection) => {
     try {
@@ -269,7 +243,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
       setCollections(updatedCollections);
       
       // Update backend
-      await updateFavorites(collection.id, !collection.isFavorite);
+      await updateFavorites(collection.id, !collection.isFavorite, user?.email);
       showToast.success(`Collection ${!collection.isFavorite ? 'added to' : 'removed from'} favorites`);
       
       // Update selected collection if it's the one being toggled
@@ -284,7 +258,7 @@ const AffinityCollections = ({ selectedCollectionId }) => {
     } finally {
       setOperationLoading(prev => ({ ...prev, toggleFavorite: false }));
     }
-  }, [collections, loadCollections, selectedCollection, showToast]);
+  }, [collections, loadCollections, selectedCollection, showToast, user]);
 
   const handleRetry = useCallback(() => {
     console.log('Retrying to load collections');
@@ -515,19 +489,18 @@ const AffinityCollections = ({ selectedCollectionId }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {selectedCollection.affinities?.length > 0 ? 
                   selectedCollection.affinities.map((affinity) => (
-                      <div 
+                    <div 
                       key={affinity.id}
-                        className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handleCollectionClick(affinity)}
-                      >
-                        <h4 className="font-semibold">{affinity.name}</h4>
-                        <p className="text-sm text-gray-600">{affinity.description}</p>
-                      </div>
-                    )) : 
-                    <div className="col-span-2 text-center text-gray-500">
-                      No affinities in this collection
+                      className="card-prominent"
+                    >
+                      <h4 className="font-semibold text-blue-900 mb-1">{affinity.name}</h4>
+                      <p className="text-sm text-gray-600">{affinity.description}</p>
                     </div>
-                  }
+                  )) : 
+                  <div className="col-span-2 text-center text-gray-500">
+                    No affinities in this collection
+                  </div>
+                }
                 </div>
               </div>
             </div>

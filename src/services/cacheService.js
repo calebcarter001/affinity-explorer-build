@@ -60,6 +60,15 @@ class CacheService {
       }
     }
   }
+
+  // Clear all cache entries with a given prefix
+  clearByPrefix(prefix) {
+    for (const key of this.cache.keys()) {
+      if (key.startsWith(CACHE_PREFIX + prefix)) {
+        this.cache.delete(key);
+      }
+    }
+  }
 }
 
 export const cacheService = new CacheService(); 

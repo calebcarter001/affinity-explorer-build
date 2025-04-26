@@ -12,11 +12,12 @@ const AgentCard = ({
   icon,
   active,
   onClick,
+  className = '',
   ...props 
 }) => {
   return (
-    <AgentCardContainer 
-      active={active}
+    <div 
+      className={`card-prominent flex items-center gap-4 ${active ? 'border-blue-500 border-2' : ''} ${className}`}
       onClick={onClick}
       {...props}
     >
@@ -25,7 +26,7 @@ const AgentCard = ({
         <AgentTitle>{title}</AgentTitle>
         {description && <AgentDescription>{description}</AgentDescription>}
       </AgentContent>
-    </AgentCardContainer>
+    </div>
   );
 };
 

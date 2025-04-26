@@ -289,12 +289,10 @@ const AffinityLibrary = () => {
                       <div 
                         key={affinity.id}
                         onClick={() => handleAffinityClick(affinity)}
-                        className={`card p-4 cursor-pointer transition-all hover:shadow-md ${
-                          selectedAffinity?.id === affinity.id ? 'border-2 border-blue-500' : ''
-                        }`}
+                        className={`card-prominent ${selectedAffinity?.id === affinity.id ? 'border-2 border-blue-500' : ''}`}
                       >
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
-                          <h3 className="text-lg font-semibold">{affinity.name}</h3>
+                          <h3 className="text-lg font-semibold text-blue-900">{affinity.name}</h3>
                           {getStatusBadge(affinity.status)}
                         </div>
                         
@@ -445,11 +443,6 @@ const AffinityLibrary = () => {
             <span>Collections</span>
             </button>
         </div>
-        
-        <button className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          <FiPlus className="w-4 h-4" />
-          <span>Create Affinity</span>
-        </button>
       </div>
       
       {activeTab === 'library' ? renderAffinityLibrary() : (
