@@ -305,3 +305,49 @@
 .chart-container {
   @apply p-4 bg-white rounded-lg shadow-sm;
 }
+
+@media print {
+  /* Hide unnecessary elements when printing */
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset background colors and shadows for printing */
+  body {
+    background: white;
+  }
+
+  /* Ensure the print view takes full width */
+  .print-header {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  /* Table styles for printing */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f8f9fa !important;
+    font-weight: bold;
+  }
+
+  /* Ensure text is black for better printing */
+  * {
+    color: black !important;
+  }
+
+  /* Add page breaks where needed */
+  tr {
+    page-break-inside: avoid;
+  }
+}

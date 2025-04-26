@@ -1,4 +1,6 @@
 import { cacheService } from './cacheService';
+import axios from 'axios';
+import API_CONFIG from '../config/appConfig';
 
 // Utility function for creating delays
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1007,4 +1009,99 @@ export const getMetrics = async () => {
   } catch (error) {
     throw new Error('Failed to fetch metrics');
   }
+};
+
+/**
+ * Performs an advanced semantic search for affinities
+ * @param {string} query - The search query
+ * @param {Object} filters - Optional filters for the search
+ * @returns {Promise<Object>} - The search results
+ */
+export const advancedSearch = async (query, filters = {}) => {
+  try {
+    console.log('Attempting search with query:', query);
+    const response = await axios.post(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SEARCH}`, 
+      { query, filters },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        // Add CORS configuration
+        withCredentials: false
+      }
+    );
+
+    console.log('Search API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Search error:', error);
+    
+    if (error.code === 'ERR_NETWORK') {
+      console.log('Network error - Search server may be down');
+    } else if (error.code === 'ERR_CORS') {
+      console.log('CORS error - Search server not configured for cross-origin requests');
+    }
+
+    // Return mock data with a delay to simulate network latency
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return generateMockSearchResults(query, filters);
+  }
+};
+
+/**
+ * Generates mock search results for development
+ * @param {string} query - The search query
+ * @param {Object} filters - Optional filters
+ * @returns {Object} - Mock search results
+ */
+const generateMockSearchResults = (query, filters) => {
+  // Create a delay to simulate network request
+  const delay = Math.random() * 500 + 500; // 500-1000ms
+  
+  // Generate mock results based on the query
+  const mockResults = [
+    {
+      input_concept: query,
+      category: 'Travel',
+      definition: `A concept related to "${query}" for travel properties`,
+      similarity_score: 0.92
+    },
+    {
+      input_concept: `${query} Experience`,
+      category: 'Experience',
+      definition: `An enhanced ${query} experience for travelers`,
+      similarity_score: 0.85
+    },
+    {
+      input_concept: `${query} Friendly`,
+      category: 'Amenity',
+      definition: `Properties that are ${query} friendly`,
+      similarity_score: 0.78
+    },
+    {
+      input_concept: `${query} Focused`,
+      category: 'Target Audience',
+      definition: `Properties targeting ${query} enthusiasts`,
+      similarity_score: 0.72
+    },
+    {
+      input_concept: `${query} Destination`,
+      category: 'Location',
+      definition: `Destinations known for ${query}`,
+      similarity_score: 0.65
+    }
+  ];
+  
+  // Return a promise that resolves after the delay
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        results: mockResults,
+        total: mockResults.length,
+        query: query,
+        filters: filters
+      });
+    }, delay);
+  });
 }; 
