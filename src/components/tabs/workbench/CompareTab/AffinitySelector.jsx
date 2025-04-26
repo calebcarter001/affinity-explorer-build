@@ -49,7 +49,14 @@ const AffinitySelector = ({
       case 'Enter':
         e.preventDefault();
         if (filteredAffinities[activeIndex]) {
-          onSelect(filteredAffinities[activeIndex]);
+          const affinity = filteredAffinities[activeIndex];
+          if (isSelected(affinity)) {
+            // Remove if already selected
+            onSelect(selectedAffinities.filter(a => a.id !== affinity.id));
+          } else if (canSelect) {
+            // Add if not selected
+            onSelect([...selectedAffinities, affinity]);
+          }
           setSearchTerm('');
           setActiveIndex(0);
         }
@@ -97,7 +104,7 @@ const AffinitySelector = ({
                 <span className="text-xs text-blue-500 mr-2">#{index + 1}</span>
                 <span className="text-sm font-medium">{affinity.name}</span>
                 <button
-                  onClick={() => onSelect(affinity)}
+                  onClick={() => onSelect(selectedAffinities.filter(a => a.id !== affinity.id))}
                   className="ml-2 text-blue-400 hover:text-blue-600"
                 >
                   <FiX className="w-4 h-4" />
@@ -143,11 +150,15 @@ const AffinitySelector = ({
                       <button
                         key={affinity.id}
                         onClick={() => {
-                          if (selected || canSelect) {
-                            onSelect(affinity);
-                            setSearchTerm('');
-                            setActiveIndex(0);
+                          if (selected) {
+                            // Remove if already selected
+                            onSelect(selectedAffinities.filter(a => a.id !== affinity.id));
+                          } else if (canSelect) {
+                            // Add if not selected
+                            onSelect([...selectedAffinities, affinity]);
                           }
+                          setSearchTerm('');
+                          setActiveIndex(0);
                         }}
                         className={`
                           w-full px-4 py-2 text-left flex items-center justify-between

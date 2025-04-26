@@ -16,6 +16,24 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
   const [error, setError] = useState(null);
   const [selectedAffinityDetails, setSelectedAffinityDetails] = useState(null);
 
+  // Clear selectedAffinityDetails when no affinities are selected
+  useEffect(() => {
+    if (selectedAffinities.length === 0) {
+      setSelectedAffinityDetails(null);
+    }
+  }, [selectedAffinities]);
+
+  // Clear selectedAffinityDetails on initial mount
+  useEffect(() => {
+    setSelectedAffinityDetails(null);
+  }, []);
+
+  // Debug: Log state on render
+  useEffect(() => {
+    console.log('DEBUG: selectedAffinities', selectedAffinities);
+    console.log('DEBUG: selectedAffinityDetails', selectedAffinityDetails);
+  });
+
   // Fetch comparison data when period or selections change
   useEffect(() => {
     const fetchComparisonData = async () => {
@@ -63,6 +81,12 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
   }, [selectedAffinities, periodState.year, periodState.quarter]);
 
   const handleAffinityClick = (affinity) => {
+    // Only allow clicking if the affinity is in the selected affinities list
+    if (!selectedAffinities.some(a => a.id === affinity.id)) {
+      console.log('⚠️ Cannot show details for unselected affinity:', affinity.name);
+      return;
+    }
+
     console.log('👆 Affinity clicked:', affinity);
     
     // Ensure all required fields are present with correct types
@@ -265,21 +289,23 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
       <AffinitySelector
         affinities={affinities}
         selectedAffinities={selectedAffinities}
-        onSelectionChange={setSelectedAffinities}
+        onSelect={newSelection => setSelectedAffinities(Array.isArray(newSelection) ? newSelection : [newSelection])}
         loading={affinitiesLoading}
         error={affinitiesError}
       />
 
       {/* Comparison Grid */}
-      <ComparisonGrid
-        data={comparisonData}
-        loading={loading}
-        error={error}
-        onRowClick={handleAffinityClick}
-      />
+      {selectedAffinities.length > 0 && (
+        <ComparisonGrid
+          affinities={comparisonData}
+          periodState={periodState}
+        />
+      )}
 
       {/* Performance Metrics */}
-      {selectedAffinityDetails && (
+      {selectedAffinityDetails && 
+       selectedAffinities.length > 0 && 
+       selectedAffinities.some(a => a.id === selectedAffinityDetails.performance.affinityId) && (
         <div className="mt-8">
           <PerformanceMetrics
             performance={selectedAffinityDetails.performance}
