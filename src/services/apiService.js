@@ -157,6 +157,34 @@ const affinityConcepts = [
     coverage: 72,
     propertiesTagged: 156,
     propertiesWithScore: 142,
+    // Brand-specific property tracking
+    propertiesTaggedVrbo: 85,
+    propertiesTaggedBex: 45,
+    propertiesTaggedHcom: 26,
+    propertiesScoredVrbo: 82,
+    propertiesScoredBex: 42,
+    propertiesScoredHcom: 18,
+    // Implementation metadata
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 96,
+        lastUpdated: "2024-03-15",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "in-progress",
+        progress: 93,
+        lastUpdated: "2024-03-14",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "at-risk",
+        progress: 69,
+        lastUpdated: "2024-03-13",
+        owner: "Team Gamma"
+      }
+    },
     dateCreated: "2024-01-15",
     lastUpdatedDate: "2024-03-15"
   },
@@ -181,6 +209,34 @@ const affinityConcepts = [
     coverage: 65,
     propertiesTagged: 142,
     propertiesWithScore: 128,
+    // Platform-specific property tracking
+    propertiesTaggedVrbo: 78,
+    propertiesTaggedBex: 38,
+    propertiesTaggedHcom: 26,
+    propertiesScoredVrbo: 75,
+    propertiesScoredBex: 35,
+    propertiesScoredHcom: 18,
+    // Implementation metadata
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 96,
+        lastUpdated: "2024-03-10",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "in-progress",
+        progress: 92,
+        lastUpdated: "2024-03-09",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "at-risk",
+        progress: 69,
+        lastUpdated: "2024-03-08",
+        owner: "Team Gamma"
+      }
+    },
     dateCreated: "2024-01-16",
     lastUpdatedDate: "2024-03-10"
   },
@@ -205,6 +261,34 @@ const affinityConcepts = [
     coverage: 81,
     propertiesTagged: 178,
     propertiesWithScore: 165,
+    // Platform-specific property tracking
+    propertiesTaggedVrbo: 95,
+    propertiesTaggedBex: 48,
+    propertiesTaggedHcom: 35,
+    propertiesScoredVrbo: 92,
+    propertiesScoredBex: 45,
+    propertiesScoredHcom: 28,
+    // Implementation metadata
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 97,
+        lastUpdated: "2024-03-20",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 94,
+        lastUpdated: "2024-03-19",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 80,
+        lastUpdated: "2024-03-18",
+        owner: "Team Gamma"
+      }
+    },
     dateCreated: "2024-01-17",
     lastUpdatedDate: "2024-03-20"
   },
@@ -1463,4 +1547,149 @@ export const mergeRecentlyViewed = async (userId, localList) => {
   }, []);
   mockRecentlyViewed[userId] = merged.slice(0, 10);
   return mockRecentlyViewed[userId];
+};
+
+// Get implementation readiness data for a specific affinity
+const getImplementationReadiness = async (affinityId) => {
+  await delay(300);
+  const affinity = affinityConcepts.find(a => a.id === affinityId);
+  if (!affinity) {
+    throw new Error('Affinity not found');
+  }
+  return affinity.implementationStatus;
+};
+
+// Get platform-specific property counts for an affinity
+const getPlatformPropertyCounts = async (affinityId) => {
+  await delay(300);
+  const affinity = affinityConcepts.find(a => a.id === affinityId);
+  if (!affinity) {
+    throw new Error('Affinity not found');
+  }
+  return {
+    vrbo: {
+      tagged: affinity.propertiesTaggedVrbo,
+      scored: affinity.propertiesScoredVrbo
+    },
+    bex: {
+      tagged: affinity.propertiesTaggedBex,
+      scored: affinity.propertiesScoredBex
+    },
+    hcom: {
+      tagged: affinity.propertiesTaggedHcom,
+      scored: affinity.propertiesScoredHcom
+    }
+  };
+};
+
+// Get implementation readiness summary for a collection
+const getCollectionImplementationReadiness = async (collectionId) => {
+  await delay(300);
+  const collection = mockCollections.find(c => c.id === collectionId);
+  if (!collection) {
+    throw new Error('Collection not found');
+  }
+
+  // Get all affinities in the collection
+  const collectionAffinities = collection.affinityIds.map(id => 
+    affinityConcepts.find(a => a.id === id)
+  ).filter(Boolean);
+
+  // Calculate aggregate metrics
+  const summary = {
+    vrbo: {
+      status: "in-progress",
+      progress: 0,
+      lastUpdated: null,
+      owner: null,
+      totalTagged: 0,
+      totalScored: 0
+    },
+    bex: {
+      status: "in-progress",
+      progress: 0,
+      lastUpdated: null,
+      owner: null,
+      totalTagged: 0,
+      totalScored: 0
+    },
+    hcom: {
+      status: "in-progress",
+      progress: 0,
+      lastUpdated: null,
+      owner: null,
+      totalTagged: 0,
+      totalScored: 0
+    }
+  };
+
+  // Aggregate metrics across all affinities
+  collectionAffinities.forEach(affinity => {
+    ['vrbo', 'bex', 'hcom'].forEach(platform => {
+      const platformData = affinity.implementationStatus[platform];
+      const platformProps = {
+        tagged: affinity[`propertiesTagged${platform.charAt(0).toUpperCase() + platform.slice(1)}`],
+        scored: affinity[`propertiesScored${platform.charAt(0).toUpperCase() + platform.slice(1)}`]
+      };
+
+      summary[platform].totalTagged += platformProps.tagged;
+      summary[platform].totalScored += platformProps.scored;
+
+      // Update status based on most recent update
+      if (!summary[platform].lastUpdated || 
+          new Date(platformData.lastUpdated) > new Date(summary[platform].lastUpdated)) {
+        summary[platform].lastUpdated = platformData.lastUpdated;
+        summary[platform].owner = platformData.owner;
+      }
+
+      // Calculate overall progress
+      summary[platform].progress = Math.round(
+        (summary[platform].totalScored / summary[platform].totalTagged) * 100
+      );
+
+      // Determine overall status
+      if (summary[platform].progress >= 95) {
+        summary[platform].status = "completed";
+      } else if (summary[platform].progress < 70) {
+        summary[platform].status = "at-risk";
+      } else {
+        summary[platform].status = "in-progress";
+      }
+    });
+  });
+
+  return summary;
+};
+
+/**
+ * Simulates fetching brand-specific property data for an affinity.
+ * Returns an object with propertiesTaggedVrbo, propertiesTaggedBex, propertiesTaggedHcom,
+ * propertiesScoredVrbo, propertiesScoredBex, propertiesScoredHcom.
+ */
+export async function enrichAffinityWithBrandData(affinityId) {
+  try {
+    await delay(300 + Math.random() * 300); // Simulate network delay
+    const affinity = affinityConcepts.find(a => a.id === affinityId);
+    if (!affinity) throw new Error('Affinity not found');
+    // Use existing data if present, otherwise generate mock values
+    return {
+      propertiesTaggedVrbo: affinity.propertiesTaggedVrbo ?? Math.floor(Math.random() * 100) + 20,
+      propertiesTaggedBex: affinity.propertiesTaggedBex ?? Math.floor(Math.random() * 100) + 20,
+      propertiesTaggedHcom: affinity.propertiesTaggedHcom ?? Math.floor(Math.random() * 100) + 20,
+      propertiesScoredVrbo: affinity.propertiesScoredVrbo ?? Math.floor(Math.random() * 90) + 10,
+      propertiesScoredBex: affinity.propertiesScoredBex ?? Math.floor(Math.random() * 90) + 10,
+      propertiesScoredHcom: affinity.propertiesScoredHcom ?? Math.floor(Math.random() * 90) + 10,
+    };
+  } catch (error) {
+    // Return null or throw, depending on how you want to handle errors
+    return { error: error.message };
+  }
+}
+
+// Export the new functions
+export {
+  // ... existing exports ...
+  getImplementationReadiness,
+  getPlatformPropertyCounts,
+  getCollectionImplementationReadiness
 }; 
