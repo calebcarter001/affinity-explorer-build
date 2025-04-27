@@ -34,96 +34,28 @@ const Dashboard = () => {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
-  const [recentlyViewedItems, setRecentlyViewedItems] = useState([
-    {
-      name: 'Pet-Friendly',
-      description: 'Properties that welcome pets with amenities or policies that accommodate animals.',
-      score: '7.2/10',
-      coverage: '72%',
-      status: 'Active'
-    },
-    {
-      name: 'Romantic',
-      description: 'Properties suitable for couples seeking a romantic experience.',
-      score: '6.8/10',
-      coverage: '65%',
-      status: 'Active'
-    },
-    {
-      name: 'Family-Friendly',
-      description: 'Properties that cater to families with children offering suitable amenities and activities.',
-      score: '7.9/10',
-      coverage: '81%',
-      status: 'Active'
-    },
-    {
-      name: 'Luxury',
-      description: 'High-end properties offering premium amenities, services, and experiences.',
-      score: '8.2/10',
-      coverage: '45%',
-      status: 'Active'
-    }
-  ]);
-  const [favoriteCollections, setFavoriteCollections] = useState([
-    {
-      name: 'Summer Getaway Collection',
-      affinities: [
-        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
-        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
-        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' }
-      ],
-      isFavorite: true
-    },
-    {
-      name: 'Urban Exploration Bundle',
-      affinities: [
-        { name: 'Historical', description: 'Properties with historical significance' },
-        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
-        { name: 'Romantic', description: 'Properties suitable for couples' }
-      ],
-      isFavorite: true
-    },
-    {
-      name: 'Family Trip Essentials',
-      affinities: [
-        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' },
-        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' }
-      ],
-      isFavorite: true
-    }
-  ]);
+  const [recentlyViewedItems, setRecentlyViewedItems] = useState([]);
+  const [favoriteCollections, setFavoriteCollections] = useState([]);
   const [goalData, setGoalData] = useState({
     affinityExpansion: {
-      current: 10,
-      target: 50,
-      status: 'in_progress',
-      lastUpdated: '2024-03-20'
+      current: 0,
+      target: 0,
+      status: 'not_started',
+      lastUpdated: new Date().toISOString()
     },
     accuracy: {
-      current: 20,
-      target: 95,
-      status: 'needs_improvement',
-      lastUpdated: '2024-03-20',
-      validationStrategies: [
-        { name: 'Automated Validation', contribution: 8 },
-        { name: 'Manual Review', contribution: 7 },
-        { name: 'User Feedback', contribution: 5 }
-      ]
+      current: 0,
+      target: 0,
+      status: 'not_started',
+      lastUpdated: new Date().toISOString(),
+      validationStrategies: []
     },
     completeness: {
-      current: 45,
-      target: 100,
-      status: 'in_progress',
-      lastUpdated: '2024-03-20',
-      subScores: [
-        { name: 'Data Quality', score: 40 },
-        { name: 'Coverage', score: 50 },
-        { name: 'Consistency', score: 45 }
-      ]
+      current: 0,
+      target: 0,
+      status: 'not_started',
+      lastUpdated: new Date().toISOString(),
+      subScores: []
     }
   });
 

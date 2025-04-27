@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FiSearch, FiX, FiCheck, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import debounce from 'lodash/debounce';
+import { useAppContext } from '../../../../contexts/AppContext';
 
 const AffinitySelector = ({
   affinities,
@@ -15,6 +16,7 @@ const AffinitySelector = ({
   const [activeIndex, setActiveIndex] = useState(0);
   const searchRef = useRef(null);
   const resultsRef = useRef(null);
+  const { addToRecentlyViewed } = useAppContext();
 
   // Debounced search results
   const filteredAffinities = useMemo(() => {
@@ -56,6 +58,7 @@ const AffinitySelector = ({
           } else if (canSelect) {
             // Add if not selected
             onSelect([...selectedAffinities, affinity]);
+            addToRecentlyViewed(affinity);
           }
           setSearchTerm('');
           setActiveIndex(0);
@@ -156,6 +159,7 @@ const AffinitySelector = ({
                           } else if (canSelect) {
                             // Add if not selected
                             onSelect([...selectedAffinities, affinity]);
+                            addToRecentlyViewed(affinity);
                           }
                           setSearchTerm('');
                           setActiveIndex(0);

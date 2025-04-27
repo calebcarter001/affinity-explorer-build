@@ -1,104 +1,107 @@
 import React from 'react';
-import { FiCheckCircle, FiAlertCircle, FiClock, FiSettings } from 'react-icons/fi';
+import PropTypes from 'prop-types';
+import { FiCheckCircle, FiAlertCircle, FiClock, FiTrendingUp } from 'react-icons/fi';
+import ModernProgressBar from './ModernProgressBar';
 
-const ImplementationStatus = ({
-  title,
-  status,
-  progress,
-  lastUpdated,
-  owner,
-  metrics = [],
-  className = ''
-}) => {
-  // Get status color
-  const getStatusColor = () => {
-    switch (status) {
-      case 'completed':
-        return 'text-green-500';
-      case 'in-progress':
-        return 'text-blue-500';
-      case 'at-risk':
-        return 'text-yellow-500';
-      case 'behind':
-        return 'text-red-500';
-      default:
-        return 'text-gray-500';
-    }
-  };
-
-  // Get status icon
+const ImplementationStatus = ({ title, status, progress, lastUpdated, owner, metrics }) => {
+  // Get status icon based on status
   const getStatusIcon = () => {
     switch (status) {
       case 'completed':
         return <FiCheckCircle className="text-green-500" />;
       case 'in-progress':
-        return <FiClock className="text-blue-500" />;
+        return <FiTrendingUp className="text-blue-500" />;
       case 'at-risk':
-        return <FiAlertCircle className="text-yellow-500" />;
+        return <FiClock className="text-yellow-500" />;
       case 'behind':
         return <FiAlertCircle className="text-red-500" />;
       default:
-        return <FiSettings className="text-gray-500" />;
+        return <FiClock className="text-gray-500" />;
     }
   };
 
-  // Format date
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  // Get status color based on status
+  const getStatusColor = () => {
+    switch (status) {
+      case 'completed':
+        return 'green';
+      case 'in-progress':
+        return 'blue';
+      case 'at-risk':
+        return 'yellow';
+      case 'behind':
+        return 'red';
+      default:
+        return 'gray';
+    }
+  };
+
+  // Get status text based on status
+  const getStatusText = () => {
+    switch (status) {
+      case 'completed':
+        return 'Ready for Production';
+      case 'in-progress':
+        return 'In Progress';
+      case 'at-risk':
+        return 'At Risk';
+      case 'behind':
+        return 'Behind Schedule';
+      default:
+        return 'Unknown Status';
+    }
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow p-4 ${className}`}>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <FiSettings className="text-gray-400 mr-2" />
-          <h3 className="text-lg font-semibold">{title}</h3>
-        </div>
+    <div className="bg-white rounded-lg border p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="font-medium text-lg">{title}</h4>
         <div className="flex items-center">
           {getStatusIcon()}
-          <span className={`font-bold ml-2 ${getStatusColor()}`}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+          <span className={`ml-2 text-sm font-medium text-${getStatusColor()}-600`}>
+            {getStatusText()}
           </span>
         </div>
       </div>
-
+      
       <div className="mb-4">
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div 
-            className={`${getStatusColor().replace('text', 'bg')} h-2.5 rounded-full`} 
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
+        <ModernProgressBar 
+          progress={progress} 
+          color={getStatusColor()} 
+          showLabel={true}
+          label={`${progress}% Complete`}
+        />
       </div>
-
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <div className="text-sm text-gray-500">Last Updated</div>
-          <div className="text-sm font-medium">{formatDate(lastUpdated)}</div>
-        </div>
-        <div>
-          <div className="text-sm text-gray-500">Owner</div>
-          <div className="text-sm font-medium">{owner}</div>
-        </div>
+      
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        {metrics.map((metric, index) => (
+          <div key={index} className="text-sm">
+            <span className="text-gray-500">{metric.label}:</span>
+            <span className="ml-1 font-medium">{metric.value}</span>
+          </div>
+        ))}
       </div>
-
-      {metrics.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700">Implementation Metrics</h4>
-          {metrics.map((metric, index) => (
-            <div key={index} className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">{metric.label}</span>
-              <span className="text-sm font-medium">{metric.value}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      
+      <div className="text-xs text-gray-500">
+        <div>Last Updated: {lastUpdated}</div>
+        <div>Owner: {owner}</div>
+      </div>
     </div>
   );
+};
+
+ImplementationStatus.propTypes = {
+  title: PropTypes.string.isRequired,
+  status: PropTypes.oneOf(['completed', 'in-progress', 'at-risk', 'behind', 'unknown']).isRequired,
+  progress: PropTypes.number.isRequired,
+  lastUpdated: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired,
+  metrics: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired
+    })
+  ).isRequired
 };
 
 export default ImplementationStatus; 

@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { FiBarChart2, FiLayers, FiTrendingUp } from 'react-icons/fi';
+import { FiBarChart2, FiLayers, FiTrendingUp, FiRefreshCw, FiSettings } from 'react-icons/fi';
 import { getAffinities } from '../../services/apiService';
 import { useSearchParams } from 'react-router-dom';
 import PerformanceTab from './workbench/PerformanceTab';
 import CompareTab from './workbench/CompareTab';
+import PrepareTab from './workbench/PrepareTab';
+import { useAffinityData } from '../../contexts/AffinityDataContext';
+import SkeletonLoader from '../common/SkeletonLoader';
+import EmptyStateStyled from '../common/EmptyStateStyled';
 
 const Workbench = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'performance';
   const [activeTab, setActiveTab] = useState(defaultTab);
-  const [affinities, setAffinities] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [periodState, setPeriodState] = useState({
     mode: 'quarter',
     year: new Date().getFullYear(),
     quarter: 1
   });
+
+  // Use global affinities state
+  const {
+    affinities,
+    affinitiesLoading: loading,
+    affinitiesError: error,
+    fetchAffinities
+  } = useAffinityData();
 
   // Update URL when tab changes
   const handleTabChange = (tabId) => {
@@ -25,28 +34,15 @@ const Workbench = () => {
   };
 
   useEffect(() => {
-    const loadAffinities = async () => {
-      if (activeTab === 'compare') {
-        setLoading(true);
-        setError(null);
-        try {
-          const response = await getAffinities();
-          setAffinities(response.data);
-        } catch (err) {
-          console.error('Failed to load affinities:', err);
-          setError('Failed to load affinities');
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadAffinities();
-  }, [activeTab]);
+    if (activeTab === 'compare') {
+      fetchAffinities();
+    }
+  }, [activeTab, fetchAffinities]);
 
   const tabs = [
     { id: 'performance', label: 'Performance', icon: <FiBarChart2 /> },
     { id: 'compare', label: 'Compare', icon: <FiLayers /> },
+    { id: 'prepare', label: 'Prepare', icon: <FiSettings /> },
     { id: 'forecast', label: 'Forecast', icon: <FiTrendingUp /> },
   ];
 
@@ -82,14 +78,35 @@ const Workbench = () => {
       <div className="mt-2">
         {activeTab === 'performance' && <PerformanceTab />}
         {activeTab === 'compare' && (
-          <CompareTab
-            affinities={affinities}
-            loading={loading}
-            error={error}
-            periodState={periodState}
-            onPeriodChange={setPeriodState}
-          />
+          loading ? (
+            <SkeletonLoader count={3} />
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center p-8">
+              <EmptyStateStyled
+                type="ERROR"
+                title="Failed to load affinities"
+                description={error}
+                actionButton={
+                  <button
+                    onClick={() => fetchAffinities(true)}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
+                  >
+                    <FiRefreshCw className="mr-2" /> Retry
+                  </button>
+                }
+              />
+            </div>
+          ) : (
+            <CompareTab
+              affinities={affinities}
+              loading={loading}
+              error={error}
+              periodState={periodState}
+              onPeriodChange={setPeriodState}
+            />
+          )
         )}
+        {activeTab === 'prepare' && <PrepareTab />}
         {activeTab === 'forecast' && (
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-4">Forecast Analysis</h2>

@@ -134,6 +134,130 @@ export const getDashboardStats = async () => {
   return data;
 };
 
+// Mock data for the application
+const affinityConcepts = [
+  {
+    id: "aff1",
+    name: "Pet-Friendly",
+    type: "travel",
+    category: "amenity",
+    scoreAvailable: true,
+    definition: "Properties that welcome pets and provide pet-friendly amenities",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "vacation_rental"],
+    metrics: {
+      accuracy: 0.85,
+      coverage: 72,
+      completeness: 0.89,
+      lastValidated: "2024-03-15"
+    },
+    averageScore: 0.82,
+    highestScore: 0.95,
+    lowestScore: 0.65,
+    coverage: 72,
+    propertiesTagged: 156,
+    propertiesWithScore: 142,
+    dateCreated: "2024-01-15",
+    lastUpdatedDate: "2024-03-15"
+  },
+  {
+    id: "aff2",
+    name: "Romantic",
+    type: "travel",
+    category: "experience",
+    scoreAvailable: true,
+    definition: "Properties ideal for romantic getaways and couples",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "boutique"],
+    metrics: {
+      accuracy: 0.78,
+      coverage: 65,
+      completeness: 0.82,
+      lastValidated: "2024-03-10"
+    },
+    averageScore: 0.75,
+    highestScore: 0.88,
+    lowestScore: 0.62,
+    coverage: 65,
+    propertiesTagged: 142,
+    propertiesWithScore: 128,
+    dateCreated: "2024-01-16",
+    lastUpdatedDate: "2024-03-10"
+  },
+  {
+    id: "aff3",
+    name: "Family-Friendly",
+    type: "travel",
+    category: "amenity",
+    scoreAvailable: true,
+    definition: "Properties suitable for families with children",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "vacation_rental"],
+    metrics: {
+      accuracy: 0.92,
+      coverage: 81,
+      completeness: 0.95,
+      lastValidated: "2024-03-20"
+    },
+    averageScore: 0.89,
+    highestScore: 0.98,
+    lowestScore: 0.75,
+    coverage: 81,
+    propertiesTagged: 178,
+    propertiesWithScore: 165,
+    dateCreated: "2024-01-17",
+    lastUpdatedDate: "2024-03-20"
+  },
+  {
+    id: "aff4",
+    name: "Luxury",
+    type: "travel",
+    category: "experience",
+    scoreAvailable: true,
+    definition: "High-end properties offering premium amenities and services",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "boutique"],
+    metrics: {
+      accuracy: 0.88,
+      coverage: 45,
+      completeness: 0.91,
+      lastValidated: "2024-03-18"
+    },
+    averageScore: 0.85,
+    highestScore: 0.92,
+    lowestScore: 0.78,
+    coverage: 45,
+    propertiesTagged: 98,
+    propertiesWithScore: 92,
+    dateCreated: "2024-01-18",
+    lastUpdatedDate: "2024-03-18"
+  },
+  {
+    id: "aff5",
+    name: "Business",
+    type: "travel",
+    category: "purpose",
+    scoreAvailable: true,
+    definition: "Properties suitable for business travelers",
+    status: "active",
+    applicableEntities: ["hotel", "resort"],
+    metrics: {
+      accuracy: 0.86,
+      coverage: 68,
+      completeness: 0.88,
+      lastValidated: "2024-03-12"
+    },
+    averageScore: 0.83,
+    highestScore: 0.90,
+    lowestScore: 0.70,
+    coverage: 68,
+    propertiesTagged: 148,
+    propertiesWithScore: 135,
+    dateCreated: "2024-01-19",
+    lastUpdatedDate: "2024-03-12"
+  }
+];
+
 const mockAffinityDetails = {
   "Pet-Friendly": {
     relatedConcepts: ['Family-Friendly', 'Spacious', 'Outdoor Recreation'],
@@ -179,7 +303,7 @@ const generateMockPerformanceData = () => {
   const quarters = [1, 2, 3, 4];
   const result = [];
   
-  Object.entries(mockAffinityDetails).forEach(([name, data], index) => {
+  affinityConcepts.forEach((affinity) => {
     // Generate data for each year and quarter
     years.forEach(year => {
       quarters.forEach(quarter => {
@@ -193,17 +317,20 @@ const generateMockPerformanceData = () => {
         const avgOrderValue = Math.floor(Math.random() * 400) + 100; // $100-500 per transaction
         const gpNet = transactions * avgOrderValue;
         
-        result.push({
-          id: `perf_${index + 1}_${year}_${quarter}`,
-          affinityId: (index + 1).toString(),
-          name,
+        // Ensure we're using the exact same ID format as in affinityConcepts
+        const performanceItem = {
+          id: `perf_${affinity.id}_${year}_${quarter}`,
+          affinityId: affinity.id, // Use the exact same ID format
+          name: affinity.name,
           clicks,
           impressions,
           transactions,
           gpNet,
           dateCreated: date.toISOString(),
-          lastUpdatedDate: data.metrics.lastValidated
-        });
+          lastUpdatedDate: affinity.metrics?.lastValidated || date.toISOString()
+        };
+        
+        result.push(performanceItem);
       });
     });
   });
@@ -214,9 +341,9 @@ const generateMockPerformanceData = () => {
 const mockPerformanceData = generateMockPerformanceData();
 
 // Update getAffinities to use cacheService
-export const getAffinities = async ({ page = 1, limit = 10 } = {}) => {
+export const getAffinities = async ({ page = 1, limit = 10, searchTerm = '' } = {}) => {
   try {
-    const cacheKey = cacheService.generateKey('affinities', { page, limit });
+    const cacheKey = cacheService.generateKey('affinities', { page, limit, searchTerm });
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
       return cachedData;
@@ -224,22 +351,39 @@ export const getAffinities = async ({ page = 1, limit = 10 } = {}) => {
 
     await delay(300);
 
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-    const paginatedData = affinityConcepts.slice(startIndex, endIndex);
+    // Filter affinities if searchTerm is provided
+    let filteredAffinities = affinityConcepts;
+    if (searchTerm) {
+      filteredAffinities = affinityConcepts.filter(affinity => 
+        affinity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        affinity.definition?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        affinity.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        affinity.type?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Ensure consistent ID format (with 'aff' prefix)
+    filteredAffinities = filteredAffinities.map(affinity => ({
+      ...affinity,
+      id: affinity.id.startsWith('aff') ? affinity.id : `aff${affinity.id}`
+    }));
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedData = filteredAffinities.slice(startIndex, endIndex);
 
     const response = {
       data: paginatedData,
-      total: affinityConcepts.length,
-    page,
-    limit,
-      totalPages: Math.ceil(affinityConcepts.length / limit)
+      total: filteredAffinities.length,
+      page,
+      limit,
+      totalPages: Math.ceil(filteredAffinities.length / limit)
     };
 
     cacheService.set(cacheKey, response);
     return response;
   } catch (error) {
-    throw new Error('Failed to fetch affinities');
+    return { data: [], total: 0, page, limit, totalPages: 0 };
   }
 };
 
@@ -265,11 +409,11 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
       reviewCount: 1250,
       lastUpdated: '2024-03-15',
       affinityScores: [
-        { affinityId: 1, name: 'Business Traveler', score: 0.85 },
-        { affinityId: 2, name: 'Family Friendly', score: 0.72 },
-        { affinityId: 3, name: 'Luxury Experience', score: 0.91 },
-        { affinityId: 4, name: 'Budget Conscious', score: 0.48 },
-        { affinityId: 5, name: 'Local Experience', score: 0.69 }
+        { affinityId: "aff1", name: 'Business Traveler', score: 0.85 },
+        { affinityId: "aff2", name: 'Family Friendly', score: 0.72 },
+        { affinityId: "aff3", name: 'Luxury Experience', score: 0.91 },
+        { affinityId: "aff4", name: 'Budget Conscious', score: 0.48 },
+        { affinityId: "aff5", name: 'Local Experience', score: 0.69 }
       ],
       amenities: ['WiFi', 'Pool', 'Spa', 'Restaurant', 'Gym', 'Business Center'],
       images: [
@@ -288,11 +432,11 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
       reviewCount: 980,
       lastUpdated: '2024-03-14',
       affinityScores: [
-        { affinityId: 1, name: 'Business Traveler', score: 0.62 },
-        { affinityId: 2, name: 'Family Friendly', score: 0.87 },
-        { affinityId: 3, name: 'Luxury Experience', score: 0.75 },
-        { affinityId: 4, name: 'Budget Conscious', score: 0.59 },
-        { affinityId: 5, name: 'Local Experience', score: 0.81 }
+        { affinityId: "aff1", name: 'Business Traveler', score: 0.62 },
+        { affinityId: "aff2", name: 'Family Friendly', score: 0.87 },
+        { affinityId: "aff3", name: 'Luxury Experience', score: 0.75 },
+        { affinityId: "aff4", name: 'Budget Conscious', score: 0.59 },
+        { affinityId: "aff5", name: 'Local Experience', score: 0.81 }
       ],
       amenities: ['Beach Access', 'Pool', 'Kids Club', 'Restaurant', 'Bar', 'Water Sports'],
       images: [
@@ -311,11 +455,11 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
       reviewCount: 750,
       lastUpdated: '2024-03-13',
       affinityScores: [
-        { affinityId: 1, name: 'Business Traveler', score: 5.8 },
-        { affinityId: 2, name: 'Family Friendly', score: 7.9 },
-        { affinityId: 3, name: 'Luxury Experience', score: 8.3 },
-        { affinityId: 4, name: 'Budget Conscious', score: 6.5 },
-        { affinityId: 5, name: 'Local Experience', score: 9.2 }
+        { affinityId: "aff1", name: 'Business Traveler', score: 5.8 },
+        { affinityId: "aff2", name: 'Family Friendly', score: 7.9 },
+        { affinityId: "aff3", name: 'Luxury Experience', score: 8.3 },
+        { affinityId: "aff4", name: 'Budget Conscious', score: 6.5 },
+        { affinityId: "aff5", name: 'Local Experience', score: 9.2 }
       ],
       amenities: ['Ski Storage', 'Restaurant', 'Spa', 'Fireplace', 'Bar', 'Ski Shuttle'],
       images: [
@@ -350,130 +494,6 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
   cacheService.set(cacheKey, paginatedData);
   return paginatedData;
 };
-
-// Mock data for the application
-const affinityConcepts = [
-  {
-    id: "1",
-    name: "Pet-Friendly",
-    type: "travel",
-    category: "amenity",
-    scoreAvailable: true,
-    definition: "Properties that welcome pets and provide pet-friendly amenities",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "vacation_rental"],
-    metrics: {
-      accuracy: 0.85,
-      coverage: 72,
-      completeness: 0.89,
-      lastValidated: "2024-03-15"
-    },
-    averageScore: 0.82,
-    highestScore: 0.95,
-    lowestScore: 0.65,
-    coverage: 72,
-    propertiesTagged: 156,
-    propertiesWithScore: 142,
-    dateCreated: "2024-01-15",
-    lastUpdatedDate: "2024-03-15"
-  },
-  {
-    id: "2",
-    name: "Romantic",
-    type: "travel",
-    category: "experience",
-    scoreAvailable: true,
-    definition: "Properties ideal for romantic getaways and couples",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "boutique"],
-    metrics: {
-      accuracy: 0.78,
-      coverage: 65,
-      completeness: 0.82,
-      lastValidated: "2024-03-10"
-    },
-    averageScore: 0.75,
-    highestScore: 0.88,
-    lowestScore: 0.62,
-    coverage: 65,
-    propertiesTagged: 142,
-    propertiesWithScore: 128,
-    dateCreated: "2024-01-16",
-    lastUpdatedDate: "2024-03-10"
-  },
-  {
-    id: "3",
-    name: "Family-Friendly",
-    type: "travel",
-    category: "amenity",
-    scoreAvailable: true,
-    definition: "Properties suitable for families with children",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "vacation_rental"],
-    metrics: {
-      accuracy: 0.92,
-      coverage: 81,
-      completeness: 0.95,
-      lastValidated: "2024-03-20"
-    },
-    averageScore: 0.89,
-    highestScore: 0.98,
-    lowestScore: 0.75,
-    coverage: 81,
-    propertiesTagged: 178,
-    propertiesWithScore: 165,
-    dateCreated: "2024-01-17",
-    lastUpdatedDate: "2024-03-20"
-  },
-  {
-    id: "4",
-    name: "Luxury",
-    type: "travel",
-    category: "experience",
-    scoreAvailable: true,
-    definition: "High-end properties offering premium amenities and services",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "boutique"],
-    metrics: {
-      accuracy: 0.88,
-      coverage: 45,
-      completeness: 0.91,
-      lastValidated: "2024-03-18"
-    },
-    averageScore: 0.85,
-    highestScore: 0.92,
-    lowestScore: 0.78,
-    coverage: 45,
-    propertiesTagged: 98,
-    propertiesWithScore: 92,
-    dateCreated: "2024-01-18",
-    lastUpdatedDate: "2024-03-18"
-  },
-  {
-    id: "5",
-    name: "Business",
-    type: "travel",
-    category: "purpose",
-    scoreAvailable: true,
-    definition: "Properties suitable for business travelers",
-    status: "active",
-    applicableEntities: ["hotel", "resort"],
-    metrics: {
-      accuracy: 0.86,
-      coverage: 68,
-      completeness: 0.88,
-      lastValidated: "2024-03-12"
-    },
-    averageScore: 0.83,
-    highestScore: 0.90,
-    lowestScore: 0.70,
-    coverage: 68,
-    propertiesTagged: 148,
-    propertiesWithScore: 135,
-    dateCreated: "2024-01-19",
-    lastUpdatedDate: "2024-03-12"
-  }
-];
 
 const properties = [
   {
@@ -595,60 +615,280 @@ export const updateRecentlyViewed = async (affinityId) => {
 };
 
 export const deleteCollection = async (collectionId, ownerId) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  // In a real app, this would make an API call to delete the collection
-  // For now, we just simulate a successful deletion if owned by user
-  const collections = await getCollections(ownerId);
-  const collectionIndex = collections.findIndex(c => c.id === collectionId);
-  if (collectionIndex === -1) {
-    throw new Error('Collection not found or not owned by user');
+  try {
+    // Simulate API delay
+    await delay(1000);
+    
+    // Find the collection index
+    const collections = await getCollections(ownerId);
+    const collectionIndex = collections.findIndex(c => String(c.id) === String(collectionId));
+    
+    if (collectionIndex === -1) {
+      throw new Error('Collection not found or not owned by user');
+    }
+    
+    // Remove the collection from mockCollections
+    const mockIndex = mockCollections.findIndex(c => String(c.id) === String(collectionId));
+    if (mockIndex !== -1) {
+      mockCollections.splice(mockIndex, 1);
+    }
+    
+    // Clear the cache to ensure fresh data
+    clearCollectionsCache();
+    
+    return { success: true };
+  } catch (error) {
+    throw error;
   }
-  return { success: true };
 };
 
-// Mock collections data
+// Mock collections data with consistent structure
 const mockCollections = [
   {
-    id: '1',
-    name: 'My First Collection',
-    description: 'A collection of my favorite affinities',
+    id: "col1",
+    name: "My First Collection",
+    description: "A collection of my favorite properties",
     isFavorite: true,
-    affinities: [
-      { id: 'aff1', name: 'Urban Living' },
-      { id: 'aff2', name: 'Tech Enthusiasts' }
-    ],
-    createdAt: '2023-01-15T10:30:00Z',
-    lastUpdated: '2023-02-20T14:45:00Z',
-    ownerId: 'demo@example.com'
+    affinityIds: ["aff1", "aff2"].map(id => String(id)),  // Store normalized IDs
+    createdAt: "2024-01-15",
+    lastUpdated: "2024-03-15",
+    ownerId: "demo@example.com"
   },
   {
-    id: '2',
-    name: 'Market Research',
-    description: 'Collections for market research purposes',
+    id: "col2",
+    name: "Market Research",
+    description: "Properties for market analysis",
     isFavorite: false,
-    affinities: [
-      { id: 'aff3', name: 'Fitness Enthusiasts' },
-      { id: 'aff4', name: 'Home Improvement' }
-    ],
-    createdAt: '2023-03-10T09:15:00Z',
-    lastUpdated: '2023-04-05T11:20:00Z',
-    ownerId: 'pm1@example.com'
+    affinityIds: ["aff4", "aff5"].map(id => String(id)),
+    createdAt: "2024-01-16",
+    lastUpdated: "2024-03-16",
+    ownerId: "demo@example.com"
+  },
+  {
+    id: "col3",
+    name: "Luxury Escapes",
+    description: "High-end properties",
+    isFavorite: false,
+    affinityIds: ["aff4", "aff2"].map(id => String(id)),
+    createdAt: "2024-01-17",
+    lastUpdated: "2024-03-17",
+    ownerId: "demo@example.com"
+  },
+  {
+    id: "col4",
+    name: "Family Adventures",
+    description: "Family-friendly destinations",
+    isFavorite: true,
+    affinityIds: ["aff3", "aff1"].map(id => String(id)),
+    createdAt: "2024-01-18",
+    lastUpdated: "2024-03-18",
+    ownerId: "demo@example.com"
   }
 ];
+
+// Constants for validation
+const COLLECTION_CONSTRAINTS = {
+  MAX_AFFINITIES: 50,
+  MIN_NAME_LENGTH: 3,
+  MAX_NAME_LENGTH: 100,
+  MAX_DESCRIPTION_LENGTH: 500
+};
+
+// Validation helper
+const validateCollection = (data, collections, isUpdate = false) => {
+  const errors = [];
+  
+  // Required fields
+  if (!data.name?.trim()) {
+    errors.push('Collection name is required');
+  } else {
+    // Name length
+    if (data.name.length < COLLECTION_CONSTRAINTS.MIN_NAME_LENGTH) {
+      errors.push(`Name must be at least ${COLLECTION_CONSTRAINTS.MIN_NAME_LENGTH} characters`);
+    }
+    if (data.name.length > COLLECTION_CONSTRAINTS.MAX_NAME_LENGTH) {
+      errors.push(`Name cannot exceed ${COLLECTION_CONSTRAINTS.MAX_NAME_LENGTH} characters`);
+    }
+    
+    // Duplicate name check (skip for updates)
+    if (!isUpdate && collections.some(c => c.name.toLowerCase() === data.name.toLowerCase())) {
+      errors.push('Collection name must be unique');
+    }
+  }
+  
+  // Description length
+  if (data.description && data.description.length > COLLECTION_CONSTRAINTS.MAX_DESCRIPTION_LENGTH) {
+    errors.push(`Description cannot exceed ${COLLECTION_CONSTRAINTS.MAX_DESCRIPTION_LENGTH} characters`);
+  }
+  
+  // Affinity count
+  if (data.affinityIds && data.affinityIds.length > COLLECTION_CONSTRAINTS.MAX_AFFINITIES) {
+    errors.push(`Cannot exceed ${COLLECTION_CONSTRAINTS.MAX_AFFINITIES} affinities per collection`);
+  }
+  
+  // Owner ID
+  if (!data.ownerId) {
+    errors.push('Owner ID is required');
+  }
+  
+  return errors;
+};
+
+export const createCollection = async (collectionData) => {
+  try {
+    await delay(1000);
+    
+    // Validate collection data
+    const validationErrors = validateCollection(collectionData, mockCollections);
+    if (validationErrors.length > 0) {
+      throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+    }
+    
+    // Get fresh affinities data
+    const response = await getAffinities();
+    const allAffinities = response.data;
+    
+    // Normalize and validate affinity IDs
+    const normalizedAffinityIds = (collectionData.affinityIds || [])
+      .map(id => String(id))
+      .filter((id, index, self) => self.indexOf(id) === index); // Remove duplicates
+    
+    // Validate affinities exist
+    const invalidIds = normalizedAffinityIds.filter(id => 
+      !allAffinities.some(a => String(a.id) === id)
+    );
+    if (invalidIds.length > 0) {
+      throw new Error(`Invalid affinity IDs: ${invalidIds.join(', ')}`);
+    }
+    
+    // Create new collection
+    const newCollection = {
+      ...collectionData,
+      id: `col${mockCollections.length + 1}`,
+      affinityIds: normalizedAffinityIds,
+      isFavorite: false,
+      createdAt: new Date().toISOString(),
+      lastUpdated: new Date().toISOString()
+    };
+    
+    mockCollections.push(newCollection);
+    clearCollectionsCache();
+    
+    // Return the collection with full affinity objects
+    const collectionWithAffinities = {
+      ...newCollection,
+      affinities: allAffinities.filter(a => 
+        normalizedAffinityIds.includes(String(a.id))
+      )
+    };
+    
+    return collectionWithAffinities;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateCollection = async (collectionId, updates, ownerId) => {
+  try {
+    await delay(1000);
+    
+    // Get current collections
+    const collections = await getCollections(ownerId);
+    const collectionIndex = collections.findIndex(c => String(c.id) === String(collectionId));
+    
+    if (collectionIndex === -1) {
+      throw new Error('Collection not found or not owned by user');
+    }
+    
+    // Validate updates
+    const validationErrors = validateCollection(
+      { ...collections[collectionIndex], ...updates },
+      collections.filter(c => c.id !== collectionId),
+      true
+    );
+    if (validationErrors.length > 0) {
+      throw new Error(`Validation failed: ${validationErrors.join(', ')}`);
+    }
+    
+    // Normalize affinity IDs if provided
+    let normalizedAffinityIds = collections[collectionIndex].affinityIds;
+    if (updates.affinityIds) {
+      normalizedAffinityIds = updates.affinityIds
+        .map(id => String(id))
+        .filter((id, index, self) => self.indexOf(id) === index);
+        
+      // Validate affinities exist
+      const response = await getAffinities();
+      const allAffinities = response.data;
+      const invalidIds = normalizedAffinityIds.filter(id => 
+        !allAffinities.some(a => String(a.id) === id)
+      );
+      if (invalidIds.length > 0) {
+        throw new Error(`Invalid affinity IDs: ${invalidIds.join(', ')}`);
+      }
+      
+      // Map IDs to full affinity objects for response
+      const updatedAffinities = allAffinities.filter(a => 
+        normalizedAffinityIds.includes(String(a.id))
+      );
+      
+      // Update mock data
+      const mockIndex = mockCollections.findIndex(c => String(c.id) === String(collectionId));
+      if (mockIndex !== -1) {
+        mockCollections[mockIndex] = {
+          ...mockCollections[mockIndex],
+          ...updates,
+          affinityIds: normalizedAffinityIds,
+          lastUpdated: new Date().toISOString()
+        };
+      }
+      
+      // Return updated collection with full affinity objects
+      const updatedCollection = {
+        ...collections[collectionIndex],
+        ...updates,
+        affinities: updatedAffinities,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      clearCollectionsCache();
+      return updatedCollection;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getCollections = async (ownerId) => {
   try {
     const cacheKey = cacheService.generateKey('collections', { ownerId });
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
-      console.log('[getCollections] Returning cached collections for ownerId:', ownerId, cachedData);
       return cachedData;
     }
 
     await delay(300);
-    const collections = mockCollections.filter(c => c.ownerId === ownerId);
-    console.log('[getCollections] Fetched collections for ownerId:', ownerId, collections);
+    
+    // Get all affinities
+    const affinitiesResponse = await getAffinities();
+    const allAffinities = affinitiesResponse.data;
+    
+    // Map collections and convert affinity IDs to full objects
+    const collections = mockCollections
+      .filter(collection => collection.ownerId === ownerId)
+      .map(collection => ({
+        ...collection,
+        affinities: (collection.affinityIds || [])
+          .map(id => {
+            const affinity = allAffinities.find(a => String(a.id) === String(id));
+            if (!affinity) {
+              return null;
+            }
+            return affinity;
+          })
+          .filter(Boolean)
+      }));
+
     cacheService.set(cacheKey, collections);
     return collections;
   } catch (error) {
@@ -659,52 +899,6 @@ export const getCollections = async (ownerId) => {
 // Update clearCollectionsCache to use cacheService
 export const clearCollectionsCache = () => {
   cacheService.clearByPrefix('collections');
-};
-
-export const updateCollection = async (collectionId, updates, ownerId) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Get current collections for the user
-  const collections = await getCollections(ownerId);
-  const collectionIndex = collections.findIndex(c => c.id === collectionId);
-  
-  if (collectionIndex === -1) {
-    throw new Error('Collection not found or not owned by user');
-  }
-  
-  // Update the collection
-  const updatedCollection = {
-    ...collections[collectionIndex],
-    ...updates,
-    lastUpdated: new Date().toISOString()
-  };
-  
-  // In a real implementation, this would be an API call
-  // For now, we'll just return the updated collection
-  return updatedCollection;
-};
-
-export const createCollection = async (collectionData) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  // Map affinityIds to full affinity objects
-  let selectedAffinities = [];
-  if (Array.isArray(collectionData.affinityIds) && collectionData.affinityIds.length > 0) {
-    selectedAffinities = affinityConcepts.filter(a => collectionData.affinityIds.includes(a.id));
-  }
-  // Create a new collection with selected affinities
-  const newCollection = {
-    ...collectionData,
-    affinities: selectedAffinities,
-    isFavorite: false,
-    lastUpdated: new Date().toISOString(),
-    id: (mockCollections.length + 1).toString()
-  };
-  mockCollections.push(newCollection);
-  console.log('[createCollection] New collection created:', newCollection);
-  clearCollectionsCache();
-  return newCollection;
 };
 
 // Update getAffinityPerformance to use cacheService
@@ -718,11 +912,14 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
     }
 
     await delay(300);
-
     
     const filteredData = mockPerformanceData.filter(item => {
       try {
-        if (affinityId && item.affinityId !== affinityId) {
+        // Ensure consistent string comparison
+        const itemAffinityId = String(item.affinityId);
+        const searchAffinityId = String(affinityId);
+        
+        if (affinityId && itemAffinityId !== searchAffinityId) {
           return false;
         }
         
@@ -743,18 +940,23 @@ export const getAffinityPerformance = async (affinityId, year, quarter, { page =
       }
     });
     
-
     // Enrich the filtered data with affinity details
     const enrichedData = filteredData.map(item => {
-      const affinityDetails = mockAffinityDetails[item.name] || {};
+      // Find the matching affinity from affinityConcepts
+      const affinity = affinityConcepts.find(a => a.id === item.affinityId);
+      
+      if (!affinity) {
+        return item;
+      }
+      
       return {
         ...item,
-        affinityName: item.name,
-        affinityType: "Platform Score", // Default value, can be customized based on your needs
-        affinityCategory: "Amenities", // Default value, can be customized based on your needs
-        affinityStatus: "Active", // Default value, can be customized based on your needs
-        affinityMetrics: affinityDetails.metrics || {},
-        relatedConcepts: affinityDetails.relatedConcepts || []
+        affinityName: affinity.name,
+        affinityType: affinity.type,
+        affinityCategory: affinity.category,
+        affinityStatus: affinity.status,
+        affinityMetrics: affinity.metrics || {},
+        relatedConcepts: affinity.applicableEntities || []
       };
     });
 
@@ -1122,4 +1324,143 @@ const generateMockSearchResults = (query) => {
       });
     }, delay);
   });
+};
+
+// Dashboard configuration and mock data for UI (centralized)
+export const getDashboardConfig = async () => {
+  // Simulate API delay
+  await delay(100);
+  // All dashboard stats and progress values in one place
+  const config = {
+    affinityExpansion: {
+      current: 10,
+      target: 50,
+      status: 'in_progress',
+      lastUpdated: '2024-03-20'
+    },
+    accuracy: {
+      current: 20,
+      target: 95,
+      status: 'needs_improvement',
+      lastUpdated: '2024-03-20',
+      validationStrategies: [
+        { name: 'Automated Validation', contribution: 8 },
+        { name: 'Manual Review', contribution: 7 },
+        { name: 'User Feedback', contribution: 5 }
+      ]
+    },
+    completeness: {
+      current: 45,
+      target: 100,
+      status: 'in_progress',
+      lastUpdated: '2024-03-20',
+      subScores: [
+        { name: 'Data Quality', score: 40 },
+        { name: 'Coverage', score: 50 },
+        { name: 'Consistency', score: 45 }
+      ]
+    },
+    // Additional dashboard stats
+    quarterlyGrowth: 12,
+    avgCoverage: 78,
+    yearlyGrowthCoverage: 5,
+    implementationRate: 85,
+    quarterlyGrowthImplementation: 8,
+    reuseRate: 92,
+    targetDiffReuse: 7,
+    // Trends and chart data
+    trends: {
+      coverage: {
+        data: [65, 59, 80, 81, 56, 55, 70, 75, 82, 85, 78, 80],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      accuracy: {
+        data: [45, 50, 55, 58, 62, 65, 68, 70, 72, 75, 73, 75],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      completeness: {
+        data: [60, 62, 65, 68, 70, 71, 72, 72, 73, 73, 73, 73],
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      }
+    },
+    // Config for progress bars and pie chart (can be extended as needed)
+    progressBar: {
+      color: 'purple',
+      height: 2
+    },
+    accuracyPieChart: {
+      colors: [
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(255, 206, 86, 0.6)'
+      ],
+      borderColors: [
+        'rgba(54, 162, 235, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(255, 206, 86, 1)'
+      ]
+    }
+  };
+  // Type and error checking
+  if (typeof config.affinityExpansion.current !== 'number' || typeof config.affinityExpansion.target !== 'number') {
+    throw new Error('Invalid affinityExpansion values');
+  }
+  if (typeof config.accuracy.current !== 'number' || typeof config.accuracy.target !== 'number') {
+    throw new Error('Invalid accuracy values');
+  }
+  if (typeof config.completeness.current !== 'number' || typeof config.completeness.target !== 'number') {
+    throw new Error('Invalid completeness values');
+  }
+  if (!Array.isArray(config.trends.coverage.data) || !Array.isArray(config.trends.coverage.labels)) {
+    throw new Error('Invalid trends data');
+  }
+  return config;
+};
+
+// Mock recently viewed storage (in-memory for demo)
+let mockRecentlyViewed = {
+  // userId: [affinity, ...]
+};
+
+export const getRecentlyViewed = async (userId) => {
+  await delay(100);
+  return mockRecentlyViewed[userId] || [];
+};
+
+export const addRecentlyViewed = async (userId, affinity) => {
+  await delay(50);
+  if (!mockRecentlyViewed[userId]) mockRecentlyViewed[userId] = [];
+  
+  // Ensure consistent ID format
+  const normalizedAffinity = {
+    ...affinity,
+    id: affinity.id.startsWith('aff') ? affinity.id : `aff${affinity.id}`
+  };
+  
+  // Remove if already exists
+  mockRecentlyViewed[userId] = mockRecentlyViewed[userId].filter(a => a.id !== normalizedAffinity.id);
+  // Add to front
+  mockRecentlyViewed[userId].unshift(normalizedAffinity);
+  // Keep max 10
+  mockRecentlyViewed[userId] = mockRecentlyViewed[userId].slice(0, 10);
+  return mockRecentlyViewed[userId];
+};
+
+export const mergeRecentlyViewed = async (userId, localList) => {
+  await delay(100);
+  const serverList = mockRecentlyViewed[userId] || [];
+  
+  // Normalize IDs in local list
+  const normalizedLocalList = localList.map(item => ({
+    ...item,
+    id: item.id.startsWith('aff') ? item.id : `aff${item.id}`
+  }));
+  
+  // Merge, dedupe by id, keep most recent first
+  const merged = [...normalizedLocalList, ...serverList].reduce((acc, item) => {
+    if (!acc.find(a => a.id === item.id)) acc.push(item);
+    return acc;
+  }, []);
+  mockRecentlyViewed[userId] = merged.slice(0, 10);
+  return mockRecentlyViewed[userId];
 }; 

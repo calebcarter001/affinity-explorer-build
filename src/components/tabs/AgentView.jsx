@@ -3,6 +3,15 @@ import { FiSearch, FiChevronDown } from 'react-icons/fi';
 import { searchProperties } from '../../services/apiService';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import PropertyCard from '../common/PropertyCard';
+import Pagination from './AgentViewParts/Pagination';
+import {
+  VerificationAgent,
+  DiscoveryAgent,
+  SentimentAgent,
+  CompetitiveAgent,
+  BiasDetectionAgent,
+  TrendAgent
+} from './AgentViewParts/agents';
 
 const AgentView = () => {
   const [activeTab, setActiveTab] = useState('verification');
@@ -66,48 +75,12 @@ const AgentView = () => {
   };
 
   const renderPagination = () => {
-    if (totalPages <= 1) return null;
-
     return (
-      <div className="flex justify-center items-center mt-4 space-x-2">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={`px-3 py-1 rounded ${
-            currentPage === 1
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Previous
-        </button>
-        <div className="flex space-x-1">
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`w-8 h-8 rounded ${
-                currentPage === index + 1
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className={`px-3 py-1 rounded ${
-            currentPage === totalPages
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     );
   };
 
@@ -167,263 +140,21 @@ const AgentView = () => {
   };
 
   const renderAgentContent = () => {
-    if (!selectedProperty) {
-      return (
-        <EmptyStateStyled
-          type="NO_PROPERTIES"
-          title="Select a Property"
-          description="Choose a property from the list to view its details and affinities"
-          suggestions={[
-            'Click on a property card to select it',
-            'Use the search bar to find specific properties',
-            'Try clearing any active filters if you don\'t see expected properties'
-          ]}
-        />
-      );
-    }
-
     switch (activeTab) {
       case 'verification':
-        return (
-          <div className="mb-4">
-            <p className="text-gray-600 mb-4">This agent confirms affinity scores against ground truth using human-verified data, multiple external sources, and crowdsourced information.</p>
-            
-            <h4 className="font-semibold text-lg mb-3">Verified Affinities</h4>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center mb-2">
-                  <h5 className="font-semibold">Luxury</h5>
-                  <span className="badge score-high">9.1/10 Verified</span>
-                </div>
-                <div className="evidence-panel">
-                  <div 
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() => togglePanel('luxury-1')}
-                  >
-                    <p className="text-sm text-gray-700">Five-star rating confirmed</p>
-                    <FiChevronDown className={`text-gray-500 transform transition-transform ${expandedPanels.has('luxury-1') ? 'rotate-180' : ''}`} />
-                  </div>
-                  <div className={`collapsible-content ${expandedPanels.has('luxury-1') ? 'block' : 'hidden'}`}>
-                    <p className="text-xs text-gray-600 mt-2">Source: Official Hotel Classification Registry (verified)</p>
-                  </div>
-                </div>
-                <div className="evidence-panel mt-2">
-                  <div 
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() => togglePanel('luxury-2')}
-                  >
-                    <p className="text-sm text-gray-700">Premium amenities detected: spa, butler service, fine dining</p>
-                    <FiChevronDown className={`text-gray-500 transform transition-transform ${expandedPanels.has('luxury-2') ? 'rotate-180' : ''}`} />
-                  </div>
-                  <div className={`collapsible-content ${expandedPanels.has('luxury-2') ? 'block' : 'hidden'}`}>
-                    <p className="text-xs text-gray-600 mt-2">Source: Property website (verified), Guest reviews (aggregated)</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center mb-2">
-                  <h5 className="font-semibold">Beach Access</h5>
-                  <span className="badge score-high">9.5/10 Verified</span>
-                </div>
-                <div className="evidence-panel">
-                  <div 
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() => togglePanel('beach-1')}
-                  >
-                    <p className="text-sm text-gray-700">Direct beachfront location confirmed</p>
-                    <FiChevronDown className={`text-gray-500 transform transition-transform ${expandedPanels.has('beach-1') ? 'rotate-180' : ''}`} />
-                  </div>
-                  <div className={`collapsible-content ${expandedPanels.has('beach-1') ? 'block' : 'hidden'}`}>
-                    <p className="text-xs text-gray-600 mt-2">Source: Geospatial data (verified), On-site inspection (verified)</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <VerificationAgent property={selectedProperty} />;
       case 'discovery':
-        return (
-          <div className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
-              <p className="text-gray-600">This agent identifies new attributes and characteristics not currently captured in existing affinities.</p>
-            </div>
-            
-            <h4 className="font-semibold text-lg mb-3">Newly Discovered Attributes</h4>
-            <p className="mb-3 text-gray-700">Discovery Agent found 8 new attributes that can enhance existing affinities or suggest new ones.</p>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center mb-2">
-                  <h5 className="font-semibold">Electric Vehicle Charging Stations</h5>
-                  <span className="badge score-high">High Confidence (92%)</span>
-                </div>
-                <p className="text-sm">4 Tesla and 2 universal charging stations available in the parking garage.</p>
-                <p className="text-xs text-blue-600 mt-2">Suggests: Eco-Friendly affinity</p>
-                <div className="confidence-indicator mt-2">
-                  <div className="confidence-fill" style={{ width: '92%' }}></div>
-                </div>
-              </div>
-              
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center mb-2">
-                  <h5 className="font-semibold">Soundproof Rooms</h5>
-                  <span className="badge score-high">High Confidence (89%)</span>
-                </div>
-                <p className="text-sm">Enhanced soundproofing mentioned in 37 recent guest reviews.</p>
-                <p className="text-xs text-blue-600 mt-2">Enhances: Privacy, Luxury affinities</p>
-                <div className="confidence-indicator mt-2">
-                  <div className="confidence-fill" style={{ width: '89%' }}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <DiscoveryAgent property={selectedProperty} />;
       case 'sentiment':
-        return (
-          <div className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
-              <p className="text-gray-600">This agent analyzes reviews and social media to gauge sentiment about property affinities.</p>
-            </div>
-            
-            <h4 className="font-semibold text-lg mb-3">Sentiment Analysis</h4>
-            <p className="mb-3 text-gray-700">Sentiment Agent analyzed 736 recent reviews and social media mentions.</p>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <h5 className="font-semibold mb-2">Luxury Sentiment</h5>
-                <div className="mb-3">
-                  <h6 className="text-sm font-medium">Key Phrases (736 reviews)</h6>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                      "exceptional service" (127 mentions)
-                    </span>
-                    <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                      "worth every penny" (98 mentions)
-                    </span>
-                    <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                      "5-star experience" (82 mentions)
-                    </span>
-                    <span className="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
-                      "overpriced" (24 mentions)
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm">Impact: Sentiment confirms high Luxury score (9.1)</p>
-              </div>
-            </div>
-          </div>
-        );
+        return <SentimentAgent property={selectedProperty} />;
       case 'competitive':
-        return (
-          <div className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
-              <p className="text-gray-600">This agent benchmarks against competitors to identify relative strengths and gaps.</p>
-            </div>
-            
-            <h4 className="font-semibold text-lg mb-3">Competitive Analysis</h4>
-            <p className="mb-3 text-gray-700">Benchmarked against 16 similar resorts on competing booking sites.</p>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center">
-                  <h5 className="font-semibold">Luxury Positioning</h5>
-                </div>
-                <div className="mt-3 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span>Expedia:</span>
-                    <span className="font-semibold">9.1/10</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Competitor A:</span>
-                    <span>8.7/10</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Competitor B:</span>
-                    <span>8.9/10</span>
-                  </div>
-                  <div className="mt-3 text-sm text-green-700">
-                    <i className="fas fa-arrow-up mr-1"></i> Competitive Edge: +0.3 points above average
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <CompetitiveAgent property={selectedProperty} />;
       case 'bias':
-        return (
-          <div className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
-              <p className="text-gray-600">This agent detects and corrects systematic biases in affinity scores.</p>
-            </div>
-            
-            <h4 className="font-semibold text-lg mb-3">Bias Detection</h4>
-            <p className="mb-3 text-gray-700">Minor biases detected in review sourcing and seasonal sampling.</p>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center">
-                  <h5 className="font-semibold">Review Source Bias</h5>
-                </div>
-                <p className="mt-3 text-sm">Pet-Friendly scores are disproportionately influenced by reviews from summer travelers (72% of data points).</p>
-                <div className="mt-2 px-3 py-2 bg-yellow-50 border-l-4 border-yellow-400">
-                  <span className="text-sm font-medium">Bias Severity: Medium (11% score impact)</span>
-                </div>
-                <div className="mt-3">
-                  <h6 className="text-sm font-medium">Correction Applied</h6>
-                  <p className="text-sm mt-1">Reweighted seasonal reviews to ensure balanced representation.</p>
-                  <div className="flex justify-between mt-2 text-sm">
-                    <span>Original Score: 7.5/10</span>
-                    <span>Corrected Score: 7.2/10</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <BiasDetectionAgent property={selectedProperty} />;
       case 'trend':
-        return (
-          <div className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{selectedProperty.name}</h3>
-              <p className="text-gray-600">This agent identifies emerging trends relevant to the property.</p>
-            </div>
-            
-            <h4 className="font-semibold text-lg mb-3">Trend Analysis</h4>
-            <p className="mb-3 text-gray-700">Trend Agent identified 4 emerging patterns relevant to this property.</p>
-            
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-between items-center">
-                  <h5 className="font-semibold">Wellness Travel</h5>
-                  <span className="badge badge-validated">Rising Trend</span>
-                </div>
-                <div className="mt-2 text-sm">
-                  <p>43% increase in searches for wellness amenities and spa facilities in luxury beach resorts over last 90 days.</p>
-                  <div className="mt-3">
-                    <h6 className="font-medium">Property Alignment</h6>
-                    <p className="mt-1">Property has comprehensive spa facilities, meditation classes, and wellness packages.</p>
-                    <p className="text-green-700 mt-2">
-                      <i className="fas fa-lightbulb mr-1"></i> Opportunity: Create new "Wellness Retreat" affinity and feature property prominently.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <TrendAgent property={selectedProperty} />;
       default:
-        return (
-          <EmptyStateStyled
-            type="NO_DATA"
-            description="This agent view is under development"
-          />
-        );
+        return <VerificationAgent property={selectedProperty} />;
     }
   };
 

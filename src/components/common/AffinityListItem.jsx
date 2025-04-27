@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { FiChevronRight } from 'react-icons/fi';
 import { useAppContext } from '../../contexts/AppContext';
+import AffinityCard from './AffinityCard';
 
-const AffinityListItem = ({ affinity }) => {
+const AffinityListItem = ({ affinity, userCollections = [], onAddToCollection }) => {
   const { addToRecentlyViewed } = useAppContext();
   
   const handleClick = () => {
@@ -11,42 +12,13 @@ const AffinityListItem = ({ affinity }) => {
   };
   
   return (
-    <ListItemContainer onClick={handleClick}>
-      <IconAndName>
-        <IconContainer>{affinity.icon || '📋'}</IconContainer>
-        <NameAndDescription>
-          <AffinityName>{affinity.name}</AffinityName>
-          <AffinityDescription>{affinity.description}</AffinityDescription>
-        </NameAndDescription>
-      </IconAndName>
-      
-      <CategoryBadge>{affinity.category}</CategoryBadge>
-      
-      <ScoreContainer>
-        <ScoreBox>
-          <ScoreLabel>Score</ScoreLabel>
-          <ScoreValue>
-            {affinity.score ? (
-              <>{affinity.score.toFixed(1)}/10</>
-            ) : (
-              'N/A'
-            )}
-          </ScoreValue>
-        </ScoreBox>
-        <ScoreBox>
-          <ScoreLabel>Coverage</ScoreLabel>
-          <ScoreValue>
-            {affinity.coverage ? (
-              <>{affinity.coverage}%</>
-            ) : (
-              'N/A'
-            )}
-          </ScoreValue>
-        </ScoreBox>
-      </ScoreContainer>
-      
-      <StatusBadge status={affinity.status}>{affinity.status}</StatusBadge>
-    </ListItemContainer>
+    <div className="mb-2">
+      <AffinityCard
+        affinity={affinity}
+        userCollections={userCollections}
+        onAddToCollection={onAddToCollection}
+      />
+    </div>
   );
 };
 

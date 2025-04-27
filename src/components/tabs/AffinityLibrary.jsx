@@ -1,22 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus, FiChevronLeft, FiChevronRight, FiLayers, FiBook } from 'react-icons/fi';
-import { getAffinities, advancedSearch } from '../../services/apiService';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { FiSearch, FiCheck, FiClock, FiAlertCircle, FiPlus, FiChevronLeft, FiChevronRight, FiLayers, FiBook, FiRefreshCw } from 'react-icons/fi';
+import { getAffinities, advancedSearch, getCollections, updateCollection, clearCollectionsCache } from '../../services/apiService';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import SkeletonLoader from '../common/SkeletonLoader';
 import AffinityCollections from '../collections/AffinityCollections';
 import AffinityDetailView from '../common/AffinityDetailView';
 import SearchDetailView from '../common/SearchDetailView';
+import { useAffinityData } from '../../contexts/AffinityDataContext';
+import SearchBar from './AffinityLibraryParts/SearchBar';
+import AffinityList from './AffinityLibraryParts/AffinityList';
+import Pagination from './AffinityLibraryParts/Pagination';
+import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
+import { useAppContext } from '../../contexts/AppContext';
 
 const AffinityLibrary = () => {
   const location = useLocation();
+  const { user } = useAuth();
+  const showToast = useToast();
+  const [userCollections, setUserCollections] = useState([]);
+  const [collectionsLoading, setCollectionsLoading] = useState(false);
+  const [collectionsError, setCollectionsError] = useState(null);
   const [activeTab, setActiveTab] = useState(location.state?.view || 'library');
-  const [affinities, setAffinities] = useState([]);
   const [filteredAffinities, setFilteredAffinities] = useState([]);
   const [selectedAffinity, setSelectedAffinity] = useState(null);
+  const [selectedAffinityIdFromNav, setSelectedAffinityIdFromNav] = useState(location.state?.selectedAffinityId || null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -30,99 +40,124 @@ const AffinityLibrary = () => {
   const [mockDataReason, setMockDataReason] = useState('');
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [advancedContext, setAdvancedContext] = useState('');
+  const [advancedError, setAdvancedError] = useState('');
 
-  // Load specific affinity if navigated from dashboard
+  // Use global affinities state
+  const {
+    affinities,
+    affinitiesLoading: loading,
+    affinitiesError: error,
+    fetchAffinities
+  } = useAffinityData();
+
+  const searchTimeout = useRef();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { addToRecentlyViewed } = useAppContext();
+
+  const [selectedCollectionId, setSelectedCollectionId] = useState(location.state?.selectedCollectionId ? String(location.state.selectedCollectionId) : null);
+
+  // Initialize from URL
   useEffect(() => {
-    const loadSelectedAffinity = async () => {
-      if (location.state?.selectedAffinityId && location.state?.source === 'dashboard') {
-        setLoading(true);
-        try {
-          if (location.state.affinity) {
-            // Use the passed affinity data immediately
-            setSelectedAffinity(location.state.affinity);
-            
-            // Load the first page of affinities
-            const response = await getAffinities(1, itemsPerPage);
-            setAffinities(response.data);
-            setFilteredAffinities(response.data);
-            setTotalPages(Math.ceil(response.totalCount / itemsPerPage));
-            
-            // If the affinity isn't in the first page, find its page
-            const affinityIndex = response.data.findIndex(a => a.id === location.state.affinity.id);
-            if (affinityIndex === -1) {
-              const allAffinities = await getAffinities(1, 100);
-              const targetIndex = allAffinities.data.findIndex(a => a.id === location.state.affinity.id);
-              if (targetIndex !== -1) {
-                const targetPage = Math.floor(targetIndex / itemsPerPage) + 1;
-                setCurrentPage(targetPage);
-              }
-            }
-          } else {
-            // Fallback to previous behavior if no affinity data is passed
-            const allAffinities = await getAffinities(1, 100);
-            const totalCount = allAffinities.data.length;
-            setTotalPages(Math.ceil(totalCount / itemsPerPage));
-            
-            const targetAffinity = allAffinities.data.find(a => a.id === location.state.selectedAffinityId);
-            if (targetAffinity) {
-              const targetIndex = allAffinities.data.findIndex(a => a.id === location.state.selectedAffinityId);
-              const targetPage = Math.floor(targetIndex / itemsPerPage) + 1;
-              
-              setCurrentPage(targetPage);
-              setSelectedAffinity(targetAffinity);
-            }
-          }
-        } catch (err) {
-          console.error('Failed to load selected affinity:', err);
-          setError('Failed to load selected affinity');
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    
-    loadSelectedAffinity();
-  }, [location.state, itemsPerPage]);
+    const urlSearch = searchParams.get('search') || '';
+    const urlPage = parseInt(searchParams.get('page') || '1', 10);
+    setSearchTerm(urlSearch);
+    setCurrentPage(urlPage);
+  }, []);
 
-  // Load paginated affinities
+  // Update URL when searchTerm or currentPage changes
   useEffect(() => {
-    const fetchAffinities = async () => {
-      setLoading(true);
-      try {
-        const response = await getAffinities(currentPage, itemsPerPage);
-        setAffinities(response.data);
-        setFilteredAffinities(response.data);
-        setTotalPages(Math.ceil(response.totalCount / itemsPerPage));
-      } catch (err) {
-        console.error('Failed to load affinities:', err);
-        setError('Failed to load affinities');
-      } finally {
-        setLoading(false);
-      }
-    };
+    setSearchParams({
+      ...(searchTerm ? { search: searchTerm } : {}),
+      ...(currentPage > 1 ? { page: currentPage } : {})
+    });
+  }, [searchTerm, currentPage, setSearchParams]);
 
+  // Load affinities on mount
+  useEffect(() => {
     fetchAffinities();
-  }, [currentPage, itemsPerPage]);
+  }, [fetchAffinities]);
 
-  // Filter affinities based on search term
+  // Fetch user collections
   useEffect(() => {
-    let filtered = [...affinities];
+    const fetchUserCollections = async () => {
+      if (!user?.email) return;
+      setCollectionsLoading(true);
+      setCollectionsError(null);
+      try {
+        const collections = await getCollections(user.email);
+        setUserCollections(collections);
+      } catch (err) {
+        setCollectionsError('Failed to load collections');
+        showToast.error('Failed to load collections');
+      } finally {
+        setCollectionsLoading(false);
+      }
+    };
+    fetchUserCollections();
+  }, [user, showToast]);
 
-    // Apply search filter
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(affinity => 
-        affinity.name.toLowerCase().includes(term) || 
-        affinity.definition?.toLowerCase().includes(term) ||
-        affinity.category?.toLowerCase().includes(term) ||
-        affinity.type?.toLowerCase().includes(term)
-      );
-    }
-
-    setFilteredAffinities(filtered);
+  // Debounced search effect
+  useEffect(() => {
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
+      let filtered = [...affinities];
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filtered = filtered.filter(affinity => 
+          affinity.name.toLowerCase().includes(term) || 
+          affinity.definition?.toLowerCase().includes(term) ||
+          affinity.category?.toLowerCase().includes(term) ||
+          affinity.type?.toLowerCase().includes(term)
+        );
+      }
+      setFilteredAffinities(filtered);
+    }, 300);
+    return () => clearTimeout(searchTimeout.current);
   }, [affinities, searchTerm]);
 
+  // Handle selectedAffinityIdFromNav
+  useEffect(() => {
+    if (selectedAffinityIdFromNav) {
+      if (loading) {
+        // If still loading, wait for affinities to load
+        return;
+      }
+      
+      if (affinities.length === 0) {
+        // If no affinities loaded yet, fetch them
+        fetchAffinities();
+        return;
+      }
+
+      // Try to find the affinity
+      const found = affinities.find(a => String(a.id) === String(selectedAffinityIdFromNav));
+      if (found) {
+        setSelectedAffinity(found);
+        setIsSearchMode(false);
+        setSelectedAffinityIdFromNav(null); // Clear after use
+      } else {
+        // If affinity not found, show error
+        showToast.error('Affinity not found');
+        setSelectedAffinityIdFromNav(null); // Clear to prevent infinite loop
+      }
+    }
+  }, [selectedAffinityIdFromNav, affinities, loading, fetchAffinities, showToast]);
+
+  // Update selectedCollectionId if navigation state changes
+  useEffect(() => {
+    if (location.state?.selectedCollectionId) {
+      setSelectedCollectionId(String(location.state.selectedCollectionId));
+    }
+  }, [location.state?.selectedCollectionId]);
+
+  // When switching to collections tab, do not clear selectedCollectionId
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
+    // Do not clear selectedCollectionId on tab switch
+  };
+
   const handleAffinityClick = (affinity) => {
+    addToRecentlyViewed(affinity);
     setSelectedAffinity(affinity);
     setIsSearchMode(false);
   };
@@ -152,7 +187,7 @@ const AffinityLibrary = () => {
     if (!advancedQuery.trim()) return;
 
     setSearchLoading(true);
-    setError(null);
+    setAdvancedError(null);
     setUsingMockData(false);
     setMockDataReason('');
     setIsSearchMode(true);
@@ -181,7 +216,7 @@ const AffinityLibrary = () => {
       }
     } catch (error) {
       console.error('Search error:', error);
-      setError('An error occurred while searching. Please try again.');
+      setAdvancedError('An error occurred while searching. Please try again.');
       setAdvancedResults({ results: [] });
     } finally {
       setSearchLoading(false);
@@ -201,6 +236,30 @@ const AffinityLibrary = () => {
       setSearchTerm('');
     }
     // Don't reset isSearchMode or selectedAffinity to maintain state
+  };
+
+  // Handler for adding affinity to a collection
+  const handleAddToCollection = async (collection, affinity) => {
+    // Optimistic UI: update local state
+    setUserCollections(prev => prev.map(c =>
+      c.id === collection.id && !c.affinities.some(a => a.id === affinity.id)
+        ? { ...c, affinities: [...c.affinities, affinity] }
+        : c
+    ));
+    try {
+      const updatedAffinityIds = [...collection.affinities.map(a => a.id), affinity.id];
+      await updateCollection(collection.id, { affinityIds: updatedAffinityIds }, user.email);
+      showToast.success(`Added to collection: ${collection.name}`);
+      clearCollectionsCache();
+    } catch (err) {
+      // Revert on error
+      setUserCollections(prev => prev.map(c =>
+        c.id === collection.id
+          ? { ...c, affinities: c.affinities.filter(a => a.id !== affinity.id) }
+          : c
+      ));
+      showToast.error('Failed to add to collection');
+    }
   };
 
   const renderAffinityLibrary = () => {
@@ -263,20 +322,26 @@ const AffinityLibrary = () => {
             ) : (
               <>
                 <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-                  <div className="relative flex-grow">
-                    <input
-                      type="text"
-                      placeholder="Search affinities..."
-                      value={searchTerm}
-                      onChange={handleSearch}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  </div>
+                  <SearchBar value={searchTerm} onChange={handleSearch} />
                 </div>
-                
                 {loading ? (
                   <SkeletonLoader count={3} height={150} />
+                ) : error ? (
+                  <div className="flex flex-col items-center justify-center p-8">
+                    <EmptyStateStyled
+                      type="ERROR"
+                      title="Failed to load affinities"
+                      description={error}
+                      actionButton={
+                        <button
+                          onClick={() => fetchAffinities(true)}
+                          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
+                        >
+                          <FiRefreshCw className="mr-2" /> Retry
+                        </button>
+                      }
+                    />
+                  </div>
                 ) : filteredAffinities.length === 0 ? (
                   <EmptyStateStyled
                     icon="search"
@@ -284,99 +349,24 @@ const AffinityLibrary = () => {
                     description="Try adjusting your search to find what you're looking for."
                   />
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
-                    {filteredAffinities.map(affinity => (
-                      <div 
-                        key={affinity.id}
-                        onClick={() => handleAffinityClick(affinity)}
-                        className={`card-prominent ${selectedAffinity?.id === affinity.id ? 'border-2 border-blue-500' : ''}`}
-                      >
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
-                          <h3 className="text-lg font-semibold text-blue-900">{affinity.name}</h3>
-                          {getStatusBadge(affinity.status)}
-                        </div>
-                        
-                        <p className="text-gray-600 text-sm mb-3">{affinity.definition}</p>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span className="font-medium">Category:</span>
-                            <span className="ml-1">{affinity.category}</span>
-                          </div>
-                          <div>
-                            <span className="font-medium">Type:</span>
-                            <span className="ml-1">{affinity.type}</span>
-                          </div>
-                          <div>
-                            <span className="font-medium">Properties Tagged:</span>
-                            <span className="ml-1">{affinity.propertiesTagged}</span>
-                          </div>
-                          <div>
-                            <span className="font-medium">Properties with Score:</span>
-                            <span className="ml-1">{affinity.propertiesWithScore}</span>
-                          </div>
-                          <div>
-                            <span className="font-medium">Coverage:</span>
-                            <span className="ml-1">{affinity.coverage}%</span>
-                          </div>
-                          {affinity.scoreAvailable && (
-                            <div>
-                              <span className="font-medium">Avg Score:</span>
-                              <span className={`ml-1 ${getScoreClass(affinity.averageScore)}`}>
-                                {affinity.averageScore}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <AffinityList
+                    affinities={filteredAffinities}
+                    selectedAffinity={selectedAffinity}
+                    onSelect={handleAffinityClick}
+                    userCollections={userCollections}
+                    onAddToCollection={handleAddToCollection}
+                  />
                 )}
               </>
             )}
           </div>
-          
           {/* Pagination - Only show for basic search */}
           {!loading && !showAdvanced && filteredAffinities.length > 0 && (
-            <div className="flex justify-center items-center mt-4">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`p-2 rounded-md ${
-                  currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                <FiChevronLeft className="w-5 h-5" />
-              </button>
-              
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1 rounded-md ${
-                    currentPage === page
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-white text-gray-700 hover:bg-gray-50'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-              
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`p-2 rounded-md ${
-                  currentPage === totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                <FiChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           )}
         </div>
         
@@ -420,7 +410,7 @@ const AffinityLibrary = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-2">
             <button
-              onClick={() => setActiveTab('library')}
+              onClick={() => handleTabSwitch('library')}
             className={`flex items-center gap-1 px-3 py-1.5 rounded-md ${
                 activeTab === 'library'
                 ? 'bg-blue-100 text-blue-800 font-medium'
@@ -432,7 +422,7 @@ const AffinityLibrary = () => {
             </button>
           
             <button
-              onClick={() => setActiveTab('collections')}
+              onClick={() => handleTabSwitch('collections')}
             className={`flex items-center gap-1 px-3 py-1.5 rounded-md ${
                 activeTab === 'collections'
                 ? 'bg-blue-100 text-blue-800 font-medium'
@@ -446,7 +436,7 @@ const AffinityLibrary = () => {
       </div>
       
       {activeTab === 'library' ? renderAffinityLibrary() : (
-        <AffinityCollections selectedCollectionId={location.state?.selectedCollectionId} />
+        <AffinityCollections selectedCollectionId={selectedCollectionId} />
       )}
     </div>
   );

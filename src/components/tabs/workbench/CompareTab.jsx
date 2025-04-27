@@ -1,303 +1,153 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FiPrinter } from 'react-icons/fi';
+import { FiPrinter, FiX } from 'react-icons/fi';
 import AffinitySelector from './CompareTab/AffinitySelector';
 import ComparisonGrid from './CompareTab/ComparisonGrid';
 import PrintableView from './CompareTab/PrintableView';
 import { getAffinityPerformance } from '../../../services/apiService';
-import PerformanceMetrics from '../../performance/PerformanceMetrics';
-import { performanceDataShape } from '../../../types/affinityTypes';
 
 const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesError, periodState, onPeriodChange }) => {
   const [selectedAffinities, setSelectedAffinities] = useState([]);
-  const [isPrintView, setIsPrintView] = useState(false);
-  const [comparisonData, setComparisonData] = useState([]);
+  const [showPrintView, setShowPrintView] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedAffinityDetails, setSelectedAffinityDetails] = useState(null);
+  const [performanceData, setPerformanceData] = useState({});
 
-  // Clear selectedAffinityDetails when no affinities are selected
   useEffect(() => {
-    if (selectedAffinities.length === 0) {
-      setSelectedAffinityDetails(null);
-    }
-  }, [selectedAffinities]);
-
-  // Clear selectedAffinityDetails on initial mount
-  useEffect(() => {
-    setSelectedAffinityDetails(null);
-  }, []);
-
-  // Fetch comparison data when period or selections change
-  useEffect(() => {
-    const fetchComparisonData = async () => {
+    const fetchPerformanceData = async () => {
       if (selectedAffinities.length === 0) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
-        const promises = selectedAffinities.map(affinity =>
-          getAffinityPerformance(
-            affinity.id,
-            periodState.year,
-            periodState.quarter
-          )
-        );
+        console.log('Fetching performance data for affinities:', selectedAffinities);
+        console.log('Period state:', periodState);
         
-        const results = await Promise.all(promises);
-        
-        const enrichedData = results.map((result, index) => {
-          const affinity = selectedAffinities[index];
-          const perf = result.data?.[0] || {};
-          const name = affinity.name || perf.affinityName || perf.name || 'Unknown Affinity';
-          return {
-            ...affinity,
-            ...perf,
-            affinityName: name,
-            name,
-            year: periodState.year,
-            quarter: periodState.quarter
-          };
+        const promises = selectedAffinities.map(affinity => {
+          console.log('Fetching for affinity:', affinity.id, affinity.name);
+          return getAffinityPerformance(affinity.id, periodState.year, periodState.quarter);
         });
+
+        const responses = await Promise.all(promises);
+        console.log('Performance data responses:', responses);
         
-        setComparisonData(enrichedData);
+        const newPerformanceData = {};
+
+        responses.forEach((response, index) => {
+          const affinity = selectedAffinities[index];
+          console.log('Processing response for affinity:', affinity.id, response);
+          
+          if (response && response.data && response.data.length > 0) {
+            newPerformanceData[affinity.id] = {
+              ...response.data[0], // Use the first item in the data array
+              affinityName: affinity.name,
+              year: periodState.year,
+              quarter: periodState.quarter
+            };
+          } else {
+            console.warn('No performance data found for affinity:', affinity.id);
+            // Provide default values if no data is found
+            newPerformanceData[affinity.id] = {
+              affinityName: affinity.name,
+              year: periodState.year,
+              quarter: periodState.quarter,
+              averageScore: 0,
+              highestScore: 0,
+              lowestScore: 0,
+              propertiesTagged: 0,
+              propertiesWithScore: 0
+            };
+          }
+        });
+
+        console.log('Processed performance data:', newPerformanceData);
+        setPerformanceData(newPerformanceData);
       } catch (err) {
-        setError('Failed to fetch comparison data');
+        console.error('Error fetching performance data:', err);
+        setError('Failed to fetch performance data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchComparisonData();
-  }, [selectedAffinities, periodState.year, periodState.quarter]);
+    fetchPerformanceData();
+  }, [selectedAffinities, periodState]);
 
-  const handleAffinityClick = (affinity) => {
-    // Only allow clicking if the affinity is in the selected affinities list
-    if (!selectedAffinities.some(a => a.id === affinity.id)) {
-      return;
-    }
-
-    // Ensure all required fields are present with correct types
-    const formattedPerformance = {
-      id: String(affinity.id),
-      affinityId: String(affinity.id),
-      year: periodState.year,
-      quarter: periodState.quarter,
-      clicks: Number(affinity.clicks) || 0,
-      impressions: Number(affinity.impressions) || 0,
-      transactions: Number(affinity.transactions) || 0,
-      gpNet: Number(affinity.gpNet) || 0,
-      dateCreated: affinity.dateCreated || new Date().toISOString(),
-      lastUpdatedDate: affinity.lastUpdatedDate || new Date().toISOString(),
-      affinityName: affinity.name || 'Unknown Affinity'
-    };
-
-    // Validate the data before setting state
-    const isValid = validatePerformanceData(formattedPerformance);
-    if (!isValid) {
-      return;
-    }
-
-    setSelectedAffinityDetails({
-      affinityName: affinity.name,
-      performance: formattedPerformance
-    });
+  const handleAffinitySelect = (selectedAffinitiesArray) => {
+    setSelectedAffinities(selectedAffinitiesArray);
   };
 
-  // Add validation helper function
-  const validatePerformanceData = (data) => {
-    const requiredFields = [
-      'id', 'affinityId', 'year', 'clicks', 'impressions',
-      'transactions', 'gpNet', 'dateCreated', 'lastUpdatedDate', 'affinityName'
-    ];
-    
-    // Check for required fields
-    const hasAllFields = requiredFields.every(field => {
-      const hasField = field in data;
-      if (!hasField) {
-        return false;
-      }
-      return hasField;
-    });
-
-    // Validate data types
-    const typeValidations = {
-      id: typeof data.id === 'string',
-      affinityId: typeof data.affinityId === 'string',
-      year: typeof data.year === 'number',
-      clicks: typeof data.clicks === 'number',
-      impressions: typeof data.impressions === 'number',
-      transactions: typeof data.transactions === 'number',
-      gpNet: typeof data.gpNet === 'number',
-      dateCreated: typeof data.dateCreated === 'string',
-      lastUpdatedDate: typeof data.lastUpdatedDate === 'string',
-      affinityName: typeof data.affinityName === 'string'
-    };
-
-    const hasValidTypes = Object.entries(typeValidations).every(([field, isValid]) => {
-      if (!isValid) {
-        return false;
-      }
-      return isValid;
-    });
-
-    return hasAllFields && hasValidTypes;
+  const handlePrint = () => {
+    setShowPrintView(true);
   };
 
-  // Add data transformation helper
-  const transformPerformanceData = (data) => {
-    return {
-      ...data,
-      id: String(data.id),
-      affinityId: String(data.affinityId),
-      year: Number(data.year),
-      quarter: Number(data.quarter) || null,
-      clicks: Number(data.clicks) || 0,
-      impressions: Number(data.impressions) || 0,
-      transactions: Number(data.transactions) || 0,
-      gpNet: Number(data.gpNet) || 0,
-      dateCreated: data.dateCreated || new Date().toISOString(),
-      lastUpdatedDate: data.lastUpdatedDate || new Date().toISOString(),
-      affinityName: data.affinityName || 'Unknown Affinity'
-    };
+  const handleClosePrint = () => {
+    setShowPrintView(false);
   };
 
-  const handlePrintView = () => {
-    setIsPrintView(true);
-    setTimeout(() => {
-      window.print();
-      setIsPrintView(false);
-    }, 100);
-  };
-
-  const handleModeChange = (mode) => {
-    onPeriodChange({ ...periodState, mode });
-  };
-
-  const handleYearChange = (event) => {
-    const year = parseInt(event.target.value);
-    onPeriodChange({ ...periodState, year });
-  };
-
-  const handleQuarterChange = (event) => {
-    const quarter = parseInt(event.target.value);
-    onPeriodChange({ ...periodState, quarter });
-  };
-
-  const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
-
-  if (isPrintView) {
+  if (showPrintView) {
     return (
-      <PrintableView
-        affinities={comparisonData}
-        periodState={periodState}
-      />
+      <div className="relative">
+        <button
+          onClick={handleClosePrint}
+          className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+        >
+          <FiX className="w-5 h-5" />
+        </button>
+        <PrintableView
+          affinities={selectedAffinities.map(affinity => ({
+            ...affinity,
+            ...performanceData[affinity.id]
+          }))}
+          periodState={periodState}
+        />
+      </div>
     );
   }
 
   return (
-    <div className="p-4 space-y-6">
-      {/* Time Period Selection */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          {/* Mode Selection */}
-          <div className="flex items-center space-x-4">
-            <label className="text-sm font-medium text-gray-700">Compare by:</label>
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={() => handleModeChange('quarter')}
-                className={`px-4 py-2 text-sm rounded-md transition-colors ${
-                  periodState.mode === 'quarter'
-                    ? 'bg-white shadow text-blue-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Quarter
-              </button>
-              <button
-                onClick={() => handleModeChange('year')}
-                className={`px-4 py-2 text-sm rounded-md transition-colors ${
-                  periodState.mode === 'year'
-                    ? 'bg-white shadow text-blue-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Year
-              </button>
-            </div>
-          </div>
-
-          {/* Year Selection */}
-          <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Year:</label>
-            <select
-              value={periodState.year}
-              onChange={handleYearChange}
-              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {years.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Quarter Selection - Only visible in quarter mode */}
-          {periodState.mode === 'quarter' && (
-            <div className="flex items-center space-x-2">
-              <label className="text-sm font-medium text-gray-700">Quarter:</label>
-              <select
-                value={periodState.quarter}
-                onChange={handleQuarterChange}
-                className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value={1}>Q1</option>
-                <option value={2}>Q2</option>
-                <option value={3}>Q3</option>
-                <option value={4}>Q4</option>
-              </select>
-            </div>
-          )}
-        </div>
-
-        {/* Print Button */}
-        <button
-          onClick={handlePrintView}
-          className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          <FiPrinter className="mr-2" />
-          Print
-        </button>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Compare Affinities</h2>
+        {selectedAffinities.length > 0 && (
+          <button
+            onClick={handlePrint}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            <FiPrinter className="w-5 h-5" />
+            <span>Print Report</span>
+          </button>
+        )}
       </div>
 
-      {/* Affinity Selection */}
       <AffinitySelector
         affinities={affinities}
         selectedAffinities={selectedAffinities}
-        onSelect={newSelection => setSelectedAffinities(Array.isArray(newSelection) ? newSelection : [newSelection])}
+        onSelect={handleAffinitySelect}
         loading={affinitiesLoading}
         error={affinitiesError}
       />
 
-      {/* Comparison Grid */}
-      {selectedAffinities.length > 0 && (
+      {loading ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500">Loading performance data...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center py-8">
+          <p className="text-red-500">{error}</p>
+        </div>
+      ) : selectedAffinities.length > 0 ? (
         <ComparisonGrid
-          affinities={comparisonData}
+          affinities={selectedAffinities.map(affinity => ({
+            ...affinity,
+            ...performanceData[affinity.id]
+          }))}
           periodState={periodState}
         />
-      )}
-
-      {/* Performance Metrics */}
-      {selectedAffinityDetails && 
-       selectedAffinities.length > 0 && 
-       selectedAffinities.some(a => a.id === selectedAffinityDetails.performance.affinityId) && (
-        <div className="mt-8">
-          <PerformanceMetrics
-            performance={selectedAffinityDetails.performance}
-            comparisonPerformance={null}
-            properties={{}}
-            metrics={{}}
-          />
+      ) : (
+        <div className="text-center py-8">
+          <p className="text-gray-500">Select affinities to compare</p>
         </div>
       )}
     </div>
@@ -305,16 +155,19 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
 };
 
 CompareTab.propTypes = {
-  affinities: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
-  })).isRequired,
+  affinities: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      category: PropTypes.string
+    })
+  ).isRequired,
   loading: PropTypes.bool,
   error: PropTypes.string,
   periodState: PropTypes.shape({
     mode: PropTypes.oneOf(['quarter', 'year']).isRequired,
     year: PropTypes.number.isRequired,
-    quarter: PropTypes.number
+    quarter: PropTypes.number.isRequired
   }).isRequired,
   onPeriodChange: PropTypes.func.isRequired
 };

@@ -1,0 +1,116 @@
+/* Agent Styles */
+.agent-content {
+  padding: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge.score-high {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge.score-medium {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge.score-low {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.evidence-panel {
+  margin-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.5rem;
+}
+
+.collapsible-header {
+  cursor: pointer;
+}
+
+.collapsible-content {
+  display: none;
+  padding: 0.5rem 0;
+}
+
+.collapsible-header.active .collapsible-content {
+  display: block;
+}
+
+.confidence-indicator {
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background-color: #3b82f6;
+  border-radius: 9999px;
+}
+
+/* Agent Tab Styles */
+.agent-tab {
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.agent-tab:hover {
+  color: #374151;
+  border-bottom-color: #d1d5db;
+}
+
+.agent-tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Agent Content Sections */
+.agent-content > div {
+  margin-bottom: 1.5rem;
+}
+
+.agent-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.agent-content h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.agent-content h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.agent-content p {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .agent-tab {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.75rem;
+  }
+} 

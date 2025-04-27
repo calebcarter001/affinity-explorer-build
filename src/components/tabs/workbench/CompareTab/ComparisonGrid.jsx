@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import MetricRow from './MetricRow';
+import ModernGrid from '../../../common/ModernGrid';
 
 const metrics = [
   { key: 'averageScore', label: 'Average Score', format: 'score' },
@@ -38,79 +40,41 @@ const ComparisonGrid = ({ affinities = [], periodState }) => {
     status: affinity.status || 'Unknown'
   }));
 
+  if (!validatedAffinities.length) {
+    return <div className="p-6 text-center text-gray-500">No affinities to compare.</div>;
+  }
+
+  // Prepare headers
+  const headers = ['Metric', ...validatedAffinities.map(affinity => affinity.name)];
+
+  // Prepare rows
+  const rows = [
+    // Category row
+    ['Category', ...validatedAffinities.map(affinity => affinity.category)],
+    // Status row
+    ['Status', ...validatedAffinities.map(affinity => affinity.status)],
+    // Time period row
+    ['Time Period', ...validatedAffinities.map(() => formatPeriod())],
+    // Metrics rows
+    ...metrics.map(metric => [
+      metric.label,
+      ...validatedAffinities.map(affinity => 
+        metric.format === 'score' 
+          ? formatScore(affinity[metric.key]) 
+          : formatNumber(affinity[metric.key])
+      )
+    ])
+  ];
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Metric
-            </th>
-            {validatedAffinities.map(affinity => (
-              <th
-                key={affinity.id}
-                className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                {affinity.name}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {/* Category Row */}
-          <tr>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Category
-            </td>
-            {validatedAffinities.map(affinity => (
-              <td key={affinity.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {affinity.category}
-              </td>
-            ))}
-          </tr>
-
-          {/* Status Row */}
-          <tr>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Status
-            </td>
-            {validatedAffinities.map(affinity => (
-              <td key={affinity.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {affinity.status}
-              </td>
-            ))}
-          </tr>
-
-          {/* Time Period Row */}
-          <tr>
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Time Period
-            </td>
-            {validatedAffinities.map(affinity => (
-              <td key={affinity.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {formatPeriod()}
-              </td>
-            ))}
-          </tr>
-
-          {/* Metrics Rows */}
-          {metrics.map(metric => (
-            <tr key={metric.key}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {metric.label}
-              </td>
-              {validatedAffinities.map(affinity => (
-                <td key={affinity.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {metric.format === 'score'
-                    ? formatScore(affinity[metric.key])
-                    : formatNumber(affinity[metric.key])}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ModernGrid 
+      headers={headers}
+      rows={rows}
+      className="bg-white"
+      headerCellClassName="text-gray-700"
+      cellClassName="text-gray-700"
+      emptyMessage="No affinities to compare."
+    />
   );
 };
 

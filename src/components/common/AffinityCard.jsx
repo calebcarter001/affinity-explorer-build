@@ -1,76 +1,123 @@
 import React from 'react';
-import { FiStar } from 'react-icons/fi';
 import { useAppContext } from '../../contexts/AppContext';
+import AddToCollectionIcon from './AddToCollectionIcon';
+import Tooltip from './Tooltip';
 
-const AffinityCard = ({ affinity }) => {
-  const { favorites, toggleFavorite, addToRecentlyViewed } = useAppContext();
-  const isFavorite = favorites.includes(affinity.id);
-  
-  const handleClick = () => {
-    addToRecentlyViewed(affinity);
-  };
-  
-  const handleFavoriteClick = (e) => {
-    e.stopPropagation();
-    toggleFavorite(affinity.id);
-  };
+const validateAffinity = (affinity) => {
+  if (!affinity || typeof affinity !== 'object') return false;
+  if (typeof affinity.id !== 'string') return false;
+  if (typeof affinity.name !== 'string') return false;
+  if (typeof affinity.status !== 'string') return false;
+  return true;
+};
+
+/**
+ * AffinityCard
+ * @param {object} affinity - The affinity object to display
+ * @param {array} userCollections - The user's collections (for AddToCollectionIcon)
+ * @param {function} onAddToCollection - Handler for adding affinity to a collection
+ * @param {string} className - Optional extra className
+ * @param {function} onClick - Optional click handler
+ * @param {boolean} compact - Optional compact mode
+ * @param {boolean} selected - Optional selected state
+ */
+const AffinityCard = ({
+  affinity,
+  userCollections,
+  onAddToCollection,
+  className = '',
+  onClick,
+  compact = false,
+  selected = false
+}) => {
+  const { } = useAppContext();
+
+  if (!validateAffinity(affinity)) {
+    console.error('AffinityCard: Invalid affinity object');
+    return null;
+  }
+
+  if (userCollections && !Array.isArray(userCollections)) {
+    console.error('AffinityCard: userCollections must be an array');
+    return null;
+  }
 
   const getStatusBadgeClasses = () => {
-    switch(affinity.status) {
-      case 'Validated':
+    switch (affinity.status.toLowerCase()) {
+      case 'validated':
         return 'bg-green-100 text-green-800';
-      case 'In Development':
+      case 'in development':
         return 'bg-yellow-100 text-yellow-800';
-      case 'Proposed':
-        return 'bg-blue-100 text-blue-800';
-      case 'Deprecated':
+      case 'deprecated':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
-  
+
+  const formatScore = (affinity) => {
+    if (typeof affinity.averageScore === 'number') {
+      return affinity.averageScore.toFixed(2);
+    }
+    if (typeof affinity.score === 'number') {
+      return affinity.score.toFixed(2);
+    }
+    return 'N/A';
+  };
+
+  const formatCoverage = (coverage) => {
+    if (typeof coverage !== 'number') return 'N/A';
+    return `${coverage.toFixed(1)}%`;
+  };
+
   return (
-    <div 
-      className={`card-prominent ${className}`}
-      onClick={handleClick}
+    <div
+      className={`bg-white rounded-lg shadow-sm border ${selected ? 'border-blue-500' : 'border-gray-200'} p-4 ${className} ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+      onClick={onClick}
     >
-      <div className="flex items-center mb-4">
-        <div className="text-2xl mr-3">
-          {affinity.icon || '📋'}
-        </div>
-        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses()}`}>
-          {affinity.status}
-        </span>
-      </div>
-      
-      <h3 className="text-lg font-semibold mb-2">{affinity.name}</h3>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        {affinity.description}
-      </p>
-      
-      <div className="flex justify-between mb-4">
-        <div className="flex flex-col">
-          <span className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-            Score:
-          </span>
-          <span className="font-semibold text-gray-900 dark:text-gray-100">
-            {affinity.score ? `${affinity.score.toFixed(1)}/10` : 'N/A'}
+      <div className="flex items-start justify-between">
+        <div className="flex items-center space-x-2">
+          {affinity.icon && (
+            <img
+              src={affinity.icon}
+              alt={`${affinity.name} icon`}
+              className="w-6 h-6"
+            />
+          )}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClasses()}`}>
+            {affinity.status}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-            Coverage:
-          </span>
-          <span className="font-semibold">
-            {affinity.coverage ? `${affinity.coverage}%` : 'N/A'}
-          </span>
+        <div className="flex items-center space-x-2">
+          {userCollections && (
+            <AddToCollectionIcon
+              affinity={affinity}
+              userCollections={userCollections}
+              onAdd={onAddToCollection}
+            />
+          )}
         </div>
       </div>
+
+      <h3 className="mt-3 text-lg font-semibold text-gray-900">{affinity.name}</h3>
       
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-        {affinity.category}
-      </span>
+      {!compact && (
+        <>
+          {affinity.category && (
+            <p className="mt-1 text-sm text-gray-500">{affinity.category}</p>
+          )}
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <div>
+              <span className="font-medium">Average Score:</span>{' '}
+              <span className="text-gray-600">{formatScore(affinity)}</span>
+            </div>
+            <div>
+              <span className="font-medium">Coverage:</span>{' '}
+              <span className="text-gray-600">{formatCoverage(affinity.coverage)}</span>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

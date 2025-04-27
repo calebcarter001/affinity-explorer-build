@@ -49,26 +49,24 @@ const AffinityDetailView = ({
         </span>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-6 mt-4">
+        {/* Metadata (top-left) */}
         <div>
           <h4 className="font-semibold mb-2">Metadata</h4>
-          <div className="bg-gray-50 p-4 rounded-md h-[156px]">
+          <div className="bg-gray-50 p-4 rounded-md">
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <div className="font-medium">Category:</div>
                 <div>{affinity.category}</div>
               </div>
-              
               <div className="flex justify-between">
                 <div className="font-medium">Type:</div>
                 <div>{affinity.type}</div>
               </div>
-              
               <div className="flex justify-between">
                 <div className="font-medium">Applicable Entities:</div>
                 <div>{affinity.applicableEntities?.join(', ') || 'N/A'}</div>
               </div>
-              
               {affinity.scoreAvailable && (
                 <div className="flex justify-between">
                   <div className="font-medium">Average Score:</div>
@@ -77,20 +75,38 @@ const AffinityDetailView = ({
                   </div>
                 </div>
               )}
-
               <div className="flex justify-between">
                 <div className="font-medium">Created:</div>
                 <div>{new Date(affinity.dateCreated).toLocaleDateString()}</div>
               </div>
-
               <div className="flex justify-between">
                 <div className="font-medium">Last Updated:</div>
                 <div>{new Date(affinity.lastUpdatedDate).toLocaleDateString()}</div>
               </div>
             </div>
           </div>
+        </div>
 
-          <h4 className="font-semibold mb-2 mt-4">Coverage</h4>
+        {/* Usage Guidelines (top-right) */}
+        <div>
+          {showUsageGuidelines && (
+            <>
+              <h4 className="font-semibold mb-2">Usage Guidelines</h4>
+              <div className="bg-gray-50 p-4 rounded-md">
+                <p className="text-sm">
+                  This affinity can be used to score {affinity.applicableEntities?.join(', ') || 'properties'}.
+                  {affinity.scoreAvailable 
+                    ? ' Scores are available and can be used for ranking and filtering.' 
+                    : ' Scores are not yet available for this affinity.'}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Coverage (bottom-left) */}
+        <div>
+          <h4 className="font-semibold mb-2">Coverage</h4>
           <div className="bg-gray-50 p-4 rounded-md">
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -128,25 +144,12 @@ const AffinityDetailView = ({
             </div>
           </div>
         </div>
-        
+
+        {/* Implementation (bottom-right) */}
         <div>
-          {showUsageGuidelines && (
-            <>
-              <h4 className="font-semibold mb-2">Usage Guidelines</h4>
-              <div className="bg-gray-50 p-4 rounded-md h-[156px]">
-                <p className="text-sm">
-                  This affinity can be used to score {affinity.applicableEntities?.join(', ') || 'properties'}.
-                  {affinity.scoreAvailable 
-                    ? ' Scores are available and can be used for ranking and filtering.' 
-                    : ' Scores are not yet available for this affinity.'}
-                </p>
-              </div>
-            </>
-          )}
-          
           {showImplementation && (
             <>
-              <h4 className="font-semibold mb-2 mt-4">Implementation</h4>
+              <h4 className="font-semibold mb-2">Implementation</h4>
               <div className="bg-gray-50 p-4 rounded-md">
                 <p className="text-sm">
                   To implement this affinity in your application, use the API endpoint:

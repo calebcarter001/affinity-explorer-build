@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getLocalRecentlyViewed, addLocalRecentlyViewed, clearLocalRecentlyViewed } from '../utils/recentlyViewed';
+import { getRecentlyViewed, addRecentlyViewed, mergeRecentlyViewed, getAffinities } from '../services/apiService';
 
 const AppContext = createContext();
 
@@ -10,37 +12,70 @@ export const useAppContext = () => {
   return context;
 };
 
-export const AppProvider = ({ children }) => {
+export function AppProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
-  const [affinities, setAffinities] = useState([
-    {
-      id: "1",
-      name: 'Business Traveler',
-      description: 'Properties suitable for business travelers',
-      score: 4.8,
-      status: 'validated'
-    },
-    {
-      id: "2",
-      name: 'Family Friendly',
-      description: 'Properties ideal for family vacations',
-      score: 3.5,
-      status: 'enrichment'
-    },
-    {
-      id: "3",
-      name: 'Luxury Experience',
-      description: 'High-end properties with premium amenities',
-      score: 2.1,
-      status: 'discovery'
+  const [favorites, setFavorites] = useState([]);
+  const [affinities, setAffinities] = useState([]);
+
+  // Load affinities on mount
+  useEffect(() => {
+    async function loadAffinities() {
+      try {
+        const response = await getAffinities();
+        setAffinities(response.data || []);
+      } catch (error) {
+        console.error('Failed to load affinities:', error);
+      }
     }
-  ]);
+    loadAffinities();
+  }, []);
+
+  // Load recently viewed on mount or user change
+  useEffect(() => {
+    async function loadRecentlyViewed() {
+      if (user && user.id) {
+        // Hybrid: merge local and server
+        const localList = getLocalRecentlyViewed();
+        const merged = await mergeRecentlyViewed(user.id, localList);
+        setRecentlyViewed(merged);
+        clearLocalRecentlyViewed();
+      } else {
+        setRecentlyViewed(getLocalRecentlyViewed());
+      }
+    }
+    loadRecentlyViewed();
+  }, [user]);
+
+  // Add to recently viewed (hybrid)
+  const addToRecentlyViewed = async (affinity) => {
+    if (user && user.id) {
+      await addRecentlyViewed(user.id, affinity);
+      const updated = await getRecentlyViewed(user.id);
+      setRecentlyViewed(updated);
+    } else {
+      const updated = addLocalRecentlyViewed(affinity);
+      setRecentlyViewed(updated);
+    }
+  };
+
+  const toggleFavorite = (affinityId) => {
+    setFavorites(prev => {
+      const id = String(affinityId);
+      const exists = prev.includes(id);
+      return exists ? prev.filter(fav => fav !== id) : [...prev, id];
+    });
+  };
 
   const value = {
+    user,
+    setUser,
     recentlyViewed,
-    setRecentlyViewed,
+    addToRecentlyViewed,
     affinities,
-    setAffinities
+    setAffinities,
+    favorites,
+    toggleFavorite
   };
 
   return (
@@ -48,4 +83,4 @@ export const AppProvider = ({ children }) => {
       {children}
     </AppContext.Provider>
   );
-}; 
+} 

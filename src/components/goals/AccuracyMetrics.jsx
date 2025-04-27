@@ -2,6 +2,7 @@ import React from 'react';
 import { FiPieChart, FiTarget } from 'react-icons/fi';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import ModernProgressBar from '../common/ModernProgressBar';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -54,8 +55,8 @@ const AccuracyMetrics = ({ goal }) => {
   const progress = (goal.current / goal.target) * 100;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-lg shadow-md p-2 mb-2">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
           <FiPieChart className="text-purple-500 mr-2" size={20} />
           <h3 className="text-lg font-semibold">Accuracy Metrics</h3>
@@ -66,30 +67,28 @@ const AccuracyMetrics = ({ goal }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <div className="mb-4">
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium text-gray-700">Current Accuracy</span>
-              <span className="text-sm font-medium text-gray-700">{goal.current}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-purple-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="flex flex-col justify-center h-full w-full">
+          <div className="mb-2">
+            <ModernProgressBar
+              progress={progress}
+              color="purple"
+              height="md"
+              showLabel={true}
+              labelPosition="right"
+              className="mb-2"
+            />
           </div>
 
           <div className="text-sm">
-            <div className="mb-2">
+            <div className="mb-1">
               <span className="text-gray-500">Last Updated:</span>
               <span className="ml-1 font-medium">{new Date(goal.lastUpdated).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
 
-        <div className="h-[200px] relative">
+        <div className="h-[160px] w-full flex items-center justify-center">
           <Pie data={chartData} options={chartOptions} />
         </div>
       </div>

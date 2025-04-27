@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FiChevronDown, FiChevronUp, FiMoreVertical, FiSearch, FiChevronLeft, FiChevronRight, FiRefreshCw, FiPrinter } from 'react-icons/fi';
 import { getAffinities, getAffinityPerformance, getProperties, getMetrics } from '../../../services/apiService';
@@ -7,6 +7,11 @@ import { affinityWithPerformanceShape, performanceDataShape } from '../../../typ
 import PerformanceMetrics from '../../performance/PerformanceMetrics';
 import PerformanceTable from '../../performance/PerformanceTable';
 import PrintableView from '../workbench/CompareTab/PrintableView';
+import { useSearchParams } from 'react-router-dom';
+import SearchBar from './PerformanceTabParts/SearchBar';
+import Pagination from './PerformanceTabParts/Pagination';
+import AffinityDetailsPanel from './PerformanceTabParts/AffinityDetailsPanel';
+import { useAppContext } from '../../../contexts/AppContext';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,15 +30,33 @@ const PerformanceTab = () => {
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [selectedAffinityDetails, setSelectedAffinityDetails] = useState(null);
   const [showPrintView, setShowPrintView] = useState(false);
+  const searchTimeout = useRef();
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { addToRecentlyViewed } = useAppContext();
 
-  // Generate years array (current year and 4 years back)
+  // Memoized years and quarters
   const years = useMemo(() => {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: 5 }, (_, i) => currentYear - i);
   }, []);
-
-  // Quarters array
   const quarters = [1, 2, 3, 4];
+
+  // Initialize from URL
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    const urlPage = parseInt(searchParams.get('page') || '1', 10);
+    setSearchTerm(urlSearch);
+    setCurrentPage(urlPage);
+  }, []);
+
+  // Update URL when searchTerm or currentPage changes
+  useEffect(() => {
+    setSearchParams({
+      ...(searchTerm ? { search: searchTerm } : {}),
+      ...(currentPage > 1 ? { page: currentPage } : {})
+    });
+  }, [searchTerm, currentPage, setSearchParams]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,16 +102,23 @@ const PerformanceTab = () => {
     fetchData();
   }, [selectedAffinity, selectedYear, selectedQuarter]);
 
-  // Filter and sort data
+  // Debounce searchTerm
+  useEffect(() => {
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+    return () => clearTimeout(searchTimeout.current);
+  }, [searchTerm]);
+
+  // Memoized filtered and sorted data
   const filteredAndSortedData = useMemo(() => {
     let filtered = performanceData;
-    
-    if (searchTerm) {
+    if (debouncedSearchTerm) {
       filtered = filtered.filter(item => 
-        item.affinityName.toLowerCase().includes(searchTerm.toLowerCase())
+        item.affinityName.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
       );
     }
-    
     return [...filtered].sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) {
         return sortConfig.direction === 'asc' ? -1 : 1;
@@ -98,9 +128,9 @@ const PerformanceTab = () => {
       }
       return 0;
     });
-  }, [performanceData, searchTerm, sortConfig]);
+  }, [performanceData, debouncedSearchTerm, sortConfig]);
 
-  // Paginate data
+  // Memoized paginated data
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredAndSortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -108,35 +138,27 @@ const PerformanceTab = () => {
 
   const totalPages = Math.ceil(filteredAndSortedData.length / ITEMS_PER_PAGE);
 
-  const handleSort = (key) => {
+  // Handlers using useCallback for referential stability
+  const handleSort = useCallback((key) => {
     setSortConfig(prevConfig => ({
       key,
       direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
     }));
-  };
+  }, []);
 
-  const handleAffinityClick = (rowIndex) => {
-    if (loading) {
-      return;
-    }
-    
+  const handleAffinityClick = useCallback((rowIndex) => {
+    if (loading) return;
     setSelectedRowIndex(rowIndex);
     const selectedData = paginatedData[rowIndex];
-    
     if (selectedData) {
       const requiredFields = [
         'id', 'affinityId', 'clicks', 'impressions', 
         'transactions', 'gpNet', 'dateCreated', 'lastUpdatedDate'
       ];
-      
       const missingFields = requiredFields.filter(field => 
         selectedData[field] === undefined || selectedData[field] === null
       );
-      
-      if (missingFields.length > 0) {
-        return;
-      }
-      
+      if (missingFields.length > 0) return;
       const performance = {
         id: selectedData.id,
         affinityId: selectedData.affinityId,
@@ -150,36 +172,37 @@ const PerformanceTab = () => {
         lastUpdatedDate: selectedData.lastUpdatedDate,
         affinityName: selectedData.affinityName
       };
-      
-      if (!performance || typeof performance !== 'object') {
-        return;
-      }
-      
+      if (!performance || typeof performance !== 'object') return;
       const updatedDetails = {
         affinityName: selectedData.affinityName,
         performance: performance
       };
-      
-      if (!updatedDetails.performance || typeof updatedDetails.performance !== 'object') {
-        return;
-      }
-      
+      if (!updatedDetails.performance || typeof updatedDetails.performance !== 'object') return;
       setSelectedAffinityDetails(updatedDetails);
+      if (selectedData.affinity) {
+        addToRecentlyViewed(selectedData.affinity);
+      }
     }
-  };
+  }, [loading, paginatedData, selectedYear, selectedQuarter, addToRecentlyViewed]);
 
-  const handlePrint = () => {
+  const handlePrint = useCallback(() => {
     setShowPrintView(true);
     setTimeout(() => {
       window.print();
       setShowPrintView(false);
     }, 100);
-  };
+  }, []);
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 rounded-lg">
-        <p className="text-red-700">{error}</p>
+      <div className="p-4 bg-red-50 rounded-lg flex flex-col items-center">
+        <p className="text-red-700 mb-2">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
+        >
+          <FiRefreshCw className="mr-2" /> Retry
+        </button>
       </div>
     );
   }
@@ -210,51 +233,29 @@ const PerformanceTab = () => {
       {/* Controls Row */}
       <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 sm:justify-between sm:items-center">
         {/* Search Input */}
-        <div className="relative w-full sm:w-64">
-          <input
-            type="text"
-            placeholder="Search affinities..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-        </div>
-
+        <SearchBar value={searchTerm} onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }} />
         {/* Time Period Controls */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <select
               value={selectedYear}
-              onChange={(e) => {
-                setSelectedYear(Number(e.target.value));
-              }}
+              onChange={(e) => { setSelectedYear(Number(e.target.value)); }}
               className="border rounded px-3 py-1"
             >
               {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
+                <option key={year} value={year}>{year}</option>
               ))}
             </select>
             <select
               value={selectedQuarter}
-              onChange={(e) => {
-                setSelectedQuarter(Number(e.target.value));
-              }}
+              onChange={(e) => { setSelectedQuarter(Number(e.target.value)); }}
               className="border rounded px-3 py-1"
             >
               {quarters.map((quarter) => (
-                <option key={quarter} value={quarter}>
-                  Q{quarter}
-                </option>
+                <option key={quarter} value={quarter}>Q{quarter}</option>
               ))}
             </select>
           </div>
-
           {/* Print Button */}
           <button
             onClick={handlePrint}
@@ -265,7 +266,6 @@ const PerformanceTab = () => {
           </button>
         </div>
       </div>
-
       {/* Grid Section */}
       <div>
         <PerformanceTable
@@ -275,25 +275,22 @@ const PerformanceTab = () => {
           onRowClick={handleAffinityClick}
           selectedRowIndex={selectedRowIndex}
         />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
-
-      {/* Metrics Section */}
-      <div className="mt-8">
-        {!loading && selectedAffinityDetails && 
-         selectedAffinityDetails.performance && 
-         typeof selectedAffinityDetails.performance === 'object' && 
-         Object.keys(selectedAffinityDetails.performance).length > 0 ? (
-          <PerformanceMetrics
-            performance={selectedAffinityDetails.performance}
-            properties={properties}
-            metrics={metrics}
-          />
-        ) : (
-          <div className="text-center p-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">Select an affinity to view detailed metrics</p>
-          </div>
-        )}
-      </div>
+      {/* Details Panel */}
+      {selectedAffinityDetails && (
+        <AffinityDetailsPanel
+          selectedAffinityDetails={selectedAffinityDetails}
+          loading={loading}
+          error={error}
+          properties={properties}
+          metrics={metrics}
+        />
+      )}
     </div>
   );
 };

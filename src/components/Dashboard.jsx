@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiTrendingUp, 
@@ -19,11 +19,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import ProgressTracker from './goals/ProgressTracker';
 import AccuracyMetrics from './goals/AccuracyMetrics';
-import { getDashboardStats, updateFavorites, updateRecentlyViewed } from '../services/apiService';
+import { getDashboardStats, updateFavorites, updateRecentlyViewed, getCollections, updateCollection, clearCollectionsCache, getDashboardConfig } from '../services/apiService';
 import SkeletonLoader from './common/SkeletonLoader';
 import { useToast } from '../contexts/ToastContext';
 import { layout, card, typography, spacing, badge, button } from '../styles/design-system';
 import { useAuth } from '../contexts/AuthContext';
+import AffinityCard from './common/AffinityCard';
+import DashboardSummaryCard from './common/DashboardSummaryCard';
+import { useAppContext } from '../contexts/AppContext';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -33,160 +36,169 @@ const getStatusColor = (progress) => {
   return 'bg-red-500';
 };
 
+// Card for Recently Viewed Affinity
+const RecentlyViewedCard = React.memo(({ 
+  item, 
+  onClick, 
+  userCollections, 
+  onAddToCollection 
+}) => {
+  console.log('RecentlyViewedCard item:', item);
+  return (
+    <AffinityCard
+      affinity={item}
+      onClick={() => onClick(item)}
+      userCollections={userCollections}
+      onAddToCollection={onAddToCollection}
+    />
+  );
+});
+
+// Card for Favorite Collection
+const FavoriteCollectionCard = React.memo(({ collection, onClick }) => (
+  <div
+    onClick={() => onClick(collection)}
+    className={`${card.base} ${card.body} ${card.interactive} ${card.hover} border border-gray-200 hover:border-blue-500 hover:-translate-y-1 cursor-pointer h-[120px] flex flex-col justify-between`}
+    tabIndex={0}
+    role="button"
+    aria-label={`View collection ${collection.name}`}
+    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onClick(collection); }}
+  >
+    <div className="flex items-center justify-between w-full mb-4">
+      <h4 className={typography.h4}>{collection.name}</h4>
+    </div>
+    <div className="flex justify-between items-end">
+      <div className="flex flex-wrap gap-2">
+        {collection.affinities.map((affinity, i) => (
+          <span
+            key={i}
+            className={`${badge.base} ${badge.neutral}`}
+            title={affinity.description}
+          >
+            {affinity.name}
+          </span>
+        ))}
+      </div>
+      <span className="text-xs text-gray-500 ml-2">{collection.affinities.length}</span>
+    </div>
+  </div>
+));
+
+const statMeta = {
+  expansion: {
+    title: 'Expansion Goal',
+    icon: <FiTrendingUp className="text-green-600 mr-2" size={22} />,
+  },
+  accuracy: {
+    title: 'Accuracy Goal',
+    icon: <FiTarget className="text-blue-600 mr-2" size={22} />,
+  },
+  completeness: {
+    title: 'Completeness Score',
+    icon: <FiActivity className="text-purple-600 mr-2" size={22} />,
+  },
+  overall: {
+    title: 'Overall Progress',
+    icon: <FiPieChart className="text-red-600 mr-2" size={22} />,
+  },
+};
+
+function calculateOverallProgress(dashboardConfig) {
+  const weights = {
+    affinityExpansion: 0.4,
+    accuracy: 0.3,
+    completeness: 0.3
+  };
+  const progress = {
+    affinityExpansion: (dashboardConfig.affinityExpansion.current / dashboardConfig.affinityExpansion.target) * 100,
+    accuracy: (dashboardConfig.accuracy.current / dashboardConfig.accuracy.target) * 100,
+    completeness: (dashboardConfig.completeness.current / dashboardConfig.completeness.target) * 100
+  };
+  return Math.round(
+    progress.affinityExpansion * weights.affinityExpansion +
+    progress.accuracy * weights.accuracy +
+    progress.completeness * weights.completeness
+  );
+}
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { user } = useAuth();
+  const { recentlyViewed, addToRecentlyViewed, affinities } = useAppContext();
+  // Helper to get canonical affinity by ID
+  const getCanonicalAffinity = (id) => {
+    // Normalize the ID to ensure consistent format
+    const normalizedId = id.startsWith('aff') ? id : `aff${id}`;
+    return (affinities || []).find(a => String(a.id) === String(normalizedId));
+  };
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState(null);
-  const [recentlyViewedItems, setRecentlyViewedItems] = useState([
-    {
-      id: '1',
-      name: 'Pet-Friendly',
-      description: 'Properties that welcome pets with amenities or policies that accommodate animals.',
-      score: '7.2/10',
-      coverage: '72%',
-      status: 'Active'
-    },
-    {
-      id: '2',
-      name: 'Romantic',
-      description: 'Properties suitable for couples seeking a romantic experience.',
-      score: '6.8/10',
-      coverage: '65%',
-      status: 'Active'
-    },
-    {
-      id: '3',
-      name: 'Family-Friendly',
-      description: 'Properties that cater to families with children offering suitable amenities and activities.',
-      score: '7.9/10',
-      coverage: '81%',
-      status: 'Active'
-    },
-    {
-      id: '4',
-      name: 'Luxury',
-      description: 'High-end properties offering premium amenities, services, and experiences.',
-      score: '8.2/10',
-      coverage: '45%',
-      status: 'Active'
-    }
-  ]);
-  const [favoriteCollections, setFavoriteCollections] = useState([
-    {
-      id: 'summer-getaway',
-      name: 'Summer Getaway Collection',
-      affinities: [
-        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' },
-        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
-        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' }
-      ],
-      isFavorite: true
-    },
-    {
-      id: 'urban-exploration',
-      name: 'Urban Exploration Bundle',
-      affinities: [
-        { name: 'Historical', description: 'Properties with historical significance' },
-        { name: 'Luxury', description: 'High-end properties offering premium amenities' },
-        { name: 'Romantic', description: 'Properties suitable for couples' }
-      ],
-      isFavorite: true
-    },
-    {
-      id: 'family-trip',
-      name: 'Family Trip Essentials',
-      affinities: [
-        { name: 'Family-Friendly', description: 'Properties that cater to families with children' },
-        { name: 'Pet-Friendly', description: 'Properties that welcome pets' },
-        { name: 'Nature Retreat', description: 'Properties situated in natural surroundings' },
-        { name: 'Beach Access', description: 'Properties with direct or convenient access to beaches' }
-      ],
-      isFavorite: true
-    }
-  ]);
-  const [goalData, setGoalData] = useState({
-    affinityExpansion: {
-      current: 10,
-      target: 50,
-      status: 'in_progress',
-      lastUpdated: '2024-03-20'
-    },
-    accuracy: {
-      current: 20,
-      target: 95,
-      status: 'needs_improvement',
-      lastUpdated: '2024-03-20',
-      validationStrategies: [
-        { name: 'Automated Validation', contribution: 8 },
-        { name: 'Manual Review', contribution: 7 },
-        { name: 'User Feedback', contribution: 5 }
-      ]
-    },
-    completeness: {
-      current: 45,
-      target: 100,
-      status: 'in_progress',
-      lastUpdated: '2024-03-20',
-      subScores: [
-        { name: 'Data Quality', score: 40 },
-        { name: 'Coverage', score: 50 },
-        { name: 'Consistency', score: 45 }
-      ]
-    }
-  });
+  const [dashboardConfig, setDashboardConfig] = useState(null);
+  const [userCollections, setUserCollections] = useState([]);
+  const [selectedStat, setSelectedStat] = useState('expansion'); // 'expansion', 'accuracy', 'completeness', 'overall'
+  const RECENTLY_VIEWED_PER_PAGE = 4;
+  const [recentlyViewedPage, setRecentlyViewedPage] = useState(1);
+  const recentlyViewedTotalPages = Math.ceil(recentlyViewed.length / RECENTLY_VIEWED_PER_PAGE);
+  const paginatedRecentlyViewed = recentlyViewed.slice(
+    (recentlyViewedPage - 1) * RECENTLY_VIEWED_PER_PAGE,
+    recentlyViewedPage * RECENTLY_VIEWED_PER_PAGE
+  );
+
+  // Pagination for Your Collections
+  const COLLECTIONS_PER_PAGE = 4;
+  const [collectionsPage, setCollectionsPage] = useState(1);
+  const collectionsTotalPages = Math.ceil(userCollections.length / COLLECTIONS_PER_PAGE);
+  const paginatedUserCollections = userCollections.slice(
+    (collectionsPage - 1) * COLLECTIONS_PER_PAGE,
+    collectionsPage * COLLECTIONS_PER_PAGE
+  );
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchDashboardConfig = async () => {
       setLoading(true);
       try {
-        const data = await getDashboardStats();
-        if (!data) throw new Error('No data received');
-        setStats(data);
+        const config = await getDashboardConfig();
+        // Type and error checking
+        if (!config || typeof config !== 'object') throw new Error('Invalid dashboard config');
+        if (!config.affinityExpansion || !config.accuracy || !config.completeness) throw new Error('Missing goal data');
+        setDashboardConfig(config);
       } catch (err) {
-        console.error('Failed to fetch dashboard stats:', err);
-        setStats(null);
+        console.error('Failed to fetch dashboard config:', err);
+        setDashboardConfig(null);
       } finally {
         setLoading(false);
       }
     };
-    
-    fetchStats();
+    fetchDashboardConfig();
   }, []);
 
-  const handleAffinityClick = async (affinity) => {
-    try {
-      // Optimistically update recently viewed items
-      const updatedItems = [affinity, ...recentlyViewedItems.filter(item => item.id !== affinity.id)].slice(0, 4);
-      setRecentlyViewedItems(updatedItems);
+  useEffect(() => {
+    const fetchUserCollections = async () => {
+      if (!user?.email) return;
+      try {
+        const collections = await getCollections(user.email);
+        console.log('Fetched collections:', collections);
+        setUserCollections(collections);
+      } catch (err) {
+        showToast.error('Failed to load collections');
+        console.error('Error loading collections:', err);
+      }
+    };
+    fetchUserCollections();
+  }, [user, showToast]);
 
-      // Navigate to the affinity
-      navigate('/affinities', { 
-        state: { 
-          selectedAffinityId: affinity.id,
-          source: 'dashboard',
-          view: 'library',  // Ensure library tab is active
-          affinity: {  // Pass full affinity data to avoid loading delay
-            id: affinity.id,
-            name: affinity.name,
-            description: affinity.description,
-            score: parseFloat(affinity.score),
-            coverage: parseInt(affinity.coverage),
-            status: affinity.status
-          }
-        } 
-      });
-
-      // Update the backend
-      await updateRecentlyViewed(affinity.id);
-    } catch (error) {
-      // Revert on failure
-      setRecentlyViewedItems(recentlyViewedItems);
-      showToast('error', 'Failed to update recently viewed items');
-    }
+  const handleAffinityClick = (affinity) => {
+    addToRecentlyViewed(affinity);
+    
+    // Ensure consistent ID format
+    const normalizedId = affinity.id.startsWith('aff') ? affinity.id : `aff${affinity.id}`;
+    
+    navigate('/affinities', {
+      state: {
+        view: 'library',
+        selectedAffinityId: normalizedId
+      }
+    });
   };
 
   const handleCollectionClick = (collection) => {
@@ -213,47 +225,26 @@ const Dashboard = () => {
     }
   };
 
-  const handleFavoriteClick = async (collection, e) => {
-    e.stopPropagation(); // Prevent collection click from firing
+  const handleAddToCollection = async (collection, affinity) => {
+    setUserCollections(prev => prev.map(c =>
+      c.id === collection.id && !c.affinities.some(a => a.id === affinity.id)
+        ? { ...c, affinities: [...c.affinities, affinity] }
+        : c
+    ));
     try {
-      // Optimistically update UI
-      const updatedCollections = favoriteCollections.map(c => 
-        c.id === collection.id ? { ...c, isFavorite: !c.isFavorite } : c
-      );
-      setFavoriteCollections(updatedCollections);
-
-      // Update backend
-      await updateFavorites(collection.id, !collection.isFavorite);
-      showToast('success', `Collection ${!collection.isFavorite ? 'added to' : 'removed from'} favorites`);
-    } catch (error) {
-      // Revert on failure
-      setFavoriteCollections(favoriteCollections);
-      showToast('error', 'Failed to update favorites');
+      const updatedAffinityIds = [...collection.affinities.map(a => a.id), affinity.id];
+      await updateCollection(collection.id, { affinityIds: updatedAffinityIds }, user.email);
+      showToast.success(`Added to collection: ${collection.name}`);
+      clearCollectionsCache();
+    } catch (err) {
+      setUserCollections(prev => prev.map(c =>
+        c.id === collection.id
+          ? { ...c, affinities: c.affinities.filter(a => a.id !== affinity.id) }
+          : c
+      ));
+      showToast.error('Failed to add to collection');
     }
   };
-
-  // Calculate overall progress
-  const calculateOverallProgress = () => {
-    const weights = {
-      affinityExpansion: 0.4,
-      accuracy: 0.3,
-      completeness: 0.3
-    };
-
-    const progress = {
-      affinityExpansion: (goalData.affinityExpansion.current / goalData.affinityExpansion.target) * 100,
-      accuracy: (goalData.accuracy.current / goalData.accuracy.target) * 100,
-      completeness: (goalData.completeness.current / goalData.completeness.target) * 100
-    };
-
-    return Math.round(
-      progress.affinityExpansion * weights.affinityExpansion +
-      progress.accuracy * weights.accuracy +
-      progress.completeness * weights.completeness
-    );
-  };
-
-  const filteredFavoriteCollections = favoriteCollections.filter(c => c.ownerId === user?.email);
 
   if (loading) {
     return (
@@ -269,7 +260,7 @@ const Dashboard = () => {
     );
   }
 
-  if (!stats) {
+  if (!dashboardConfig) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50" data-testid="error-state">
         <div className="text-center">
@@ -290,7 +281,7 @@ const Dashboard = () => {
     );
   }
 
-  if (stats.total === 0) {
+  if (dashboardConfig.total === 0) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50">
         <div className="text-center">
@@ -311,7 +302,7 @@ const Dashboard = () => {
   }
 
   // Full completion state
-  if (stats.total > 0 && stats.completed === stats.total) {
+  if (dashboardConfig.total > 0 && dashboardConfig.completed === dashboardConfig.total) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 bg-gray-50">
         <div className="text-center">
@@ -327,7 +318,10 @@ const Dashboard = () => {
   }
 
   // Calculate completion percentage
-  const completionPercentage = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+  const completionPercentage = dashboardConfig.total > 0 ? Math.round((dashboardConfig.completed / dashboardConfig.total) * 100) : 0;
+
+  console.log('Recently Viewed Items:', recentlyViewed);
+  console.log('User Collections:', userCollections);
 
   return (
     <div className={`${layout.container} ${spacing.section}`}>
@@ -339,146 +333,94 @@ const Dashboard = () => {
         </div>
         <div className={`${layout.flex.base} ${spacing.inline} ${typography.small}`}>
           <span className="text-gray-500">Last updated:</span>
-          <span className="font-medium">{goalData.affinityExpansion.lastUpdated}</span>
+          <span className="font-medium">{dashboardConfig.affinityExpansion.lastUpdated}</span>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
-        {/* Affinity Expansion Goal */}
-        <div className={`${card.base} ${card.body}`}>
-          <div className={layout.flex.between}>
-            <div className={layout.flex.base}>
-              <FiTrendingUp className="text-green-500 mr-2" />
-              <h3 className={typography.h4}>Affinity Expansion Goal</h3>
-            </div>
-            <span className="text-sm text-green-600">+8%</span>
-          </div>
-          <p className="text-3xl font-bold mt-2">{goalData.affinityExpansion.current}%</p>
-          <p className={typography.small}>Target: {goalData.affinityExpansion.target}%</p>
-        </div>
-
-        {/* Accuracy Goal */}
-        <div className={`${card.base} ${card.body}`}>
-          <div className={layout.flex.between}>
-            <div className={layout.flex.base}>
-              <FiTarget className="text-blue-500 mr-2" />
-              <h3 className={typography.h4}>Accuracy Goal</h3>
-            </div>
-            <span className="text-sm text-blue-600">+3%</span>
-          </div>
-          <p className="text-3xl font-bold mt-2">{goalData.accuracy.current}%</p>
-          <p className={typography.small}>Target: {goalData.accuracy.target}%</p>
-        </div>
-
-        {/* Completeness Score */}
-        <div className={`${card.base} ${card.body}`}>
-          <div className={layout.flex.between}>
-            <div className={layout.flex.base}>
-              <FiActivity className="text-purple-500 mr-2" />
-              <h3 className={typography.h4}>Completeness Score</h3>
-            </div>
-            <span className="text-sm text-purple-600">+5%</span>
-          </div>
-          <p className="text-3xl font-bold mt-2">{goalData.completeness.current}%</p>
-          <p className={typography.small}>Target: {goalData.completeness.target}%</p>
-        </div>
-
-        {/* Overall Progress */}
-        <div className={`${card.base} ${card.body}`}>
-          <div className={layout.flex.between}>
-            <div className={layout.flex.base}>
-              <FiPieChart className="text-indigo-500 mr-2" />
-              <h3 className={typography.h4}>Overall Progress</h3>
-            </div>
-            <span className="text-sm text-indigo-600">+6%</span>
-          </div>
-          <p className="text-3xl font-bold mt-2">{calculateOverallProgress()}%</p>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-            <div 
-              className={`h-2.5 rounded-full ${getStatusColor(calculateOverallProgress())}`}
-              style={{ width: `${calculateOverallProgress()}%` }}
-            ></div>
-          </div>
-        </div>
-      </div>
+      <StatsGrid
+        dashboardConfig={dashboardConfig}
+        calculateOverallProgress={() => calculateOverallProgress(dashboardConfig)}
+        selectedStat={selectedStat}
+        setSelectedStat={setSelectedStat}
+      />
 
       {/* Main Content Grid */}
+      <div className="mt-6">
+        <div className="flex items-center mb-3">
+          {statMeta[selectedStat].icon}
+          <h2 className="text-xl font-bold text-gray-900">{statMeta[selectedStat].title}</h2>
+        </div>
+        {selectedStat === 'accuracy' ? (
+          <AccuracyMetrics goal={dashboardConfig.accuracy} />
+        ) : (
+          <ProgressTracker
+            goal={
+              selectedStat === 'expansion'
+                ? dashboardConfig.affinityExpansion
+                : selectedStat === 'completeness'
+                ? dashboardConfig.completeness
+                : dashboardConfig.affinityExpansion // fallback for 'overall', can be customized
+            }
+          />
+        )}
+      </div>
       <div className={layout.grid.base}>
-        {/* Progress Tracking */}
-        <div className={`${card.base} ${card.body}`}>
-          <h3 className={typography.h3}>Progress Tracking</h3>
-          <ProgressTracker goal={goalData.affinityExpansion} />
-        </div>
-
-        {/* Accuracy Metrics */}
-        <div className={`${card.base} ${card.body}`}>
-          <h3 className={typography.h3}>Accuracy Metrics</h3>
-          <AccuracyMetrics goal={goalData.accuracy} />
-        </div>
-
         {/* Recently Viewed */}
-        <div className={`${card.base} ${card.body}`}>
-          <h3 className={typography.h3}>Recently Viewed</h3>
-          <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
-            {recentlyViewedItems.map((item, index) => (
-              <div 
-                key={index}
-                onClick={() => handleAffinityClick(item)}
-                className={`${card.base} ${card.body} ${card.interactive} ${card.hover} border border-gray-200 hover:border-blue-500 hover:-translate-y-1`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <h4 className={typography.h4}>{item.name}</h4>
-                  <span className={`${badge.base} ${badge.info}`}>
-                    {item.status}
-                  </span>
-                </div>
-                <p className={`${typography.body} mt-2`}>{item.description}</p>
-                <div className="flex items-center justify-between mt-4">
-                  <div className="text-sm text-gray-600">
-                    <span>Score: </span>
-                    <span className="font-medium">{item.score}</span>
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    <span>Coverage: </span>
-                    <span className="font-medium">{item.coverage}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+        <div className={`${card.base} compact ${card.body} py-3 px-3`}>
+          <h3 className="text-base font-semibold mb-2">Recently Viewed</h3>
+          <div className={`${layout.grid.base} ${layout.grid.cols4} gap-2`}>
+            {paginatedRecentlyViewed.map((item, index) => {
+              const canonical = getCanonicalAffinity(item.id);
+              if (!canonical) return null; // skip if not found
+              return (
+                <RecentlyViewedCard
+                  key={canonical.id || index}
+                  item={canonical}
+                  onClick={handleAffinityClick}
+                  userCollections={userCollections}
+                  onAddToCollection={handleAddToCollection}
+                />
+              );
+            })}
           </div>
+          {/* Pagination controls for recently viewed */}
+          {recentlyViewed.length > RECENTLY_VIEWED_PER_PAGE && (
+            <div className="flex justify-center mt-2">
+              <button onClick={() => setRecentlyViewedPage(p => Math.max(1, p-1))} disabled={recentlyViewedPage === 1} className="px-2 py-1 mx-1 rounded bg-gray-100">Prev</button>
+              <span className="px-2">Page {recentlyViewedPage} of {recentlyViewedTotalPages}</span>
+              <button onClick={() => setRecentlyViewedPage(p => Math.min(recentlyViewedTotalPages, p+1))} disabled={recentlyViewedPage === recentlyViewedTotalPages} className="px-2 py-1 mx-1 rounded bg-gray-100">Next</button>
+            </div>
+          )}
         </div>
-
-        {/* Favorite Collections */}
-        <div className={`${card.base} ${card.body}`}>
-          <h3 className={typography.h3}>Favorite Collections</h3>
-          <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
-            {filteredFavoriteCollections.map((collection, index) => (
-              <div 
-                key={index}
-                onClick={() => handleCollectionClick(collection)}
-                className={`${card.base} ${card.body} ${card.interactive} ${card.hover} border border-gray-200 hover:border-blue-500 hover:-translate-y-1`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <h4 className={typography.h4}>{collection.name}</h4>
-                  <span className={`${badge.base} ${badge.info}`}>
-                    Active
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {collection.affinities.map((affinity, i) => (
-                    <span 
-                      key={i}
-                      className={`${badge.base} ${badge.neutral}`}
-                      title={affinity.description}
-                    >
-                      {affinity.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+        {/* Your Collections */}
+        <div className={`${card.base} compact ${card.body} py-3 px-3`}>
+          <h3 className="text-base font-semibold mb-2">Your Collections</h3>
+          <div className={`${layout.grid.base} ${layout.grid.cols4}`}> 
+            {paginatedUserCollections.length === 0 ? (
+              <div className="text-gray-500 col-span-4">No collections found.</div>
+            ) : (
+              paginatedUserCollections.map((collection, index) => (
+                <FavoriteCollectionCard
+                  key={collection.id || index}
+                  collection={{
+                    ...collection,
+                    affinities: (collection.affinities || []).map(a => getCanonicalAffinity(a.id)).filter(Boolean)
+                  }}
+                  onClick={handleCollectionClick}
+                  compact
+                />
+              ))
+            )}
           </div>
+          {/* Pagination controls for collections */}
+          {userCollections.length > COLLECTIONS_PER_PAGE && (
+            <div className="flex justify-center mt-2">
+              <button onClick={() => setCollectionsPage(p => Math.max(1, p-1))} disabled={collectionsPage === 1} className="px-2 py-1 mx-1 rounded bg-gray-100">Prev</button>
+              <span className="px-2">Page {collectionsPage} of {collectionsTotalPages}</span>
+              <button onClick={() => setCollectionsPage(p => Math.min(collectionsTotalPages, p+1))} disabled={collectionsPage === collectionsTotalPages} className="px-2 py-1 mx-1 rounded bg-gray-100">Next</button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -501,5 +443,118 @@ const Dashboard = () => {
     </div>
   );
 };
+
+// Stats Grid Subcomponent
+const StatsGrid = React.memo(({ dashboardConfig, calculateOverallProgress, selectedStat, setSelectedStat }) => (
+  <div className="flex flex-row gap-4 w-full justify-center items-center">
+    <DashboardSummaryCard
+      icon={<FiTrendingUp />}
+      title="Expansion Goal"
+      percentChange={8}
+      currentValue={dashboardConfig.affinityExpansion.current}
+      targetValue={50}
+      targetLabel="Target: 50 Affinities"
+      color="green"
+      selected={selectedStat === 'expansion'}
+      onClick={() => setSelectedStat('expansion')}
+      percentChangeSmall
+    />
+    <DashboardSummaryCard
+      icon={<FiTarget />}
+      title="Accuracy Goal"
+      percentChange={3}
+      currentValue={dashboardConfig.accuracy.current}
+      targetValue={75}
+      targetLabel="Target: 75%"
+      color="blue"
+      selected={selectedStat === 'accuracy'}
+      onClick={() => setSelectedStat('accuracy')}
+      percentChangeSmall
+    />
+    <DashboardSummaryCard
+      icon={<FiActivity />}
+      title="Completeness Score"
+      percentChange={5}
+      currentValue={dashboardConfig.completeness.current}
+      targetValue={85}
+      targetLabel="Target: 85%"
+      color="purple"
+      selected={selectedStat === 'completeness'}
+      onClick={() => setSelectedStat('completeness')}
+      percentChangeSmall
+    />
+    <DashboardSummaryCard
+      icon={<FiPieChart />}
+      title="Overall Progress"
+      percentChange={6}
+      currentValue={calculateOverallProgress(dashboardConfig)}
+      targetValue={100}
+      targetLabel="Target: 100"
+      color="red"
+      selected={selectedStat === 'overall'}
+      onClick={() => setSelectedStat('overall')}
+      percentChangeSmall
+    />
+  </div>
+));
+
+// Main Content Grid Subcomponent
+const MainContentGrid = React.memo(({
+  layout, card, typography, ProgressTracker, dashboardConfig, AccuracyMetrics, recentlyViewedItems, handleAffinityClick, handleCollectionClick, userCollections, handleAddToCollection
+}) => (
+  <div className={layout.grid.base}>
+    {/* Progress Tracking */}
+    <div className={`${card.base} compact ${card.body} py-3 px-3`}>
+      <h3 className="text-base font-semibold mb-2">Progress Tracking</h3>
+      <ProgressTracker goal={dashboardConfig.affinityExpansion} compact />
+    </div>
+    {/* Accuracy Metrics */}
+    <div className={`${card.base} compact ${card.body} py-2 px-3`} style={{ minHeight: 100 }}>
+      <AccuracyMetrics goal={dashboardConfig.accuracy} compact />
+    </div>
+    {/* Recently Viewed */}
+    <div className={`${card.base} compact ${card.body} py-3 px-3`}>
+      <h3 className="text-base font-semibold mb-2">Recently Viewed</h3>
+      <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
+        {recentlyViewedItems.map((item, index) => {
+          const score = typeof item.score === 'string' ? parseFloat(item.score) : item.score;
+          const coverage = typeof item.coverage === 'string' ? parseFloat(item.coverage) : item.coverage;
+          const affinity = { ...item, score, coverage };
+          return (
+            <AffinityCard
+              key={item.id || index}
+              affinity={affinity}
+              userCollections={userCollections}
+              onAddToCollection={handleAddToCollection}
+              onClick={() => handleAffinityClick(affinity)}
+              compact
+            />
+          );
+        })}
+      </div>
+    </div>
+    {/* Your Collections */}
+    <div className={`${card.base} compact ${card.body} py-3 px-3`}>
+      <h3 className="text-base font-semibold mb-2">Your Collections</h3>
+      <div className={`${layout.grid.base} ${layout.grid.cols4}`}>
+        {userCollections.length === 0 ? (
+          <div className="text-gray-500 col-span-4">No collections found.</div>
+        ) : (
+          userCollections.map((collection, index) => (
+            <FavoriteCollectionCard
+              key={collection.id || index}
+              collection={{
+                ...collection,
+                affinities: (collection.affinities || []).map(a => getCanonicalAffinity(a.id)).filter(Boolean)
+              }}
+              onClick={handleCollectionClick}
+              compact
+            />
+          ))
+        )}
+      </div>
+    </div>
+  </div>
+));
 
 export default Dashboard; 

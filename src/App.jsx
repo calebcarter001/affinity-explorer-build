@@ -20,6 +20,8 @@ import HelpSupport from './components/tabs/HelpSupport';
 import Login from './components/auth/Login';
 import AnalyticsDashboard from './components/admin/AnalyticsDashboard';
 import Workbench from './components/tabs/Workbench';
+import { AffinityDataProvider } from './contexts/AffinityDataContext';
+import './styles/agents.css';
 
 // Protected route component
 const ProtectedRoute = ({ children, requiredPermissions = [] }) => {
@@ -85,119 +87,121 @@ const App = () => {
     <Router>
       <AuthProvider>
         <ToastProvider>
-          <AppProvider>
-            <div className="flex min-h-screen bg-gray-100">
-              <div className="fixed inset-y-0 left-0 z-30 w-64 transition duration-300 transform bg-[#00355F] overflow-y-auto">
-                <Sidebar />
+          <AffinityDataProvider>
+            <AppProvider>
+              <div className="flex min-h-screen bg-gray-100">
+                <div className="fixed inset-y-0 left-0 z-30 w-64 transition duration-300 transform bg-[#00355F] overflow-y-auto">
+                  <Sidebar />
+                </div>
+                <div className="flex-1 ml-64">
+                  <Routes>
+                    <Route path="/login" element={<Login />} />
+                    
+                    <Route path="/" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <Dashboard />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/dashboard" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <Dashboard />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/affinities" element={
+                      <ProtectedRoute requiredPermissions={['read']}>
+                        <AppLayout>
+                          <AffinityLibrary />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/scoring" element={
+                      <ProtectedRoute requiredPermissions={['read']}>
+                        <AppLayout>
+                          <ScoringExplorer />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/agents" element={
+                      <ProtectedRoute requiredPermissions={['read', 'write']}>
+                        <AppLayout>
+                          <AgentView />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/lifecycle-tracker" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <LifecycleTracker />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/combine" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <AffinityCombination />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/implementation" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <ImplementationGuide />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/reports" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <ReportsAnalytics />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/settings" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <Settings />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/help" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <HelpSupport />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/workbench" element={
+                      <ProtectedRoute>
+                        <AppLayout>
+                          <Workbench />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/analytics" element={
+                      <ProtectedRoute permissions={['admin']}>
+                        <AppLayout>
+                          <AnalyticsDashboard />
+                        </AppLayout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </Routes>
+                </div>
               </div>
-              <div className="flex-1 ml-64">
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  
-                  <Route path="/" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Dashboard />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Dashboard />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/affinities" element={
-                    <ProtectedRoute requiredPermissions={['read']}>
-                      <AppLayout>
-                        <AffinityLibrary />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/scoring" element={
-                    <ProtectedRoute requiredPermissions={['read']}>
-                      <AppLayout>
-                        <ScoringExplorer />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/agents" element={
-                    <ProtectedRoute requiredPermissions={['read', 'write']}>
-                      <AppLayout>
-                        <AgentView />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/lifecycle-tracker" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <LifecycleTracker />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/combine" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <AffinityCombination />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/implementation" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <ImplementationGuide />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/reports" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <ReportsAnalytics />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/settings" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Settings />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/help" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <HelpSupport />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/workbench" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Workbench />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/analytics" element={
-                    <ProtectedRoute permissions={['admin']}>
-                      <AppLayout>
-                        <AnalyticsDashboard />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="*" element={<Navigate to="/" />} />
-                </Routes>
-              </div>
-            </div>
-          </AppProvider>
+            </AppProvider>
+          </AffinityDataProvider>
         </ToastProvider>
       </AuthProvider>
     </Router>

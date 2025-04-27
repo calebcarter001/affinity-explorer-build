@@ -5,7 +5,7 @@ import PerformanceTable from '../components/performance/PerformanceTable';
 const mockPerformanceData = [
   {
     id: '1',
-    affinityId: 'aff1',
+    affinityId: '1',
     affinityName: 'High Value Customers',
     year: 2024,
     clicks: 1500,
@@ -17,7 +17,7 @@ const mockPerformanceData = [
   },
   {
     id: '2',
-    affinityId: 'aff2',
+    affinityId: '2',
     affinityName: 'Frequent Shoppers',
     year: 2024,
     clicks: 2000,
