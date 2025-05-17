@@ -1,0 +1,197 @@
+[
+  {
+    "id": "historical_journey",
+    "name": "Historical Journey",
+    "description": "Destinations rich in history and heritage, featuring numerous historical landmarks, museums, and cultural monuments that showcase the past.",
+    "keyCharacteristics": [
+      "Weighted count of UNESCO & national heritage sites",
+      "Number of history museums & exhibits",
+      "City age & historical significance index",
+      "Preservation level of old town districts",
+      "Frequency of historical tours available"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.25×heritage_site_index + 0.20×museum_count + 0.20×historic_district_score + 0.15×preservation_score + 0.20×tour_frequency",
+    "primaryDataSources": [
+      "UNESCO World Heritage API",
+      "Google Places & Reviews (museums)",
+      "National heritage registers",
+      "Tripadvisor/Viator historical tour listings",
+      "City archival records"
+    ],
+    "category": "Culture & Heritage",
+    "typicalTravelerPersona": "History buffs, cultural travelers",
+    "popularity": "High"
+  },
+  {
+    "id": "beach_paradise",
+    "name": "Beach Paradise",
+    "description": "Coastal destinations known for beautiful beaches, clear waters, and seaside relaxation opportunities under the sun.",
+    "keyCharacteristics": [
+      "Beach quality index (Blue Flag awards + sand/coast cleanliness scores)",
+      "Coastal proximity & shoreline length per km²",
+      "Availability & diversity of water-sports operators (with ratings)",
+      "Monthly beach-day climate favorability (temp × low precipitation)",
+      "Infrastructure score (lifeguards per km, beach-accessible transport)"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.30×beach_quality + 0.25×coastal_proximity + 0.20×water_sport_facilities + 0.15×climate_favorability + 0.10×infrastructure_score",
+    "primaryDataSources": [
+      "Blue Flag (Foundation for Environmental Education) beach listings",
+      "Satellite coastline data",
+      "Local tourism boards (water-sports info)",
+      "NOAA climate normals",
+      "Local government beach facilities data"
+    ],
+    "category": "Leisure & Relaxation",
+    "typicalTravelerPersona": "Sunseekers, resort vacationers",
+    "popularity": "High"
+  },
+  {
+    "id": "cultural_immersion",
+    "name": "Cultural Immersion",
+    "description": "Places where visitors can deeply engage with local cultures through language, traditions, and everyday life, often with diverse ethnic communities.",
+    "keyCharacteristics": [
+      "Diversity index of active languages & ethnic groups",
+      "Count of cultural festivals and events",
+      "Availability of homestays or community-based tourism",
+      "Intangible heritage elements (music, crafts, cuisine) present",
+      "Tourist participation in local classes/workshops"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.25×language_ethnicity_diversity + 0.20×festival_count + 0.20×homestay_availability + 0.20×intangible_heritage_index + 0.15×workshop_participation",
+    "primaryDataSources": [
+      "Ethnologue language data",
+      "UNESCO Intangible Heritage lists",
+      "OTA homestay listings",
+      "Event calendars",
+      "Travel experience platforms (cooking classes, craft workshops)"
+    ],
+    "category": "Culture & Heritage",
+    "typicalTravelerPersona": "Experiential travelers, anthropologists at heart",
+    "popularity": "Medium"
+  },
+  {
+    "id": "nature_escape",
+    "name": "Nature Escape",
+    "description": "Retreats into natural environments with abundant greenery, parks, and tranquil landscapes, away from urban sprawl.",
+    "keyCharacteristics": [
+      "Proximity to protected areas & national parks",
+      "Green space per capita (urban parks, forests)",
+      "Biodiversity count (species richness)",
+      "Fresh air and water quality index",
+      "Availability of nature trails and scenic viewpoints"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.30×park_proximity + 0.20×green_space_area + 0.20×biodiversity_index + 0.15×air_water_quality + 0.15×trail_viewpoint_count",
+    "primaryDataSources": [
+      "World Database on Protected Areas (WDPA)",
+      "GBIF biodiversity data",
+      "Environmental Quality indices (AQI, water)",
+      "OpenStreetMap (parks/trails)",
+      "National park visitor data"
+    ],
+    "category": "Nature & Outdoors",
+    "typicalTravelerPersona": "Nature lovers, tranquility seekers",
+    "popularity": "High"
+  },
+  {
+    "id": "adventure_hub",
+    "name": "Adventure Hub",
+    "description": "Regions offering a high concentration of adventure sports and outdoor adrenaline activities (e.g. hiking, rafting, extreme sports).",
+    "keyCharacteristics": [
+      "Terrain ruggedness index (elevation variance)",
+      "Number of adventure tour operators (rafting, climbing, etc.)",
+      "Count of extreme sports events or sites (bungee, skydive)",
+      "Accessibility of outdoor adventure spots",
+      "Safety record for adventure sports"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.30×terrain_ruggedness + 0.25×operator_density + 0.20×extreme_event_count + 0.15×accessibility_index + 0.10×safety_record",
+    "primaryDataSources": [
+      "SRTM/ASTER DEM (terrain data)",
+      "Viator & Tripadvisor (adventure tour listings)",
+      "Red Bull adventure event listings",
+      "Access maps (roads/trails to sites)",
+      "Adventure travel safety reports"
+    ],
+    "category": "Adventure & Sports",
+    "typicalTravelerPersona": "Adrenaline junkies, outdoor adventurers",
+    "popularity": "Medium"
+  },
+  {
+    "id": "foodie_haven",
+    "name": "Foodie Haven",
+    "description": "Culinary capitals offering diverse and high-quality dining experiences.",
+    "keyCharacteristics": [
+      "Michelin stars count",
+      "Food market diversity"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.4*michelin_stars + 0.3*market_diversity",
+    "primaryDataSources": [
+      "Michelin Guide"
+    ],
+    "category": "Culinary",
+    "typicalTravelerPersona": "Food lovers",
+    "popularity": "High"
+  },
+  {
+    "id": "shopping_mecca",
+    "name": "Shopping Mecca",
+    "description": "Destinations renowned for extensive retail options, from luxury boutiques to local markets.",
+    "keyCharacteristics": [
+      "Number of malls",
+      "Luxury brand presence"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.5*mall_count + 0.3*luxury_presence",
+    "primaryDataSources": [
+      "Retail directories"
+    ],
+    "category": "Shopping",
+    "typicalTravelerPersona": "Shopaholics",
+    "popularity": "Medium"
+  },
+  {
+    "id": "nightlife_hotspot",
+    "name": "Nightlife Hotspot",
+    "description": "Cities with vibrant and diverse nightlife, including bars, clubs, and live music venues.",
+    "keyCharacteristics": [
+      "Number of bars/clubs",
+      "Late-night transport"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.6*venue_count + 0.4*transport_availability",
+    "primaryDataSources": [
+      "Nightlife guides"
+    ],
+    "category": "Entertainment",
+    "typicalTravelerPersona": "Partygoers",
+    "popularity": "High"
+  },
+  {
+    "id": "wellness_retreat",
+    "name": "Wellness Retreat",
+    "description": "Locations focused on health, well-being, and relaxation, offering spas, yoga, and meditation.",
+    "keyCharacteristics": [
+      "Spa quality",
+      "Yoga studio density"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.5*spa_quality + 0.3*yoga_density",
+    "primaryDataSources": [
+      "Wellness tourism sites"
+    ],
+    "category": "Health & Wellness",
+    "typicalTravelerPersona": "Health-conscious individuals",
+    "popularity": "Medium"
+  },
+  {
+    "id": "family_fun_zone",
+    "name": "Family Fun Zone",
+    "description": "Destinations with abundant attractions and activities suitable for families with children.",
+    "keyCharacteristics": [
+      "Theme park count",
+      "Kid-friendly restaurants"
+    ],
+    "sampleFitnessAlgorithm": "Score = 0.4*theme_parks + 0.3*kid_restaurants",
+    "primaryDataSources": [
+      "Family travel blogs"
+    ],
+    "category": "Family",
+    "typicalTravelerPersona": "Families with kids",
+    "popularity": "High"
+  }
+] 
