@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiAlertCircle } from 'react-icons/fi';
 import { useAppContext } from '../../../contexts/AppContext';
 
 const AffinitySelector = ({ availableAffinities, selectedAffinities, onAdd, onRemove, onClear }) => {
@@ -29,7 +29,15 @@ const AffinitySelector = ({ availableAffinities, selectedAffinities, onAdd, onRe
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">Selected affinities:</label>
         {selectedAffinities.length === 0 ? (
-          <div className="text-gray-500 text-sm">Select at least two affinities to find matching properties</div>
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-2">
+            <FiAlertCircle className="text-blue-500 w-5 h-5" />
+            <div className="text-blue-700">Select at least two affinities to find matching properties</div>
+          </div>
+        ) : selectedAffinities.length === 1 ? (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-center gap-2">
+            <FiAlertCircle className="text-yellow-500 w-5 h-5" />
+            <div className="text-yellow-700">Select one more affinity to enable property matching</div>
+          </div>
         ) : (
           <div className="flex flex-wrap gap-2">
             {selectedAffinities.map(affinity => (
