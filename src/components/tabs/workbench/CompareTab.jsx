@@ -21,22 +21,15 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
       setError(null);
 
       try {
-        console.log('Fetching performance data for affinities:', selectedAffinities);
-        console.log('Period state:', periodState);
-        
         const promises = selectedAffinities.map(affinity => {
-          console.log('Fetching for affinity:', affinity.id, affinity.name);
           return getAffinityPerformance(affinity.id, periodState.year, periodState.quarter);
         });
 
         const responses = await Promise.all(promises);
-        console.log('Performance data responses:', responses);
-        
         const newPerformanceData = {};
 
         responses.forEach((response, index) => {
           const affinity = selectedAffinities[index];
-          console.log('Processing response for affinity:', affinity.id, response);
           
           if (response && response.data && response.data.length > 0) {
             newPerformanceData[affinity.id] = {
@@ -46,7 +39,6 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
               quarter: periodState.quarter
             };
           } else {
-            console.warn('No performance data found for affinity:', affinity.id);
             // Provide default values if no data is found
             newPerformanceData[affinity.id] = {
               affinityName: affinity.name,
@@ -61,10 +53,8 @@ const CompareTab = ({ affinities, loading: affinitiesLoading, error: affinitiesE
           }
         });
 
-        console.log('Processed performance data:', newPerformanceData);
         setPerformanceData(newPerformanceData);
       } catch (err) {
-        console.error('Error fetching performance data:', err);
         setError('Failed to fetch performance data');
       } finally {
         setLoading(false);

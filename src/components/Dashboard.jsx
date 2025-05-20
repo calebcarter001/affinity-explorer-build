@@ -203,16 +203,11 @@ const Dashboard = () => {
 
   const handleCollectionClick = (collection) => {
     try {
-      console.log('Dashboard: Navigating to collection:', collection.name, 'ID:', collection.id);
-      
-      // Ensure the collection has an ID
       if (!collection.id) {
-        console.error('Collection missing ID:', collection);
         showToast('error', 'Invalid collection data');
         return;
       }
       
-      // Navigate to the collections view with the selected collection ID
       navigate('/affinities', { 
         state: { 
           view: 'collections',
@@ -220,7 +215,6 @@ const Dashboard = () => {
         } 
       });
     } catch (error) {
-      console.error('Error navigating to collection:', error);
       showToast('error', 'Failed to navigate to collection');
     }
   };

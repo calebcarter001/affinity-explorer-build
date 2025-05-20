@@ -23,12 +23,6 @@ class ErrorBoundary extends React.Component {
       componentStack: errorInfo.componentStack,
       componentName: this.props.componentName || 'Unknown Component'
     });
-    
-    // Log the error to console for development
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-    
-    // In a production environment, you would send this to an error tracking service
-    // like Sentry, LogRocket, etc.
   }
 
   handleRetry = () => {

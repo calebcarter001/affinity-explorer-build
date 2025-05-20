@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FiX, FiAlertCircle } from 'react-icons/fi';
 import { useAppContext } from '../../../contexts/AppContext';
 
 const AffinitySelector = ({ availableAffinities, selectedAffinities, onAdd, onRemove, onClear }) => {
   const { addToRecentlyViewed } = useAppContext();
+
+  const addToCombination = useCallback((affinity) => {
+    if (!affinity?.id) {
+      return;
+    }
+    if (selectedAffinities.length >= MAX_AFFINITIES) {
+      setError(`Maximum of ${MAX_AFFINITIES} affinities can be selected`);
+      return;
+    }
+    setSelectedAffinities(prev => [...prev, affinity]);
+    setError(null);
+  }, [selectedAffinities.length]);
+
+  const removeFromCombination = useCallback((affinity) => {
+    if (!affinity?.id) {
+      return;
+    }
+    setSelectedAffinities(prev => prev.filter(a => a.id !== affinity.id));
+    setError(null);
+  }, []);
 
   return (
     <>

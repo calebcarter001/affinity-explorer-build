@@ -33,12 +33,10 @@ const AffinityCard = ({
   const { } = useAppContext();
 
   if (!validateAffinity(affinity)) {
-    console.error('AffinityCard: Invalid affinity object');
     return null;
   }
 
   if (userCollections && !Array.isArray(userCollections)) {
-    console.error('AffinityCard: userCollections must be an array');
     return null;
   }
 

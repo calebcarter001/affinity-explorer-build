@@ -7,7 +7,6 @@ import CategoryDistributionList from './CategoryDistributionList';
 const PrintableView = ({ affinities, periodState }) => {
   // Validate inputs
   if (!Array.isArray(affinities)) {
-    console.error('Invalid affinities prop:', affinities);
     return (
       <div className="p-8 max-w-4xl mx-auto text-center text-red-500">
         Error: Invalid data format
@@ -16,7 +15,6 @@ const PrintableView = ({ affinities, periodState }) => {
   }
 
   if (!periodState?.year || !periodState?.mode) {
-    console.error('Invalid periodState:', periodState);
     return (
       <div className="p-8 max-w-4xl mx-auto text-center text-red-500">
         Error: Invalid period configuration
@@ -27,7 +25,6 @@ const PrintableView = ({ affinities, periodState }) => {
   // Filter out invalid affinity objects
   const validAffinities = affinities.filter(affinity => {
     if (!affinity?.id || !affinity?.name) {
-      console.warn('Invalid affinity object:', affinity);
       return false;
     }
     return true;
@@ -41,7 +38,6 @@ const PrintableView = ({ affinities, periodState }) => {
       }
       return year.toString();
     } catch (error) {
-      console.error('Error formatting period:', error);
       return 'Invalid Period';
     }
   };
