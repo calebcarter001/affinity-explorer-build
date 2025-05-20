@@ -10,6 +10,31 @@
       "Preservation level of old town districts",
       "Frequency of historical tours available"
     ],
+    "contentSignals": "References to historical landmarks, heritage sites, and cultural preservation in destination content",
+    "useCases": [
+      "Tag properties near historical districts or landmarks",
+      "Identify heritage-focused accommodations",
+      "Support historical tour package recommendations",
+      "Guide content timing for historical events and festivals",
+      "Target history enthusiast segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Distance to heritage sites",
+        "Historical district boundaries",
+        "Museum proximity",
+        "Historical tour availability",
+        "Heritage property designation"
+      ],
+      "scoringFactors": [
+        "Heritage site density",
+        "Historical significance rating",
+        "Preservation status",
+        "Cultural monument access",
+        "Historical tour frequency"
+      ],
+      "technicalNotes": "Combines geospatial analysis with cultural heritage data to create comprehensive historical relevance scores"
+    },
     "sampleFitnessAlgorithm": "Score = 0.25×heritage_site_index + 0.20×museum_count + 0.20×historic_district_score + 0.15×preservation_score + 0.20×tour_frequency",
     "primaryDataSources": [
       "UNESCO World Heritage API",
