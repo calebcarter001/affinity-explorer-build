@@ -1,0 +1,87 @@
+[
+  {
+    "id": "paris",
+    "name": "Paris",
+    "country": "France",
+    "population": 2141000,
+    "characteristics": {
+      "landmarks": ["Eiffel Tower", "Louvre", "Notre-Dame"],
+      "neighborhoods": ["Le Marais", "Montmartre", "Champs-Élysées"],
+      "specialties": ["Art", "Fashion", "Gastronomy"],
+      "seasonality": {
+        "peak": ["Summer", "Spring"],
+        "offPeak": ["Winter"],
+        "events": ["Fashion Week", "Bastille Day"]
+      }
+    }
+  },
+  {
+    "id": "tokyo",
+    "name": "Tokyo",
+    "country": "Japan",
+    "population": 13960000,
+    "characteristics": {
+      "landmarks": ["Tokyo Tower", "Senso-ji Temple", "Shibuya Crossing"],
+      "neighborhoods": ["Shinjuku", "Harajuku", "Akihabara"],
+      "specialties": ["Technology", "Pop Culture", "Traditional Arts"],
+      "seasonality": {
+        "peak": ["Spring", "Fall"],
+        "offPeak": ["Summer"],
+        "events": ["Cherry Blossom Festival", "Tokyo Game Show"]
+      }
+    }
+  },
+  {
+    "id": "bali",
+    "name": "Bali",
+    "country": "Indonesia",
+    "population": 4317000,
+    "characteristics": {
+      "landmarks": ["Tanah Lot", "Uluwatu Temple", "Rice Terraces"],
+      "neighborhoods": ["Ubud", "Seminyak", "Kuta"],
+      "specialties": ["Beaches", "Spirituality", "Arts"],
+      "seasonality": {
+        "peak": ["Summer", "Spring"],
+        "offPeak": ["Rainy Season"],
+        "events": ["Galungan", "Nyepi"]
+      }
+    }
+  },
+  {
+    "id": "new_york",
+    "name": "New York City",
+    "country": "USA",
+    "population": 8399000,
+    "characteristics": {
+      "landmarks": ["Statue of Liberty", "Central Park", "Empire State Building"],
+      "neighborhoods": ["Manhattan", "Brooklyn", "Queens"],
+      "specialties": ["Arts", "Finance", "Entertainment"],
+      "seasonality": {
+        "peak": ["Summer", "Holiday Season"],
+        "offPeak": ["Winter"],
+        "events": ["New Year's Eve", "NYC Marathon"]
+      }
+    }
+  },
+  {
+    "id": "rome",
+    "name": "Rome",
+    "country": "Italy",
+    "population": 2873000,
+    "characteristics": {
+      "landmarks": ["Colosseum", "Vatican", "Trevi Fountain"],
+      "neighborhoods": ["Trastevere", "Monti", "Testaccio"],
+      "specialties": ["History", "Art", "Cuisine"],
+      "seasonality": {
+        "peak": ["Spring", "Fall"],
+        "offPeak": ["August"],
+        "events": ["Rome Film Festival", "Estate Romana"]
+      }
+    }
+  },
+  { "id": "london", "name": "London", "country": "UK", "population": 8982000 },
+  { "id": "barcelona", "name": "Barcelona", "country": "Spain", "population": 1620000 },
+  { "id": "cape_town", "name": "Cape Town", "country": "South Africa", "population": 4710000 },
+  { "id": "sydney", "name": "Sydney", "country": "Australia", "population": 5312000 },
+  { "id": "rio_de_janeiro", "name": "Rio de Janeiro", "country": "Brazil", "population": 6719000 }
+] 

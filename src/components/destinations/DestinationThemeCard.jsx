@@ -1,300 +1,511 @@
 import React, { useState } from 'react';
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { 
-  DocumentTextIcon, 
-  LightBulbIcon, 
-  CogIcon,
-  ChartBarIcon 
-} from '@heroicons/react/24/outline';
+import EvidenceModal from './EvidenceModal';
 
-// Helper function to determine relevance based on score
-const getRelevanceInfo = (score) => {
-  if (score === undefined || score === null) {
-    return {
-      text: 'N/A',
-      badgeColorClass: 'bg-gray-100 text-gray-500',
-      scoreColorClass: 'text-gray-500',
-      textColorClass: 'text-gray-500'
-    };
-  }
-  if (score >= 0.7) {
-    return {
-      text: 'High Relevance',
-      badgeColorClass: 'bg-green-100 text-green-800',
-      scoreColorClass: 'text-green-600 font-bold',
-      textColorClass: 'text-green-800'
-    };
-  } else if (score >= 0.4) {
-    return {
-      text: 'Medium Relevance',
-      badgeColorClass: 'bg-sky-100 text-sky-800',
-      scoreColorClass: 'text-sky-600 font-semibold',
-      textColorClass: 'text-sky-800'
-    };
-  } else {
-    return {
-      text: 'Low Relevance',
-      badgeColorClass: 'bg-gray-100 text-gray-700',
-      scoreColorClass: 'text-gray-500',
-      textColorClass: 'text-gray-700'
-    };
-  }
-};
+const DestinationThemeCard = ({ theme, selectedDestination, onEvidenceClick }) => {
+  const [showEvidence, setShowEvidence] = useState(false);
+  const [evidenceContext, setEvidenceContext] = useState(null);
+  const [expandedSections, setExpandedSections] = useState({});
 
-const TabButton = ({ active, onClick, icon: Icon, label }) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-      active
-        ? 'text-indigo-700 border-b-2 border-indigo-500 bg-white'
-        : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
-    }`}
-  >
-    <Icon className="w-4 h-4 mr-2" />
-    {label}
-  </button>
-);
-
-const DestinationThemeCard = ({ theme, coverageItem, onClick, isExpanded }) => {
-  const [activeTab, setActiveTab] = useState('overview');
-
-  if (!theme) {
-    return null;
-  }
-
-  const relevance = getRelevanceInfo(theme.score);
-
-  // Popularity styling
-  let popularityBadgeColor = 'bg-gray-100 text-gray-700';
-  let popularityText = theme.popularity;
-
-  if (theme.popularity === 'High') {
-    popularityBadgeColor = 'bg-indigo-100 text-indigo-700';
-  } else if (theme.popularity === 'Medium') {
-    popularityBadgeColor = 'bg-blue-100 text-blue-700';
-  } else if (theme.popularity === 'Low') {
-    popularityBadgeColor = 'bg-slate-100 text-slate-600';
-  } else if (!theme.popularity) {
-    popularityText = 'N/A';
-  }
-
-  const handleClick = () => {
-    if (onClick) {
-      onClick(theme);
+  const handleEvidenceClick = (context, event) => {
+    event.stopPropagation();
+    setEvidenceContext(context);
+    setShowEvidence(true);
+    if (onEvidenceClick) {
+      onEvidenceClick(context);
     }
   };
 
-  const tabs = [
-    { id: 'overview', label: 'Overview', icon: DocumentTextIcon },
-    { id: 'useCases', label: 'Theme Use Cases', icon: LightBulbIcon },
-    { id: 'implementation', label: 'Implementation', icon: CogIcon },
-    { id: 'metrics', label: 'Metrics', icon: ChartBarIcon }
-  ];
+  const toggleSection = (sectionId) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
+  };
+
+  const EvidencePaperclip = ({ context, className = "", asSpan = false }) => {
+    const commonProps = {
+      className: `inline-flex items-center justify-center w-4 h-4 ml-1 text-xs text-blue-600 hover:text-blue-800 transition-colors cursor-pointer ${className}`,
+      onClick: (e) => handleEvidenceClick(context, e),
+      title: `View evidence for ${context.field}`,
+    };
+
+    if (asSpan) {
+      return (
+        <span {...commonProps} role="button" tabIndex={0}>
+          📎
+        </span>
+      );
+    }
+
+    return (
+      <button
+        {...commonProps}
+        aria-label={`View evidence for ${context.field}`}
+      >
+        📎
+      </button>
+    );
+  };
+
+  // Text truncation component
+  const TruncatedText = ({ text, maxLength = 80, sectionId }) => {
+    if (!text || text.length <= maxLength) {
+      return <span>{text}</span>;
+    }
+
+    const isExpanded = expandedSections[sectionId];
+    const displayText = isExpanded ? text : `${text.substring(0, maxLength)}...`;
+
+    return (
+      <span>
+        {displayText}
+        <button
+          onClick={() => toggleSection(sectionId)}
+          className="ml-2 text-blue-600 hover:text-blue-800 text-xs underline"
+        >
+          {isExpanded ? 'Show less' : 'Show more'}
+        </button>
+      </span>
+    );
+  };
+
+  // Helper function for confidence styling
+  const getConfidenceClass = (confidence) => {
+    if (confidence >= 0.95) return 'confidence-perfect text-blue-600';
+    if (confidence >= 0.8) return 'confidence-high text-green-600';
+    if (confidence >= 0.6) return 'confidence-medium text-yellow-600';
+    return 'confidence-low text-red-600';
+  };
+
+  // Helper function for intelligence badges
+  const renderIntelligenceBadges = () => {
+    const badges = [];
+    
+    // Add intelligence badges based on theme data
+    if (theme.intelligenceBadges) {
+      theme.intelligenceBadges.forEach((badge, index) => {
+        let badgeClass = 'badge-nano'; // default
+        
+        if (badge.includes('balanced')) badgeClass = 'badge-balanced';
+        else if (badge.includes('local')) badgeClass = 'badge-local';
+        else if (badge.includes('moderate')) badgeClass = 'badge-moderate';
+        else if (badge.includes('contemplative') || badge.includes('peaceful') || badge.includes('inspiring')) badgeClass = 'badge-contemplative';
+        
+        badges.push(
+          <span key={index} className={`${badgeClass} text-white px-2 py-1 rounded-full text-xs`}>
+            {badge}
+          </span>
+        );
+      });
+    } else {
+      // Default badges based on theme properties
+      badges.push(<span key="nano" className="badge-nano text-white px-2 py-1 rounded-full text-xs">📊 nano</span>);
+      
+      if (theme.category === 'culture') {
+        badges.push(<span key="local" className="badge-local text-white px-2 py-1 rounded-full text-xs">🌟 local influenced</span>);
+      } else {
+        badges.push(<span key="balanced" className="badge-balanced text-white px-2 py-1 rounded-full text-xs">🌟 balanced</span>);
+      }
+      
+      badges.push(<span key="path" className="badge-local text-white px-2 py-1 rounded-full text-xs">⭐ off beaten path</span>);
+      
+      if (theme.emotions && theme.emotions.length > 0) {
+        const emotion = theme.emotions[0].toLowerCase();
+        badges.push(<span key="emotion" className="badge-contemplative text-white px-2 py-1 rounded-full text-xs">✨ {emotion}</span>);
+      } else {
+        badges.push(<span key="default-emotion" className="badge-contemplative text-white px-2 py-1 rounded-full text-xs">✨ inspiring</span>);
+      }
+    }
+    
+    return badges;
+  };
 
   return (
-    <div 
-      className={`bg-white rounded-xl shadow-lg transition-all duration-300 ease-in-out flex flex-col h-full cursor-pointer focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 ${
-        isExpanded ? 'shadow-2xl' : 'hover:shadow-xl'
-      }`}
-      onClick={handleClick}
-      onKeyPress={(e) => e.key === 'Enter' && handleClick()}
-      tabIndex={0}
-    >
-      <div className="p-5">
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="text-xl font-semibold text-indigo-700 leading-tight">{theme.name}</h3>
-          {popularityText && (
-            <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${popularityBadgeColor}`}>
-              {popularityText}
-            </span>
+    <>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-blue-500 transition-all duration-200">
+        {/* Theme Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center">
+              {theme.name || theme.theme}
+              <EvidencePaperclip 
+                context={{
+                  type: 'theme',
+                  field: 'Theme Name',
+                  value: theme.name || theme.theme,
+                  themeId: theme.id || theme.theme
+                }}
+              />
+            </h3>
+            <p className="text-sm text-gray-600 flex items-center">
+              {theme.category || 'experience'}
+              <EvidencePaperclip 
+                context={{
+                  type: 'theme',
+                  field: 'Category',
+                  value: theme.category,
+                  themeId: theme.id || theme.theme
+                }}
+              />
+            </p>
+          </div>
+          <div className="text-right ml-4">
+            <div className={`text-lg font-bold ${getConfidenceClass(theme.confidence)}`}>
+              {theme.confidence ? theme.confidence.toFixed(2) : '0.85'}
+              <EvidencePaperclip 
+                context={{
+                  type: 'theme',
+                  field: 'Confidence Score',
+                  value: theme.confidence,
+                  themeId: theme.id || theme.theme
+                }}
+                className="ml-1"
+              />
+            </div>
+            <div className="text-xs text-gray-500">confidence</div>
+          </div>
+        </div>
+        
+        {/* Intelligence Badges */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {renderIntelligenceBadges()}
+          <EvidencePaperclip 
+            context={{
+              type: 'theme',
+              field: 'Intelligence Badges',
+              value: theme.intelligenceBadges || 'Generated badges',
+              themeId: theme.id || theme.theme
+            }}
+          />
+        </div>
+
+        {/* Description */}
+        <div className="mb-4">
+          <p className="text-gray-700 text-sm flex items-start">
+            <TruncatedText 
+              text={theme.description || theme.rationale || 'Enhanced destination theme with comprehensive analysis and cultural insights.'}
+              maxLength={120}
+              sectionId="description"
+            />
+            <EvidencePaperclip 
+              context={{
+                type: 'theme',
+                field: 'Description',
+                value: theme.description || theme.rationale,
+                themeId: theme.id || theme.theme
+              }}
+              className="mt-0.5 flex-shrink-0 ml-1"
+            />
+          </p>
+        </div>
+        
+        {/* Sub-themes and Nano Themes */}
+        <div className="space-y-3 mb-4">
+          {/* Sub-themes */}
+          {(theme.subThemes || theme.sub_themes) && (theme.subThemes || theme.sub_themes).length > 0 && (
+            <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
+              <h4 className="font-medium text-gray-900 text-sm mb-2 flex items-center">
+                🎯 Sub-themes:
+                <EvidencePaperclip 
+                  context={{
+                    type: 'theme',
+                    field: 'Sub-themes',
+                    value: theme.subThemes || theme.sub_themes,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
+              </h4>
+              <p className="text-xs text-gray-600">
+                <TruncatedText 
+                  text={(theme.subThemes || theme.sub_themes).join(', ')}
+                  maxLength={100}
+                  sectionId="subthemes"
+                />
+              </p>
+            </div>
+          )}
+
+          {/* Nano Themes */}
+          {(theme.nanoThemes || theme.nano_themes) && (theme.nanoThemes || theme.nano_themes).length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+              <h4 className="font-medium text-gray-900 text-sm mb-2 flex items-center">
+                🔬 Nano Themes:
+                <EvidencePaperclip 
+                  context={{
+                    type: 'theme',
+                    field: 'Nano Themes',
+                    value: theme.nanoThemes || theme.nano_themes,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
+              </h4>
+              <p className="text-xs text-gray-600">
+                <TruncatedText 
+                  text={(theme.nanoThemes || theme.nano_themes).join(', ')}
+                  maxLength={100}
+                  sectionId="nanothemes"
+                />
+              </p>
+            </div>
           )}
         </div>
-        <p className="text-xs text-gray-500 mb-3">Category: {theme.category || 'N/A'}</p>
-        
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg">
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-600">
-              Destination Affinity Score:
-            </p>
-            <span className={`text-2xl ${relevance.scoreColorClass}`}>
-              {theme.score !== undefined ? theme.score.toFixed(2) : 'N/A'}
-            </span>
-          </div>
-          <div className={`mt-1 px-2 py-0.5 inline-block rounded-md text-xs font-medium ${relevance.badgeColorClass}`}>
-            {relevance.text}
-          </div>
-        </div>
-
-        {coverageItem && (
-          <p className="text-sm text-gray-600 mb-3">
-            Properties Tagged: 
-            <span className="font-semibold text-indigo-600 ml-1.5">{coverageItem.coverageCount}</span>
-          </p>
-        )}
-
-        {!isExpanded && theme.description && (
-          <p className="text-sm text-gray-600 mb-1 italic line-clamp-3" title={theme.description}>
-            {theme.description}
-          </p>
-        )}
-      </div>
-
-      <div className="mt-auto px-5 py-3 border-t border-gray-200 flex justify-end items-center">
-        <span className="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
-          {isExpanded ? 'Collapse' : 'View Details'}
-          <ChevronRightIcon className={`ml-1 h-4 w-4 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
-        </span>
-      </div>
-
-      {isExpanded && (
-        <div className="border-t border-gray-200 animate-fade-in">
-          {/* Tabs Navigation */}
-          <div className="border-b border-gray-200 bg-gray-50">
-            <nav className="flex">
-              {tabs.map(tab => (
-                <TabButton
-                  key={tab.id}
-                  active={activeTab === tab.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveTab(tab.id);
+          
+        {/* Attributes Grid - Clean aligned layout like screenshot */}
+        <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+          <h4 className="font-medium text-gray-900 text-sm mb-3">📊 Key Insights</h4>
+          <div className="space-y-2">
+            {/* Row 1 */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center min-w-0 flex-1">
+                <span className="text-gray-600 text-sm mr-2">👥</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Best For:</span>
+                <span className="text-sm text-gray-900 truncate">{theme.bestFor || theme.contextual_info?.demographic_suitability?.join(', ') || 'Solo travelers'}</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Best For',
+                    value: theme.bestFor || theme.contextual_info?.demographic_suitability,
+                    themeId: theme.id || theme.theme
                   }}
-                  icon={tab.icon}
-                  label={tab.label}
                 />
-              ))}
-            </nav>
-          </div>
-
-          {/* Scrollable Content Area */}
-          <div className="max-h-[500px] overflow-y-auto bg-white">
-            {activeTab === 'overview' && (
-              <div className="p-5 space-y-4">
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">Description</h4>
-                  <p className="text-gray-700">{theme.description}</p>
-                </div>
-
-                {theme.keyCharacteristics && (
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Key Characteristics</h4>
-                    <ul className="list-disc list-inside space-y-1">
-                      {theme.keyCharacteristics.map((item, idx) => (
-                        <li key={idx} className="text-gray-700">{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {theme.primaryDataSources && (
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Primary Data Sources</h4>
-                    <ul className="list-disc list-inside space-y-1">
-                      {theme.primaryDataSources.map((src, idx) => (
-                        <li key={idx} className="text-gray-700">{src}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
-            )}
-
-            {activeTab === 'useCases' && (
-              <div className="p-5 space-y-6">
-                {theme.contentSignals && (
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Content Signals</h4>
-                    <p className="text-gray-700">{theme.contentSignals}</p>
-                  </div>
-                )}
-
-                {theme.useCases && (
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-3">Theme Use Cases</h4>
-                    <ul className="space-y-3">
-                      {theme.useCases.map((useCase, idx) => (
-                        <li key={idx} className="flex items-start bg-gray-50 p-3 rounded-lg">
-                          <LightBulbIcon className="w-5 h-5 text-indigo-500 mr-3 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{useCase}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              <div className="flex items-center min-w-0 flex-1 ml-4">
+                <span className="text-gray-600 text-sm mr-2">⏰</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Time:</span>
+                <span className="text-sm text-gray-900 truncate">{theme.timeNeeded || theme.contextual_info?.time_commitment || 'Flexible'}</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Time Needed',
+                    value: theme.timeNeeded || theme.contextual_info?.time_commitment,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
               </div>
-            )}
+            </div>
 
-            {activeTab === 'implementation' && (
-              <div className="p-5 space-y-6">
-                {theme.implementationDetails && (
-                  <>
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-3">Data Points</h4>
-                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {theme.implementationDetails.dataPoints.map((point, idx) => (
-                          <li key={idx} className="flex items-center bg-gray-50 p-3 rounded-lg">
-                            <span className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
-                            <span className="text-gray-700">{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-3">Scoring Factors</h4>
-                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {theme.implementationDetails.scoringFactors.map((factor, idx) => (
-                          <li key={idx} className="flex items-center bg-gray-50 p-3 rounded-lg">
-                            <ChartBarIcon className="w-5 h-5 text-indigo-500 mr-3" />
-                            <span className="text-gray-700">{factor}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {theme.implementationDetails.technicalNotes && (
-                      <div className="bg-yellow-50 p-4 rounded-lg">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-2">Technical Notes</h4>
-                        <p className="text-gray-700">{theme.implementationDetails.technicalNotes}</p>
-                      </div>
-                    )}
-                  </>
-                )}
+            {/* Row 2 */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center min-w-0 flex-1">
+                <span className="text-gray-600 text-sm mr-2">⚡</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Intensity:</span>
+                <span className="text-sm text-gray-900 truncate">{theme.intensity || theme.experience_intensity?.overall_intensity || 'Moderate'}</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Intensity',
+                    value: theme.intensity || theme.experience_intensity?.overall_intensity,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
               </div>
-            )}
+              <div className="flex items-center min-w-0 flex-1 ml-4">
+                <span className="text-gray-600 text-sm mr-2">💰</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Price:</span>
+                <span className="text-sm text-gray-900 truncate">{theme.priceRange || theme.price_point || 'Mid'}</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Price Range',
+                    value: theme.priceRange || theme.price_point,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
+              </div>
+            </div>
 
-            {activeTab === 'metrics' && (
-              <div className="p-5 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">Destination Affinity Score</h4>
-                    <p className={`text-2xl ${relevance.scoreColorClass}`}>
-                      {theme.score !== undefined ? theme.score.toFixed(2) : 'N/A'}
-                    </p>
-                  </div>
+            {/* Row 3 */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center min-w-0 flex-1">
+                <span className="text-gray-600 text-sm mr-2">✨</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Emotions:</span>
+                <span className="text-sm text-gray-900 truncate">{
+                  theme.emotions && theme.emotions.length > 0 
+                    ? theme.emotions.join(', ')
+                    : theme.emotional_profile?.primary_emotions?.join(', ') || 'Contemplative'
+                }</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Emotions',
+                    value: theme.emotions || theme.emotional_profile?.primary_emotions,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
+              </div>
+              <div className="flex items-center min-w-0 flex-1 ml-4">
+                <span className="text-gray-600 text-sm mr-2">🌟</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Season:</span>
+                <span className="text-sm text-gray-900 truncate">{theme.bestSeason || theme.seasonality?.peak?.join(', ') || 'Mar-Apr, Oct-Nov'}</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Best Season',
+                    value: theme.bestSeason || theme.seasonality?.peak,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
+              </div>
+            </div>
 
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">Properties Tagged</h4>
-                    <p className="text-2xl text-indigo-600">
-                      {coverageItem ? coverageItem.coverageCount : 'N/A'}
-                    </p>
-                  </div>
-
-                  {theme.sampleFitnessAlgorithm && (
-                    <div className="col-span-2 bg-indigo-50 p-4 rounded-lg">
-                      <h4 className="text-sm font-medium text-gray-500 mb-2">Destination Affinity Score Algorithm</h4>
-                      <p className="text-sm font-mono bg-white p-3 rounded border border-indigo-100">
-                        {theme.sampleFitnessAlgorithm}
-                      </p>
-                    </div>
-                  )}
-                </div>
+            {/* Cultural Sensitivity - Full width if present */}
+            {(theme.culturalSensitivity || theme.cultural_sensitivity) && (
+              <div className="flex items-center pt-1 border-t border-gray-200">
+                <span className="text-gray-600 text-sm mr-2">🏛️</span>
+                <span className="font-medium text-sm text-gray-700 mr-2">Cultural:</span>
+                <span className="text-sm text-gray-900 flex-1">{
+                  theme.culturalSensitivity || 
+                  (theme.cultural_sensitivity?.considerations ? theme.cultural_sensitivity.considerations.join(', ') : '')
+                }</span>
+                <EvidencePaperclip 
+                  context={{
+                    type: 'attribute',
+                    field: 'Cultural Sensitivity',
+                    value: theme.culturalSensitivity || theme.cultural_sensitivity,
+                    themeId: theme.id || theme.theme
+                  }}
+                />
               </div>
             )}
           </div>
         </div>
+
+        {/* Additional Metadata with Paperclips - Collapsible */}
+        {theme.sourceQuality && (
+          <div className="mt-4">
+            <button
+              onClick={() => toggleSection('sourceQuality')}
+              className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 mb-2"
+            >
+              📊 Source Quality
+              <span className="ml-1">{expandedSections.sourceQuality ? '−' : '+'}</span>
+              <EvidencePaperclip 
+                context={{
+                  type: 'metadata',
+                  field: 'Source Quality',
+                  value: theme.sourceQuality,
+                  themeId: theme.id || theme.theme
+                }}
+                asSpan={true}
+              />
+            </button>
+                         {expandedSections.sourceQuality && (
+               <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                 <div className="grid grid-cols-3 gap-3 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span>Authority</span>
+                    <div className="flex items-center">
+                      <span className="font-medium">{Math.round(theme.sourceQuality.authority * 100)}%</span>
+                      <EvidencePaperclip 
+                        context={{
+                          type: 'metadata',
+                          field: 'Source Authority',
+                          value: theme.sourceQuality.authority,
+                          themeId: theme.id || theme.theme
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Relevance</span>
+                    <div className="flex items-center">
+                      <span className="font-medium">{Math.round(theme.sourceQuality.relevance * 100)}%</span>
+                      <EvidencePaperclip 
+                        context={{
+                          type: 'metadata',
+                          field: 'Source Relevance',
+                          value: theme.sourceQuality.relevance,
+                          themeId: theme.id || theme.theme
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Recency</span>
+                    <div className="flex items-center">
+                      <span className="font-medium">{Math.round(theme.sourceQuality.recency * 100)}%</span>
+                      <EvidencePaperclip 
+                        context={{
+                          type: 'metadata',
+                          field: 'Source Recency',
+                          value: theme.sourceQuality.recency,
+                          themeId: theme.id || theme.theme
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Emotional Profile with Paperclips - Collapsible */}
+        {(theme.emotionalProfile || theme.emotional_profile) && (
+          <div className="mt-4">
+            <button
+              onClick={() => toggleSection('emotionalProfile')}
+              className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 mb-2"
+            >
+              💝 Emotional Profile
+              <span className="ml-1">{expandedSections.emotionalProfile ? '−' : '+'}</span>
+              <EvidencePaperclip 
+                context={{
+                  type: 'metadata',
+                  field: 'Emotional Profile',
+                  value: theme.emotionalProfile || theme.emotional_profile,
+                  themeId: theme.id || theme.theme
+                }}
+                asSpan={true}
+              />
+            </button>
+                         {expandedSections.emotionalProfile && (
+               <div className="p-3 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  {Object.entries(theme.emotionalProfile || theme.emotional_profile || {}).map(([emotion, intensity]) => (
+                    <div key={emotion} className="flex justify-between items-center">
+                      <span className="text-gray-700 capitalize flex items-center">
+                        {emotion}
+                        <EvidencePaperclip 
+                          context={{
+                            type: 'metadata',
+                            field: `Emotion: ${emotion}`,
+                            value: intensity,
+                            themeId: theme.id || theme.theme
+                          }}
+                        />
+                      </span>
+                      <div className="flex items-center">
+                        <div className="w-12 h-2 bg-gray-200 rounded-full mr-1">
+                          <div 
+                            className="h-full bg-purple-500 rounded-full"
+                            style={{ width: `${(typeof intensity === 'number' ? intensity : 0.5) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-gray-600 text-xs">
+                          {Math.round((typeof intensity === 'number' ? intensity : 0.5) * 100)}%
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Evidence Modal */}
+      {showEvidence && evidenceContext && (
+        <EvidenceModal
+          isOpen={showEvidence}
+          onClose={() => setShowEvidence(false)}
+          context={evidenceContext}
+          theme={theme}
+          selectedDestination={selectedDestination}
+        />
       )}
-    </div>
+    </>
   );
 };
 

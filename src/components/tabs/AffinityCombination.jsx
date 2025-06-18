@@ -121,7 +121,7 @@ const AffinityCombination = () => {
 
         return scores.length === selectedAffinities.length;
       });
-
+      
       // Calculate blended scores with weighted importance
       const processedProperties = filtered.map(property => {
         const relevantScores = property.affinityScores.filter(score => 
@@ -134,8 +134,8 @@ const AffinityCombination = () => {
           return total + (score.score * weight);
         }, 0) / relevantScores.reduce((total, score) => total + Math.pow(score.score, 2), 0);
 
-        return {
-          ...property,
+        return { 
+          ...property, 
           blendedScore,
           relevantScores
         };
@@ -227,14 +227,14 @@ const AffinityCombination = () => {
         
         {error && (
           <div className="mb-4">
-            <EmptyStateStyled
-              type="ERROR"
-              message={error}
+          <EmptyStateStyled
+            type="ERROR"
+            message={error}
               actionButton={error.includes('Maximum') ? null : {
-                label: 'Try Again',
-                onClick: () => window.location.reload()
-              }}
-            />
+              label: 'Try Again',
+              onClick: () => window.location.reload()
+            }}
+          />
           </div>
         )}
         
@@ -312,11 +312,11 @@ const AffinityCombination = () => {
         ) : (
           selectedAffinities.length >= 2 ? (
             matchingProperties.properties.length > 0 ? (
-              <MatchingPropertiesGrid
+          <MatchingPropertiesGrid
                 matchingProperties={matchingProperties.properties}
-                selectedAffinities={selectedAffinities}
-                getScoreClass={getScoreClass}
-              />
+            selectedAffinities={selectedAffinities}
+            getScoreClass={getScoreClass}
+          />
             ) : (
               <EmptyStateStyled
                 type="NO_DATA"

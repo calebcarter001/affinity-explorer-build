@@ -1,0 +1,50 @@
+{
+  "paris": [
+    { "themeId": "historical_journey", "score": 0.92 },
+    { "themeId": "beach_paradise", "score": 0.05 },
+    { "themeId": "cultural_immersion", "score": 0.88 },
+    { "themeId": "nature_escape", "score": 0.45 },
+    { "themeId": "adventure_hub", "score": 0.30 },
+    { "themeId": "foodie_haven", "score": 0.90 },
+    { "themeId": "shopping_mecca", "score": 0.85 },
+    { "themeId": "nightlife_hotspot", "score": 0.75 },
+    { "themeId": "wellness_retreat", "score": 0.60 },
+    { "themeId": "family_fun_zone", "score": 0.70 }
+  ],
+  "rome": [
+    { "themeId": "historical_journey", "score": 0.95 },
+    { "themeId": "beach_paradise", "score": 0.10 },
+    { "themeId": "cultural_immersion", "score": 0.90 },
+    { "themeId": "nature_escape", "score": 0.30 },
+    { "themeId": "adventure_hub", "score": 0.20 },
+    { "themeId": "foodie_haven", "score": 0.94 },
+    { "themeId": "shopping_mecca", "score": 0.70 },
+    { "themeId": "nightlife_hotspot", "score": 0.65 },
+    { "themeId": "wellness_retreat", "score": 0.50 },
+    { "themeId": "family_fun_zone", "score": 0.60 }
+  ],
+  "tokyo": [
+    { "themeId": "historical_journey", "score": 0.70 },
+    { "themeId": "beach_paradise", "score": 0.15 },
+    { "themeId": "cultural_immersion", "score": 0.92 },
+    { "themeId": "nature_escape", "score": 0.50 },
+    { "themeId": "adventure_hub", "score": 0.60 },
+    { "themeId": "foodie_haven", "score": 0.95 },
+    { "themeId": "shopping_mecca", "score": 0.93 },
+    { "themeId": "nightlife_hotspot", "score": 0.90 },
+    { "themeId": "wellness_retreat", "score": 0.70 },
+    { "themeId": "family_fun_zone", "score": 0.80 }
+  ],
+   "bali": [
+    { "themeId": "historical_journey", "score": 0.40 },
+    { "themeId": "beach_paradise", "score": 0.95 },
+    { "themeId": "cultural_immersion", "score": 0.85 },
+    { "themeId": "nature_escape", "score": 0.92 },
+    { "themeId": "adventure_hub", "score": 0.75 },
+    { "themeId": "foodie_haven", "score": 0.70 },
+    { "themeId": "shopping_mecca", "score": 0.60 },
+    { "themeId": "nightlife_hotspot", "score": 0.78 },
+    { "themeId": "wellness_retreat", "score": 0.94 },
+    { "themeId": "family_fun_zone", "score": 0.70 }
+  ]
+} 

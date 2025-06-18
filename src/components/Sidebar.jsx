@@ -11,7 +11,8 @@ import {
   FiFileText,
   FiSettings,
   FiHelpCircle,
-  FiGrid
+  FiGrid,
+  FiMap
 } from 'react-icons/fi';
 
 const Sidebar = () => {
@@ -21,6 +22,7 @@ const Sidebar = () => {
     { path: '/', icon: <FiHome size={20} />, text: 'Dashboard' },
     { path: '/affinities', icon: <FiBook size={20} />, text: 'Affinity Library' },
     { path: '/scoring', icon: <FiBarChart2 size={20} />, text: 'Property Affinity Scores' },
+    { path: '/destination-insights', icon: <FiMap size={20} />, text: 'Destination Insights' },
     { path: '/lifecycle-tracker', icon: <FiActivity size={20} />, text: 'Lifecycle Tracker' },
     { path: '/agents', icon: <FiCpu size={20} />, text: 'Agent View' },
     { path: '/combine', icon: <FiLayers size={20} />, text: 'Affinity Combination' },

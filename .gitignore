@@ -35,3 +35,21 @@ yarn-error.log*
 
 # Vite
 *.local
+
+# Python virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Large data files
+public/data/
+external/json/
+datasource/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python

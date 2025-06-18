@@ -4,6 +4,7 @@ A modern web application for exploring and analyzing property affinities, built 
 
 ## Features
 
+### Core Affinity Analysis
 - Interactive dashboard with property insights
 - Workbench: advanced analysis and implementation readiness for collections and affinities
 - Affinity Combination: combine and analyze multiple affinities
@@ -16,6 +17,21 @@ A modern web application for exploring and analyzing property affinities, built 
 - Lifecycle tracking
 - Implementation guides
 - Reports and analytics
+
+### Enhanced Destination Themes System
+- **Evidence-Backed Insights**: Every data point includes clickable evidence links with source URLs
+- **Professional Dashboard**: Real-time statistics showing theme counts, confidence scores, and coverage metrics
+- **Interactive Theme Cards**: Clean, modern design with comprehensive paperclip evidence system
+- **Intelligence Badges**: Visual indicators (nano, balanced, local, moderate, contemplative) with gradient styling
+- **Confidence Color Coding**: High (green), medium (yellow), perfect (blue) confidence levels
+- **Comprehensive Evidence Modal**: Detailed validation metrics, source quality scores, and multiple URL evidences per insight
+- **Multi-Destination Support**: Paris, New York, Tokyo with real JSON data from external travel sources
+- **Search & Filtering**: Real-time theme search across names, categories, and descriptions
+- **Text Management**: Smart truncation with expand/collapse for long content
+- **Configurable Architecture**: Destination configuration system with data validation
+- **Professional Validation Metrics**: Authority scores, quality ratings, relevance scores for all evidence
+
+### System Features
 - Settings & Help: user settings and help/support
 - Notifications: in-app notification system
 - User authentication (login/logout, user context)
@@ -35,12 +51,20 @@ A modern web application for exploring and analyzing property affinities, built 
 - Chart.js
 - Font Awesome Icons
 - React Icons (Feather Icons)
+- Heroicons (for destination themes UI)
 - React Context API (Auth, Toast, App, AffinityData)
 - Custom analytics, validation, formatting, error handling, and performance monitoring utilities
 - In-memory and localStorage caching
 - Vitest, React Testing Library, Jest-DOM (testing)
 - Python (for backend scripts: affinityIndexer.py, affinitySearchAPI.py)
 - Custom design system (CSS and JS)
+
+### Destination Themes Architecture
+- **Data Sources**: Real JSON files from external travel data sources (~23MB total)
+- **Evidence System**: Multi-layered evidence validation with URL sources
+- **Configuration System**: Centralized destination management with validation
+- **Modular Components**: Reusable cards, modals, and service layers
+- **Professional UI**: TailwindCSS with custom gradient badges and confidence indicators
 
 ## Getting Started
 
@@ -59,21 +83,79 @@ npm install
 ```bash
 npm run dev
 ```
+The application will be available at `http://localhost:3000`
 
-4. **Run tests**
+4. **Access Destination Themes**
+Navigate to the "Destination Insights" tab to explore the enhanced destination themes system with evidence-backed insights.
+
+5. **Run tests**
 ```bash
 npm test
 # or
 npx vitest
 ```
 
-5. **(Optional) Python Backend Scripts**
+6. **(Optional) Python Backend Scripts**
 If you want to use the backend scripts for data processing:
 - Ensure you have Python 3.8+ installed.
 - See `src/affinityIndexer.py` and `src/affinitySearchAPI.py` for details.
 
-6. **Environment Variables**
+7. **Environment Variables**
 - If you need to connect to a real backend, set the appropriate environment variables in a `.env` file (see Vite docs for details).
+
+## Enhanced Destination Themes System
+
+The application includes a sophisticated destination analysis system that provides evidence-backed insights for travel destinations.
+
+### Key Features
+- **Real Data Sources**: Uses actual travel data from external JSON files (~23MB total)
+- **Evidence-Based**: Every insight includes clickable evidence with source URLs from real travel blogs and sites
+- **Professional UI**: Clean, modern design with TailwindCSS styling
+- **Interactive Elements**: Expandable cards, evidence modals, search functionality
+- **Multi-Destination**: Currently supports Paris, New York, and Tokyo
+
+### Data Structure
+```javascript
+// Destination themes data structure
+{
+  "destination": "Paris, France",
+  "affinities": [
+    {
+      "theme": "Revolutionary Paris History",
+      "category": "Historical",
+      "confidence": 0.92,
+      "intelligence_badges": ["contemplative", "local"],
+      "sub_themes": ["French Revolution Sites", "Political History"],
+      "nano_themes": ["Bastille Day", "Revolutionary Museums"],
+      "rationale": "Evidence-backed description...",
+      // ... additional attributes with evidence
+    }
+  ]
+}
+```
+
+### Configuration
+Destinations are configured in `src/config/appConfig.js`:
+```javascript
+AVAILABLE_DESTINATIONS: [
+  {
+    id: 'paris__france',
+    name: 'Paris, France',
+    flag: '🇫🇷',
+    dataFiles: {
+      enhanced: 'paris__france_enhanced.json',
+      evidence: 'paris__france_evidence.json'
+    }
+  }
+  // ... additional destinations
+]
+```
+
+### Components
+- **DestinationThemeCard**: Interactive theme cards with evidence paperclips
+- **EvidenceModal**: Professional evidence display with validation metrics
+- **DestinationInsightsPage**: Main dashboard with stats and destination switching
+- **destinationThemeService**: Data loading and processing service
 
 ## Development
 

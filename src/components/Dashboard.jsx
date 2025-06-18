@@ -67,20 +67,20 @@ const FavoriteCollectionCard = React.memo(({ collection, onClick }) => (
     <div className="flex items-center justify-between w-full mb-4">
       <h4 className={typography.h4}>{collection.name}</h4>
     </div>
-    <div className="flex justify-between items-end">
-      <div className="flex flex-wrap gap-2">
-        {collection.affinities.map((affinity, i) => (
-          <span
-            key={i}
-            className={`${badge.base} ${badge.neutral}`}
-            title={affinity.description}
-          >
-            {affinity.name}
-          </span>
-        ))}
+          <div className="flex justify-between items-end">
+        <div className="flex flex-wrap gap-2">
+          {collection.affinities.map((affinity, i) => (
+            <span
+              key={i}
+              className={`${badge.base} ${badge.info}`}
+              title={affinity.description}
+            >
+              {affinity.name}
+            </span>
+          ))}
+        </div>
+        <span className="text-xs text-gray-500 ml-2">{collection.affinities.length}</span>
       </div>
-      <span className="text-xs text-gray-500 ml-2">{collection.affinities.length}</span>
-    </div>
   </div>
 ));
 

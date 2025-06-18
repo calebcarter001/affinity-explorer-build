@@ -1,34 +1,45 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { trackPageView } from './utils/analytics';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import AgentView from './components/tabs/AgentView';
-import AffinityLibrary from './components/tabs/AffinityLibrary';
-import ScoringExplorer from './components/tabs/ScoringExplorer';
-import LifecycleTracker from './components/tabs/LifecycleTracker';
 import { AppProvider } from './contexts/AppContext';
 import Header from './components/Header';
-import AffinityCombination from './components/tabs/AffinityCombination';
-import ImplementationGuide from './components/tabs/ImplementationGuide';
-import ReportsAnalytics from './components/tabs/ReportsAnalytics';
-import Settings from './components/tabs/Settings';
-import HelpSupport from './components/tabs/HelpSupport';
 import Login from './components/auth/Login';
-import AnalyticsDashboard from './components/admin/AnalyticsDashboard';
-import Workbench from './components/tabs/Workbench';
 import { AffinityDataProvider } from './contexts/AffinityDataContext';
 import './styles/agents.css';
+
+// Lazy load page components
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const AgentView = lazy(() => import('./components/tabs/AgentView'));
+const AffinityLibrary = lazy(() => import('./components/tabs/AffinityLibrary'));
+const ScoringExplorer = lazy(() => import('./components/tabs/ScoringExplorer'));
+const LifecycleTracker = lazy(() => import('./components/tabs/LifecycleTracker'));
+const AffinityCombination = lazy(() => import('./components/tabs/AffinityCombination'));
+const ImplementationGuide = lazy(() => import('./components/tabs/ImplementationGuide'));
+const ReportsAnalytics = lazy(() => import('./components/tabs/ReportsAnalytics'));
+const Settings = lazy(() => import('./components/tabs/Settings'));
+const HelpSupport = lazy(() => import('./components/tabs/HelpSupport'));
+const AnalyticsDashboard = lazy(() => import('./components/admin/AnalyticsDashboard'));
+const Workbench = lazy(() => import('./components/tabs/Workbench'));
+const DestinationInsightsPage = lazy(() => import('./pages/DestinationInsightsPage'));
+
+// Simple loading fallback component - replace with your actual spinner if you have one
+const LoadingFallback = () => (
+  <div className="flex justify-center items-center h-screen">
+    <p>Loading page...</p>
+    {/* Or use a spinner component: <LoadingSpinner /> */}
+  </div>
+);
 
 // Protected route component
 const ProtectedRoute = ({ children, requiredPermissions = [] }) => {
   const { user, loading, hasAllPermissions } = useAuth();
   
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading user...</div>; // Or a proper loading indicator
   }
   
   if (!user) {
@@ -94,110 +105,120 @@ const App = () => {
                   <Sidebar />
                 </div>
                 <div className="flex-1 ml-64">
-                  <Routes>
-                    <Route path="/login" element={<Login />} />
-                    
-                    <Route path="/" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <Dashboard />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/dashboard" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <Dashboard />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/affinities" element={
-                      <ProtectedRoute requiredPermissions={['read']}>
-                        <AppLayout>
-                          <AffinityLibrary />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/scoring" element={
-                      <ProtectedRoute requiredPermissions={['read']}>
-                        <AppLayout>
-                          <ScoringExplorer />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/agents" element={
-                      <ProtectedRoute requiredPermissions={['read', 'write']}>
-                        <AppLayout>
-                          <AgentView />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/lifecycle-tracker" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <LifecycleTracker />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/combine" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <AffinityCombination />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/implementation" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <ImplementationGuide />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/reports" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <ReportsAnalytics />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/settings" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <Settings />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/help" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <HelpSupport />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/workbench" element={
-                      <ProtectedRoute>
-                        <AppLayout>
-                          <Workbench />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="/analytics" element={
-                      <ProtectedRoute permissions={['admin']}>
-                        <AppLayout>
-                          <AnalyticsDashboard />
-                        </AppLayout>
-                      </ProtectedRoute>
-                    } />
-                    
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </Routes>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Routes>
+                      <Route path="/login" element={<Login />} />
+                      
+                      <Route path="/" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <Dashboard />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <Dashboard />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/affinities" element={
+                        <ProtectedRoute requiredPermissions={['read']}>
+                          <AppLayout>
+                            <AffinityLibrary />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/destination-insights" element={
+                        <ProtectedRoute requiredPermissions={['read']}>
+                          <AppLayout>
+                            <DestinationInsightsPage />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/scoring" element={
+                        <ProtectedRoute requiredPermissions={['read']}>
+                          <AppLayout>
+                            <ScoringExplorer />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/agents" element={
+                        <ProtectedRoute requiredPermissions={['read', 'write']}>
+                          <AppLayout>
+                            <AgentView />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/lifecycle-tracker" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <LifecycleTracker />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/combine" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <AffinityCombination />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/implementation" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <ImplementationGuide />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/reports" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <ReportsAnalytics />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/settings" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <Settings />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/help" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <HelpSupport />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/workbench" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <Workbench />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/analytics" element={
+                        <ProtectedRoute permissions={['admin']}>
+                          <AppLayout>
+                            <AnalyticsDashboard />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="*" element={<Navigate to="/" />} />
+                    </Routes>
+                  </Suspense>
                 </div>
               </div>
             </AppProvider>

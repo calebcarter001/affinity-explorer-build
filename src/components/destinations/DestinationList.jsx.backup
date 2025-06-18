@@ -1,0 +1,103 @@
+import React from 'react';
+import { MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'; // Assuming heroicons
+
+const DestinationList = ({
+  destinations,
+  selectedDestination,
+  onDestinationSelect,
+  loading,
+  currentPage,
+  totalPages,
+  onPageChange,
+  searchTerm,
+  onSearchChange,
+  totalResults
+}) => {
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex items-center justify-between p-3 border-t bg-white sticky bottom-0 z-10">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+        >
+          <ChevronLeftIcon className="h-4 w-4 mr-1" />
+          Prev
+        </button>
+        <span className="text-sm text-gray-700">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+        >
+          Next
+          <ChevronRightIcon className="h-4 w-4 ml-1" />
+        </button>
+      </div>
+    );
+  };
+
+  return (
+    <div className="h-full flex flex-col bg-white rounded-lg shadow-sm"> {/* Changed shadow to shadow-sm as parent has shadow */}
+      <div className="p-4 border-b sticky top-0 bg-white z-10">
+        <h3 className="text-lg font-semibold text-gray-800 mb-3">Destinations</h3>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder={`Search ${totalResults > 0 ? totalResults : 'all'} destinations...`}
+            className="w-full p-2 pl-10 pr-4 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            value={searchTerm}
+            onChange={onSearchChange} // Use the passed handler
+          />
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="p-4 text-gray-500 text-center flex-1">Loading destinations...</div>
+      ) : !destinations || destinations.length === 0 ? (
+        <div className="p-4 text-gray-500 text-center flex-1">
+          {searchTerm ? `No destinations found for "${searchTerm}".` : 'No destinations available.'}
+        </div>
+      ) : (
+        <ul className="divide-y divide-gray-200 overflow-y-auto flex-1"> {/* Added flex-1 and overflow-y-auto */}
+          {destinations.map((dest) => {
+            const isSelected = selectedDestination?.id === dest.id;
+            return (
+              <li
+                key={dest.id}
+                className={`px-4 py-3 cursor-pointer hover:bg-indigo-50 transition-colors ${isSelected ? 'bg-indigo-100 font-semibold text-indigo-800' : 'text-gray-700'
+                  }`}
+                onClick={() => onDestinationSelect(dest)}
+              >
+                <p className="text-sm font-medium">{dest.name}</p>
+                <p className={`text-xs ${isSelected ? 'text-indigo-600' : 'text-gray-500'}`}>
+                  {dest.country}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {renderPagination()}
+    </div>
+  );
+};
+
+export default DestinationList; 

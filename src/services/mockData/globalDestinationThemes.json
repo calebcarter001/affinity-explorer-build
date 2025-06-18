@@ -58,6 +58,31 @@
       "Monthly beach-day climate favorability (temp × low precipitation)",
       "Infrastructure score (lifeguards per km, beach-accessible transport)"
     ],
+    "contentSignals": "References to beaches, coastal activities, water sports, and seaside amenities in destination content",
+    "useCases": [
+      "Identify beachfront and beach-view properties",
+      "Tag properties with beach amenities",
+      "Support seasonal beach activity recommendations",
+      "Guide water sports package offerings",
+      "Target beach vacation segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Distance to nearest beach",
+        "Beach quality ratings",
+        "Water sports facility proximity",
+        "Beach amenities inventory",
+        "Coastal view assessment"
+      ],
+      "scoringFactors": [
+        "Beach proximity score",
+        "Beach quality rating",
+        "Water sports availability",
+        "Beach infrastructure",
+        "Climate suitability"
+      ],
+      "technicalNotes": "Combines geographical proximity with beach quality metrics and seasonal factors"
+    },
     "sampleFitnessAlgorithm": "Score = 0.30×beach_quality + 0.25×coastal_proximity + 0.20×water_sport_facilities + 0.15×climate_favorability + 0.10×infrastructure_score",
     "primaryDataSources": [
       "Blue Flag (Foundation for Environmental Education) beach listings",
@@ -81,6 +106,31 @@
       "Intangible heritage elements (music, crafts, cuisine) present",
       "Tourist participation in local classes/workshops"
     ],
+    "contentSignals": "References to local traditions, cultural experiences, and authentic community interactions",
+    "useCases": [
+      "Identify culturally authentic accommodations",
+      "Tag properties near cultural districts",
+      "Support cultural experience recommendations",
+      "Guide cultural event timing",
+      "Target cultural explorer segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Cultural district mapping",
+        "Local event calendars",
+        "Community engagement metrics",
+        "Traditional activity proximity",
+        "Cultural authenticity score"
+      ],
+      "scoringFactors": [
+        "Cultural diversity index",
+        "Event frequency",
+        "Local interaction opportunities",
+        "Traditional experience access",
+        "Community integration level"
+      ],
+      "technicalNotes": "Combines cultural diversity metrics with experiential opportunity data"
+    },
     "sampleFitnessAlgorithm": "Score = 0.25×language_ethnicity_diversity + 0.20×festival_count + 0.20×homestay_availability + 0.20×intangible_heritage_index + 0.15×workshop_participation",
     "primaryDataSources": [
       "Ethnologue language data",
@@ -104,6 +154,31 @@
       "Fresh air and water quality index",
       "Availability of nature trails and scenic viewpoints"
     ],
+    "contentSignals": "References to natural landscapes, wildlife, hiking trails, and outdoor serenity",
+    "useCases": [
+      "Identify properties in natural settings",
+      "Tag properties near nature trails",
+      "Support outdoor activity recommendations",
+      "Guide seasonal nature experiences",
+      "Target nature enthusiast segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Natural area proximity",
+        "Trail access points",
+        "Wildlife observation spots",
+        "Environmental quality metrics",
+        "Scenic view availability"
+      ],
+      "scoringFactors": [
+        "Natural area coverage",
+        "Biodiversity index",
+        "Trail network density",
+        "Air/water quality",
+        "Scenic value rating"
+      ],
+      "technicalNotes": "Combines environmental data with accessibility metrics"
+    },
     "sampleFitnessAlgorithm": "Score = 0.30×park_proximity + 0.20×green_space_area + 0.20×biodiversity_index + 0.15×air_water_quality + 0.15×trail_viewpoint_count",
     "primaryDataSources": [
       "World Database on Protected Areas (WDPA)",
@@ -127,6 +202,31 @@
       "Accessibility of outdoor adventure spots",
       "Safety record for adventure sports"
     ],
+    "contentSignals": "References to adventure sports, extreme activities, and outdoor challenges",
+    "useCases": [
+      "Identify adventure-ready accommodations",
+      "Tag properties near adventure sites",
+      "Support activity package recommendations",
+      "Guide seasonal adventure planning",
+      "Target thrill-seeker segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Adventure site mapping",
+        "Activity provider locations",
+        "Equipment rental proximity",
+        "Safety certification data",
+        "Adventure difficulty ratings"
+      ],
+      "scoringFactors": [
+        "Activity diversity",
+        "Provider density",
+        "Equipment availability",
+        "Safety standards",
+        "Challenge level range"
+      ],
+      "technicalNotes": "Combines adventure activity metrics with safety and accessibility data"
+    },
     "sampleFitnessAlgorithm": "Score = 0.30×terrain_ruggedness + 0.25×operator_density + 0.20×extreme_event_count + 0.15×accessibility_index + 0.10×safety_record",
     "primaryDataSources": [
       "SRTM/ASTER DEM (terrain data)",
@@ -145,11 +245,43 @@
     "description": "Culinary capitals offering diverse and high-quality dining experiences.",
     "keyCharacteristics": [
       "Michelin stars count",
-      "Food market diversity"
+      "Food market diversity",
+      "Local cuisine authenticity",
+      "Culinary event frequency",
+      "Restaurant density per capita"
     ],
-    "sampleFitnessAlgorithm": "Score = 0.4*michelin_stars + 0.3*market_diversity",
+    "contentSignals": "References to dining experiences, local cuisine, food markets, and culinary culture",
+    "useCases": [
+      "Identify properties near dining districts",
+      "Tag properties with culinary amenities",
+      "Support restaurant recommendations",
+      "Guide food tour planning",
+      "Target gastronomy enthusiast segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Restaurant proximity",
+        "Cuisine type diversity",
+        "Food market locations",
+        "Culinary event venues",
+        "Local ingredient sources"
+      ],
+      "scoringFactors": [
+        "Restaurant quality",
+        "Cuisine diversity",
+        "Market accessibility",
+        "Event frequency",
+        "Local food culture"
+      ],
+      "technicalNotes": "Combines dining establishment data with cultural food metrics"
+    },
+    "sampleFitnessAlgorithm": "Score = 0.3×restaurant_quality + 0.25×cuisine_diversity + 0.2×market_proximity + 0.15×event_frequency + 0.1×local_food_score",
     "primaryDataSources": [
-      "Michelin Guide"
+      "Michelin Guide",
+      "Local restaurant databases",
+      "Food market directories",
+      "Culinary event calendars",
+      "Local food culture assessments"
     ],
     "category": "Culinary",
     "typicalTravelerPersona": "Food lovers",
@@ -160,12 +292,44 @@
     "name": "Shopping Mecca",
     "description": "Destinations renowned for extensive retail options, from luxury boutiques to local markets.",
     "keyCharacteristics": [
-      "Number of malls",
-      "Luxury brand presence"
+      "Number of malls and shopping centers",
+      "Luxury brand presence",
+      "Local market diversity",
+      "Shopping district density",
+      "Retail variety index"
     ],
-    "sampleFitnessAlgorithm": "Score = 0.5*mall_count + 0.3*luxury_presence",
+    "contentSignals": "References to shopping experiences, retail districts, markets, and fashion",
+    "useCases": [
+      "Identify properties near shopping districts",
+      "Tag properties with retail proximity",
+      "Support shopping experience recommendations",
+      "Guide retail event timing",
+      "Target shopping enthusiast segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Shopping center locations",
+        "Retail district mapping",
+        "Market accessibility",
+        "Brand presence data",
+        "Shopping convenience score"
+      ],
+      "scoringFactors": [
+        "Retail density",
+        "Shopping variety",
+        "Brand diversity",
+        "Market accessibility",
+        "Shopping experience quality"
+      ],
+      "technicalNotes": "Combines retail presence data with shopping experience metrics"
+    },
+    "sampleFitnessAlgorithm": "Score = 0.3×retail_density + 0.25×shopping_variety + 0.2×brand_presence + 0.15×market_access + 0.1×experience_quality",
     "primaryDataSources": [
-      "Retail directories"
+      "Retail directories",
+      "Shopping center databases",
+      "Market location data",
+      "Brand presence surveys",
+      "Shopping district maps"
     ],
     "category": "Shopping",
     "typicalTravelerPersona": "Shopaholics",
@@ -176,12 +340,44 @@
     "name": "Nightlife Hotspot",
     "description": "Cities with vibrant and diverse nightlife, including bars, clubs, and live music venues.",
     "keyCharacteristics": [
-      "Number of bars/clubs",
-      "Late-night transport"
+      "Number of bars and clubs",
+      "Live music venue density",
+      "Late-night transport availability",
+      "Entertainment district vibrancy",
+      "Night safety index"
     ],
-    "sampleFitnessAlgorithm": "Score = 0.6*venue_count + 0.4*transport_availability",
+    "contentSignals": "References to nightlife, entertainment venues, music scenes, and evening activities",
+    "useCases": [
+      "Identify properties in entertainment districts",
+      "Tag properties with nightlife proximity",
+      "Support venue recommendations",
+      "Guide evening activity planning",
+      "Target nightlife enthusiast segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Venue locations",
+        "Transport availability",
+        "Entertainment district mapping",
+        "Operating hours data",
+        "Safety metrics"
+      ],
+      "scoringFactors": [
+        "Venue density",
+        "Transport access",
+        "Entertainment variety",
+        "Operating hours",
+        "Safety rating"
+      ],
+      "technicalNotes": "Combines venue data with accessibility and safety metrics"
+    },
+    "sampleFitnessAlgorithm": "Score = 0.3×venue_density + 0.25×transport_access + 0.2×entertainment_variety + 0.15×hours_coverage + 0.1×safety_score",
     "primaryDataSources": [
-      "Nightlife guides"
+      "Nightlife guides",
+      "Entertainment venue databases",
+      "Transport schedules",
+      "Safety indices",
+      "District activity surveys"
     ],
     "category": "Entertainment",
     "typicalTravelerPersona": "Partygoers",
@@ -192,12 +388,44 @@
     "name": "Wellness Retreat",
     "description": "Locations focused on health, well-being, and relaxation, offering spas, yoga, and meditation.",
     "keyCharacteristics": [
-      "Spa quality",
-      "Yoga studio density"
+      "Spa facility quality and variety",
+      "Yoga and meditation center density",
+      "Wellness service diversity",
+      "Natural healing resource presence",
+      "Health facility accessibility"
     ],
-    "sampleFitnessAlgorithm": "Score = 0.5*spa_quality + 0.3*yoga_density",
+    "contentSignals": "References to wellness activities, spa services, meditation, and holistic health",
+    "useCases": [
+      "Identify wellness-focused properties",
+      "Tag properties with health amenities",
+      "Support wellness activity recommendations",
+      "Guide retreat planning",
+      "Target wellness-seeking segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Wellness facility locations",
+        "Service type mapping",
+        "Natural resource proximity",
+        "Provider certification data",
+        "Facility quality metrics"
+      ],
+      "scoringFactors": [
+        "Facility quality",
+        "Service diversity",
+        "Resource accessibility",
+        "Provider credentials",
+        "Wellness environment"
+      ],
+      "technicalNotes": "Combines wellness facility data with environmental quality metrics"
+    },
+    "sampleFitnessAlgorithm": "Score = 0.3×facility_quality + 0.25×service_diversity + 0.2×resource_proximity + 0.15×provider_rating + 0.1×environment_score",
     "primaryDataSources": [
-      "Wellness tourism sites"
+      "Wellness tourism sites",
+      "Spa and yoga center directories",
+      "Health facility databases",
+      "Provider certification records",
+      "Environmental quality data"
     ],
     "category": "Health & Wellness",
     "typicalTravelerPersona": "Health-conscious individuals",
@@ -208,12 +436,44 @@
     "name": "Family Fun Zone",
     "description": "Destinations with abundant attractions and activities suitable for families with children.",
     "keyCharacteristics": [
-      "Theme park count",
-      "Kid-friendly restaurants"
+      "Theme park and attraction count",
+      "Kid-friendly restaurant density",
+      "Family activity variety",
+      "Child safety infrastructure",
+      "Family accommodation availability"
     ],
-    "sampleFitnessAlgorithm": "Score = 0.4*theme_parks + 0.3*kid_restaurants",
+    "contentSignals": "References to family activities, child-friendly amenities, and family-oriented entertainment",
+    "useCases": [
+      "Identify family-friendly properties",
+      "Tag properties with child amenities",
+      "Support family activity recommendations",
+      "Guide family trip planning",
+      "Target family traveler segments"
+    ],
+    "implementationDetails": {
+      "dataPoints": [
+        "Family attraction locations",
+        "Kid-friendly facility mapping",
+        "Safety feature inventory",
+        "Family service availability",
+        "Child amenity presence"
+      ],
+      "scoringFactors": [
+        "Attraction proximity",
+        "Kid-friendly rating",
+        "Safety measures",
+        "Family services",
+        "Child amenities"
+      ],
+      "technicalNotes": "Combines family-oriented facility data with safety and convenience metrics"
+    },
+    "sampleFitnessAlgorithm": "Score = 0.3×attraction_proximity + 0.25×kid_friendly_rating + 0.2×safety_score + 0.15×service_availability + 0.1×amenity_presence",
     "primaryDataSources": [
-      "Family travel blogs"
+      "Family attraction databases",
+      "Kid-friendly venue listings",
+      "Safety assessment records",
+      "Family service directories",
+      "Accommodation amenity data"
     ],
     "category": "Family",
     "typicalTravelerPersona": "Families with kids",

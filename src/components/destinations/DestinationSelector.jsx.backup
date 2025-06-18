@@ -1,0 +1,49 @@
+import React from 'react';
+
+const DestinationSelector = ({ 
+  destinations, 
+  selectedDestination, 
+  onDestinationSelect, 
+  loading 
+}) => {
+  if (!destinations) {
+    return <p>No destinations loaded.</p>; // Or some other placeholder/loader
+  }
+
+  const handleChange = (e) => {
+    const destinationId = e.target.value;
+    const destination = destinations.find(d => d.id === destinationId);
+    if (destination) {
+      onDestinationSelect(destination);
+    }
+  };
+
+  return (
+    <div className="mb-6">
+      <label htmlFor="destination-select" className="block text-sm font-medium text-gray-700 mb-1">
+        Select Destination:
+      </label>
+      <select
+        id="destination-select"
+        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm disabled:bg-gray-100"
+        value={selectedDestination ? selectedDestination.id : ''}
+        onChange={handleChange}
+        disabled={loading || destinations.length === 0}
+      >
+        <option value="" disabled={!!selectedDestination && destinations.length > 0}>
+          -- Select a Destination --
+        </option>
+        {destinations.map(dest => (
+          <option key={dest.id} value={dest.id}>
+            {dest.name} ({dest.country})
+          </option>
+        ))}
+      </select>
+      {destinations.length === 0 && !loading && (
+        <p className="text-xs text-gray-500 mt-1">No destinations available.</p>
+      )}
+    </div>
+  );
+};
+
+export default DestinationSelector; 

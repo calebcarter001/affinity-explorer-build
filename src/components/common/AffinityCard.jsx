@@ -43,13 +43,15 @@ const AffinityCard = ({
   const getStatusBadgeClasses = () => {
     switch (affinity.status.toLowerCase()) {
       case 'validated':
-        return 'bg-green-100 text-green-800';
+        return 'bg-blue-100 text-blue-700';
       case 'in development':
         return 'bg-yellow-100 text-yellow-800';
       case 'deprecated':
         return 'bg-red-100 text-red-800';
+      case 'active':
+        return 'bg-blue-100 text-blue-700';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-blue-100 text-blue-700';
     }
   };
 
@@ -70,7 +72,7 @@ const AffinityCard = ({
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-sm border ${selected ? 'border-blue-500' : 'border-gray-200'} p-4 ${className} ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+      className={`card-prominent ${selected ? 'border-2 border-blue-500 ring-2 ring-blue-200' : ''} ${className}`}
       onClick={onClick}
     >
       <div className="flex items-start justify-between">

@@ -313,6 +313,34 @@ const affinityConcepts = [
     coverage: 45,
     propertiesTagged: 98,
     propertiesWithScore: 92,
+    // Adding platform-specific property tracking
+    propertiesTaggedVrbo: 45,
+    propertiesTaggedBex: 30,
+    propertiesTaggedHcom: 23,
+    propertiesScoredVrbo: 42,
+    propertiesScoredBex: 28,
+    propertiesScoredHcom: 22,
+    // Adding implementation metadata
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 93,
+        lastUpdated: "2024-03-18",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 93,
+        lastUpdated: "2024-03-17",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 96,
+        lastUpdated: "2024-03-16",
+        owner: "Team Gamma"
+      }
+    },
     dateCreated: "2024-01-18",
     lastUpdatedDate: "2024-03-18"
   },
@@ -337,6 +365,34 @@ const affinityConcepts = [
     coverage: 68,
     propertiesTagged: 148,
     propertiesWithScore: 135,
+    // Adding platform-specific property tracking
+    propertiesTaggedVrbo: 65,
+    propertiesTaggedBex: 48,
+    propertiesTaggedHcom: 35,
+    propertiesScoredVrbo: 60,
+    propertiesScoredBex: 45,
+    propertiesScoredHcom: 30,
+    // Adding implementation metadata
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 92,
+        lastUpdated: "2024-03-12",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 94,
+        lastUpdated: "2024-03-11",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 86,
+        lastUpdated: "2024-03-10",
+        owner: "Team Gamma"
+      }
+    },
     dateCreated: "2024-01-19",
     lastUpdatedDate: "2024-03-12"
   }
@@ -579,19 +635,18 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
   return paginatedData;
 };
 
+// Mock properties data
 const properties = [
   {
     id: "PROP12345",
     name: "Oceanview Resort & Spa",
     location: "Miami Beach, FL",
-    propertyType: "Hotel",
+    propertyType: "Resort",
     affinityScores: [
-      { name: "Pet-Friendly", score: 0.72 },
-      { name: "Romantic", score: 0.85 },
-      { name: "Luxury", score: 0.91 },
-      { name: "Beach Access", score: 0.95 },
-      { name: "Privacy", score: 0.82 },
-      { name: "Family-Friendly", score: 0.67 }
+      { affinityId: "aff1", score: 0.72 },  // Pet-Friendly
+      { affinityId: "aff2", score: 0.85 },  // Romantic
+      { affinityId: "aff4", score: 0.91 },  // Luxury
+      { affinityId: "aff3", score: 0.67 }   // Family-Friendly
     ]
   },
   {
@@ -600,11 +655,9 @@ const properties = [
     location: "Aspen, CO",
     propertyType: "Resort",
     affinityScores: [
-      { name: "Pet-Friendly", score: 0.87 },
-      { name: "Family-Friendly", score: 0.76 },
-      { name: "Nature Retreat", score: 0.93 },
-      { name: "Privacy", score: 0.88 },
-      { name: "Luxury", score: 0.81 }
+      { affinityId: "aff1", score: 0.87 },  // Pet-Friendly
+      { affinityId: "aff3", score: 0.76 },  // Family-Friendly
+      { affinityId: "aff4", score: 0.81 }   // Luxury
     ]
   },
   {
@@ -613,15 +666,194 @@ const properties = [
     location: "New York, NY",
     propertyType: "Hotel",
     affinityScores: [
-      { name: "Luxury", score: 0.83 },
-      { name: "Pet-Friendly", score: 0.61 },
-      { name: "Historical", score: 0.75 },
-      { name: "Romantic", score: 0.72 }
+      { affinityId: "aff2", score: 0.79 },  // Romantic
+      { affinityId: "aff4", score: 0.88 }   // Luxury
+    ]
+  },
+  {
+    id: "PROP13579",
+    name: "Beachfront Paradise",
+    location: "Maui, HI",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff2", score: 0.95 },  // Romantic
+      { affinityId: "aff4", score: 0.93 },  // Luxury
+      { affinityId: "aff3", score: 0.65 }   // Family-Friendly
+    ]
+  },
+  {
+    id: "PROP11111",
+    name: "Family Fun Resort",
+    location: "Orlando, FL",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff3", score: 0.94 },  // Family-Friendly
+      { affinityId: "aff1", score: 0.82 },  // Pet-Friendly
+      { affinityId: "aff4", score: 0.75 }   // Luxury
+    ]
+  },
+  {
+    id: "PROP22222",
+    name: "Cozy Mountain Cabin",
+    location: "Park City, UT",
+    propertyType: "Vacation Rental",
+    affinityScores: [
+      { affinityId: "aff1", score: 0.89 },  // Pet-Friendly
+      { affinityId: "aff2", score: 0.78 },  // Romantic
+      { affinityId: "aff3", score: 0.85 }   // Family-Friendly
+    ]
+  },
+  {
+    id: "PROP33333",
+    name: "Urban Luxury Hotel",
+    location: "Chicago, IL",
+    propertyType: "Hotel",
+    affinityScores: [
+      { affinityId: "aff4", score: 0.96 },  // Luxury
+      { affinityId: "aff2", score: 0.88 }   // Romantic
+    ]
+  },
+  {
+    id: "PROP44444",
+    name: "Pet Paradise Inn",
+    location: "Portland, OR",
+    propertyType: "Hotel",
+    affinityScores: [
+      { affinityId: "aff1", score: 0.98 },  // Pet-Friendly
+      { affinityId: "aff3", score: 0.72 }   // Family-Friendly
+    ]
+  },
+  {
+    id: "PROP55555",
+    name: "Romantic Vineyard Estate",
+    location: "Napa Valley, CA",
+    propertyType: "Boutique",
+    affinityScores: [
+      { affinityId: "aff2", score: 0.97 },  // Romantic
+      { affinityId: "aff4", score: 0.89 }   // Luxury
+    ]
+  },
+  {
+    id: "PROP66666",
+    name: "Adventure Lodge",
+    location: "Boulder, CO",
+    propertyType: "Lodge",
+    affinityScores: [
+      { affinityId: "aff1", score: 0.85 },  // Pet-Friendly
+      { affinityId: "aff3", score: 0.88 },  // Family-Friendly
+      { affinityId: "aff4", score: 0.76 }   // Luxury
+    ]
+  },
+  {
+    id: "PROP77777",
+    name: "Seaside Family Resort",
+    location: "San Diego, CA",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff3", score: 0.92 },  // Family-Friendly
+      { affinityId: "aff1", score: 0.75 },  // Pet-Friendly
+      { affinityId: "aff2", score: 0.68 }   // Romantic
+    ]
+  },
+  {
+    id: "PROP88888",
+    name: "Luxury Beach Villa",
+    location: "Palm Beach, FL",
+    propertyType: "Villa",
+    affinityScores: [
+      { affinityId: "aff4", score: 0.95 },  // Luxury
+      { affinityId: "aff2", score: 0.92 },  // Romantic
+      { affinityId: "aff1", score: 0.65 }   // Pet-Friendly
+    ]
+  },
+  {
+    id: "PROP99999",
+    name: "Mountain View Resort",
+    location: "Vail, CO",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff4", score: 0.87 },  // Luxury
+      { affinityId: "aff3", score: 0.83 },  // Family-Friendly
+      { affinityId: "aff2", score: 0.81 }   // Romantic
+    ]
+  },
+  {
+    id: "PROP10101",
+    name: "Downtown Boutique Hotel",
+    location: "Seattle, WA",
+    propertyType: "Boutique",
+    affinityScores: [
+      { affinityId: "aff2", score: 0.86 },  // Romantic
+      { affinityId: "aff4", score: 0.84 }   // Luxury
+    ]
+  },
+  {
+    id: "PROP20202",
+    name: "Family Beach Resort",
+    location: "Myrtle Beach, SC",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff3", score: 0.89 },  // Family-Friendly
+      { affinityId: "aff1", score: 0.77 },  // Pet-Friendly
+      { affinityId: "aff2", score: 0.71 }   // Romantic
+    ]
+  },
+  {
+    id: "PROP30303",
+    name: "Historic Luxury Inn",
+    location: "Charleston, SC",
+    propertyType: "Boutique",
+    affinityScores: [
+      { affinityId: "aff4", score: 0.92 },  // Luxury
+      { affinityId: "aff2", score: 0.90 }   // Romantic
+    ]
+  },
+  {
+    id: "PROP40404",
+    name: "Lake View Lodge",
+    location: "Lake Tahoe, CA",
+    propertyType: "Lodge",
+    affinityScores: [
+      { affinityId: "aff3", score: 0.86 },  // Family-Friendly
+      { affinityId: "aff1", score: 0.83 },  // Pet-Friendly
+      { affinityId: "aff4", score: 0.79 }   // Luxury
+    ]
+  },
+  {
+    id: "PROP50505",
+    name: "Desert Oasis Resort",
+    location: "Scottsdale, AZ",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff4", score: 0.94 },  // Luxury
+      { affinityId: "aff2", score: 0.87 },  // Romantic
+      { affinityId: "aff3", score: 0.75 }   // Family-Friendly
+    ]
+  },
+  {
+    id: "PROP60606",
+    name: "Coastal Pet Resort",
+    location: "Newport, RI",
+    propertyType: "Resort",
+    affinityScores: [
+      { affinityId: "aff1", score: 0.93 },  // Pet-Friendly
+      { affinityId: "aff3", score: 0.82 },  // Family-Friendly
+      { affinityId: "aff2", score: 0.74 }   // Romantic
+    ]
+  },
+  {
+    id: "PROP70707",
+    name: "Mountain Luxury Chalet",
+    location: "Telluride, CO",
+    propertyType: "Chalet",
+    affinityScores: [
+      { affinityId: "aff4", score: 0.96 },  // Luxury
+      { affinityId: "aff2", score: 0.93 },  // Romantic
+      { affinityId: "aff1", score: 0.68 }   // Pet-Friendly
     ]
   }
 ];
 
-// Mock API functions with artificial delay to simulate network requests
 export const getProperties = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -1110,6 +1342,16 @@ const mockLifecycleData = {
       "Scoring Implemented": { status: "Complete", lastUpdated: "2024-08-25", owner: "Michael Chang" },
       "Validation & Distribution": { status: "In Progress", lastUpdated: "2024-10-15", owner: "Sarah Wilson" }
     }
+  },
+  "Business": {
+    stages: {
+      "Discovery": { status: "Complete", lastUpdated: "2024-05-20", owner: "Michael Chang" },
+      "Relationship Definition": { status: "Complete", lastUpdated: "2024-06-25", owner: "Sarah Wilson" },
+      "Concept Enrichment": { status: "Complete", lastUpdated: "2024-07-30", owner: "Alex Johnson" },
+      "Weighting Finalized": { status: "Complete", lastUpdated: "2024-08-15", owner: "Alex Johnson" },
+      "Scoring Implemented": { status: "Complete", lastUpdated: "2024-09-20", owner: "Michael Chang" },
+      "Validation & Distribution": { status: "Complete", lastUpdated: "2024-10-10", owner: "Sarah Wilson" }
+    }
   }
 };
 
@@ -1194,14 +1436,22 @@ const mockCombinationAnalysis = {
     "Pet-Friendly + Luxury": 0.45,
     "Romantic + Luxury": 0.85,
     "Beach Access + Romantic": 0.80,
-    "Family-Friendly + Luxury": 0.55
+    "Family-Friendly + Luxury": 0.55,
+    "Business + Luxury": 0.88,
+    "Business + Pet-Friendly": 0.45,
+    "Business + Family-Friendly": 0.52,
+    "Business + Romantic": 0.65
   },
   coverage: {
     "Pet-Friendly + Family-Friendly": 68,
     "Pet-Friendly + Luxury": 35,
     "Romantic + Luxury": 42,
     "Beach Access + Romantic": 45,
-    "Family-Friendly + Luxury": 38
+    "Family-Friendly + Luxury": 38,
+    "Business + Luxury": 48,
+    "Business + Pet-Friendly": 32,
+    "Business + Family-Friendly": 35,
+    "Business + Romantic": 40
   }
 };
 
