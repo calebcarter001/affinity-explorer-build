@@ -1,12 +1,13 @@
 import { cacheService } from './cacheService';
 import axios from 'axios';
 import API_CONFIG from '../config/appConfig';
+import { baliProperties } from './mockData/bali_properties';
 
 // Utility function for creating delays
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Mock API service with caching and pagination
-export const getDashboardStats = async () => {
+   const getDashboardStats = async () => {
   const cacheKey = cacheService.generateKey('dashboard_stats');
   const cachedData = cacheService.get(cacheKey);
   if (cachedData) return cachedData;
@@ -395,6 +396,410 @@ const affinityConcepts = [
     },
     dateCreated: "2024-01-19",
     lastUpdatedDate: "2024-03-12"
+  },
+  {
+    id: "aff6",
+    name: "All-Inclusive",
+    type: "travel",
+    category: "service",
+    scoreAvailable: true,
+    definition: "Properties offering comprehensive packages including meals, activities, and amenities",
+    status: "active",
+    applicableEntities: ["hotel", "resort"],
+    metrics: {
+      accuracy: 0.88,
+      coverage: 45,
+      completeness: 0.91,
+      lastValidated: "2024-03-20"
+    },
+    averageScore: 0.84,
+    highestScore: 0.96,
+    lowestScore: 0.72,
+    coverage: 45,
+    propertiesTagged: 98,
+    propertiesWithScore: 92,
+    // Add platform-specific property tracking
+    propertiesTaggedVrbo: 52,
+    propertiesTaggedBex: 28,
+    propertiesTaggedHcom: 18,
+    propertiesScoredVrbo: 48,
+    propertiesScoredBex: 26,
+    propertiesScoredHcom: 18,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 95,
+        lastUpdated: "2024-03-20",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 94,
+        lastUpdated: "2024-03-19",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 85,
+        lastUpdated: "2024-03-18",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-20",
+    lastUpdatedDate: "2024-03-20"
+  },
+  {
+    id: "aff7",
+    name: "Oceanview",
+    type: "travel",
+    category: "feature",
+    scoreAvailable: true,
+    definition: "Properties with views of the ocean from rooms or common areas",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "vacation_rental"],
+    metrics: {
+      accuracy: 0.92,
+      coverage: 38,
+      completeness: 0.94,
+      lastValidated: "2024-03-19"
+    },
+    averageScore: 0.88,
+    highestScore: 0.98,
+    lowestScore: 0.75,
+    coverage: 38,
+    propertiesTagged: 82,
+    propertiesWithScore: 78,
+    // Add platform-specific property tracking
+    propertiesTaggedVrbo: 45,
+    propertiesTaggedBex: 22,
+    propertiesTaggedHcom: 15,
+    propertiesScoredVrbo: 42,
+    propertiesScoredBex: 21,
+    propertiesScoredHcom: 15,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 97,
+        lastUpdated: "2024-03-19",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 96,
+        lastUpdated: "2024-03-18",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "completed",
+        progress: 94,
+        lastUpdated: "2024-03-17",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-21",
+    lastUpdatedDate: "2024-03-19"
+  },
+  {
+    id: "aff8",
+    name: "Spa & Wellness",
+    type: "travel",
+    category: "amenity",
+    scoreAvailable: true,
+    definition: "Properties offering spa services, wellness programs, and relaxation amenities",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "boutique"],
+    metrics: {
+      accuracy: 0.86,
+      coverage: 55,
+      completeness: 0.88,
+      lastValidated: "2024-03-18"
+    },
+    averageScore: 0.82,
+    highestScore: 0.94,
+    lowestScore: 0.68,
+    coverage: 55,
+    propertiesTagged: 120,
+    propertiesWithScore: 112,
+    // Add platform-specific property tracking
+    propertiesTaggedVrbo: 65,
+    propertiesTaggedBex: 35,
+    propertiesTaggedHcom: 20,
+    propertiesScoredVrbo: 62,
+    propertiesScoredBex: 32,
+    propertiesScoredHcom: 18,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 94,
+        lastUpdated: "2024-03-18",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "in-progress",
+        progress: 88,
+        lastUpdated: "2024-03-17",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 82,
+        lastUpdated: "2024-03-16",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-22",
+    lastUpdatedDate: "2024-03-18"
+  },
+  {
+    id: "aff9",
+    name: "Beach",
+    type: "travel",
+    category: "location",
+    scoreAvailable: true,
+    definition: "Properties with direct beach access or located near beaches",
+    status: "active",
+    applicableEntities: ["hotel", "resort", "vacation_rental"],
+    metrics: {
+      accuracy: 0.94,
+      coverage: 42,
+      completeness: 0.96,
+      lastValidated: "2024-03-17"
+    },
+    averageScore: 0.90,
+    highestScore: 0.99,
+    lowestScore: 0.78,
+    coverage: 42,
+    propertiesTagged: 92,
+    propertiesWithScore: 88,
+    // Add platform-specific property tracking
+    propertiesTaggedVrbo: 48,
+    propertiesTaggedBex: 26,
+    propertiesTaggedHcom: 18,
+    propertiesScoredVrbo: 46,
+    propertiesScoredBex: 25,
+    propertiesScoredHcom: 17,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 98,
+        lastUpdated: "2024-03-17",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 97,
+        lastUpdated: "2024-03-16",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "completed",
+        progress: 95,
+        lastUpdated: "2024-03-15",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-23",
+    lastUpdatedDate: "2024-03-17"
+  },
+  {
+    id: "aff10",
+    name: "Historic & Cultural",
+    type: "travel",
+    category: "cultural",
+    scoreAvailable: true,
+    definition: "Properties with historical significance or located in culturally rich areas",
+    status: "active",
+    applicableEntities: ["hotel", "boutique", "heritage"],
+    metrics: {
+      accuracy: 0.89,
+      coverage: 28,
+      completeness: 0.91,
+      lastValidated: "2024-03-14"
+    },
+    averageScore: 0.86,
+    highestScore: 0.96,
+    lowestScore: 0.72,
+    coverage: 28,
+    propertiesTagged: 62,
+    propertiesWithScore: 58,
+    propertiesTaggedVrbo: 32,
+    propertiesTaggedBex: 18,
+    propertiesTaggedHcom: 12,
+    propertiesScoredVrbo: 30,
+    propertiesScoredBex: 16,
+    propertiesScoredHcom: 12,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 94,
+        lastUpdated: "2024-03-14",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 89,
+        lastUpdated: "2024-03-13",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 100,
+        lastUpdated: "2024-03-12",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-24",
+    lastUpdatedDate: "2024-03-14"
+  },
+  {
+    id: "aff11",
+    name: "Adventure & Sports",
+    type: "travel",
+    category: "outdoors",
+    scoreAvailable: true,
+    definition: "Properties offering adventure activities, sports facilities, and outdoor recreation",
+    status: "active",
+    applicableEntities: ["resort", "lodge", "adventure"],
+    metrics: {
+      accuracy: 0.91,
+      coverage: 35,
+      completeness: 0.93,
+      lastValidated: "2024-03-16"
+    },
+    averageScore: 0.88,
+    highestScore: 0.97,
+    lowestScore: 0.75,
+    coverage: 35,
+    propertiesTagged: 78,
+    propertiesWithScore: 72,
+    propertiesTaggedVrbo: 42,
+    propertiesTaggedBex: 22,
+    propertiesTaggedHcom: 14,
+    propertiesScoredVrbo: 38,
+    propertiesScoredBex: 20,
+    propertiesScoredHcom: 14,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 90,
+        lastUpdated: "2024-03-16",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 91,
+        lastUpdated: "2024-03-15",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "completed",
+        progress: 100,
+        lastUpdated: "2024-03-14",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-25",
+    lastUpdatedDate: "2024-03-16"
+  },
+  {
+    id: "aff12",
+    name: "Budget-Friendly",
+    type: "travel",
+    category: "pricing",
+    scoreAvailable: true,
+    definition: "Properties offering affordable rates and good value for money",
+    status: "active",
+    applicableEntities: ["hotel", "motel", "hostel", "vacation_rental"],
+    metrics: {
+      accuracy: 0.87,
+      coverage: 64,
+      completeness: 0.89,
+      lastValidated: "2024-03-19"
+    },
+    averageScore: 0.83,
+    highestScore: 0.94,
+    lowestScore: 0.68,
+    coverage: 64,
+    propertiesTagged: 142,
+    propertiesWithScore: 128,
+    propertiesTaggedVrbo: 78,
+    propertiesTaggedBex: 38,
+    propertiesTaggedHcom: 26,
+    propertiesScoredVrbo: 72,
+    propertiesScoredBex: 34,
+    propertiesScoredHcom: 22,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 92,
+        lastUpdated: "2024-03-19",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "completed",
+        progress: 89,
+        lastUpdated: "2024-03-18",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 85,
+        lastUpdated: "2024-03-17",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-26",
+    lastUpdatedDate: "2024-03-19"
+  },
+  {
+    id: "aff13",
+    name: "Eco-Friendly",
+    type: "travel",
+    category: "sustainability",
+    scoreAvailable: true,
+    definition: "Properties with sustainable practices and environmental consciousness",
+    status: "active",
+    applicableEntities: ["eco-lodge", "resort", "hotel", "boutique"],
+    metrics: {
+      accuracy: 0.84,
+      coverage: 31,
+      completeness: 0.86,
+      lastValidated: "2024-03-21"
+    },
+    averageScore: 0.81,
+    highestScore: 0.93,
+    lowestScore: 0.65,
+    coverage: 31,
+    propertiesTagged: 68,
+    propertiesWithScore: 62,
+    propertiesTaggedVrbo: 35,
+    propertiesTaggedBex: 20,
+    propertiesTaggedHcom: 13,
+    propertiesScoredVrbo: 32,
+    propertiesScoredBex: 18,
+    propertiesScoredHcom: 12,
+    implementationStatus: {
+      vrbo: {
+        status: "completed",
+        progress: 91,
+        lastUpdated: "2024-03-21",
+        owner: "Team Alpha"
+      },
+      bex: {
+        status: "in-progress",
+        progress: 90,
+        lastUpdated: "2024-03-20",
+        owner: "Team Beta"
+      },
+      hcom: {
+        status: "in-progress",
+        progress: 92,
+        lastUpdated: "2024-03-19",
+        owner: "Team Gamma"
+      }
+    },
+    dateCreated: "2024-01-27",
+    lastUpdatedDate: "2024-03-21"
   }
 ];
 
@@ -481,7 +886,7 @@ const generateMockPerformanceData = () => {
 const mockPerformanceData = generateMockPerformanceData();
 
 // Update getAffinities to use cacheService
-export const getAffinities = async ({ page = 1, limit = 10, searchTerm = '' } = {}) => {
+   const getAffinities = async ({ page = 1, limit = 10, searchTerm = '' } = {}) => {
   try {
     const cacheKey = cacheService.generateKey('affinities', { page, limit, searchTerm });
     const cachedData = cacheService.get(cacheKey);
@@ -528,95 +933,54 @@ export const getAffinities = async ({ page = 1, limit = 10, searchTerm = '' } = 
 };
 
 // Mock property search with pagination
-export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
-  const cacheKey = cacheService.generateKey('properties_search', { searchTerm, page, limit });
-  const cachedData = cacheService.get(cacheKey);
-  if (cachedData) return cachedData;
+   const searchProperties = async (searchTerm, page = 1, limit = 10) => {
+  // Add timestamp to prevent stale cache issues with pagination
+  const cacheKey = cacheService.generateKey('properties_search', { searchTerm, page, limit, v: Date.now() });
+  // Temporarily disable cache for debugging pagination
+  // const cachedData = cacheService.get(cacheKey);
+  // if (cachedData) return cachedData;
 
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Mock data with pagination
-  const mockProperties = [
-    {
-      id: 'PROP001',
-      name: 'Grand Hotel Downtown',
-      location: 'New York, NY',
-      type: 'Hotel',
-      description: 'Luxury hotel in the heart of Manhattan',
-      priceRange: '$$$',
-      rating: 4.5,
-      reviewCount: 1250,
-      lastUpdated: '2024-03-15',
-      affinityScores: [
-        { affinityId: "aff1", name: 'Business Traveler', score: 0.85 },
-        { affinityId: "aff2", name: 'Family Friendly', score: 0.72 },
-        { affinityId: "aff3", name: 'Luxury Experience', score: 0.91 },
-        { affinityId: "aff4", name: 'Budget Conscious', score: 0.48 },
-        { affinityId: "aff5", name: 'Local Experience', score: 0.69 }
-      ],
-      amenities: ['WiFi', 'Pool', 'Spa', 'Restaurant', 'Gym', 'Business Center'],
-      images: [
-        'https://example.com/hotel1.jpg',
-        'https://example.com/hotel2.jpg'
-      ]
-    },
-    {
-      id: 'PROP002',
-      name: 'Seaside Resort',
-      location: 'Miami Beach, FL',
-      type: 'Resort',
-      description: 'Beachfront resort with stunning ocean views',
-      priceRange: '$$$$',
-      rating: 4.8,
-      reviewCount: 980,
-      lastUpdated: '2024-03-14',
-      affinityScores: [
-        { affinityId: "aff1", name: 'Business Traveler', score: 0.62 },
-        { affinityId: "aff2", name: 'Family Friendly', score: 0.87 },
-        { affinityId: "aff3", name: 'Luxury Experience', score: 0.75 },
-        { affinityId: "aff4", name: 'Budget Conscious', score: 0.59 },
-        { affinityId: "aff5", name: 'Local Experience', score: 0.81 }
-      ],
-      amenities: ['Beach Access', 'Pool', 'Kids Club', 'Restaurant', 'Bar', 'Water Sports'],
-      images: [
-        'https://example.com/resort1.jpg',
-        'https://example.com/resort2.jpg'
-      ]
-    },
-    {
-      id: 'PROP003',
-      name: 'Mountain Lodge',
-      location: 'Aspen, CO',
-      type: 'Lodge',
-      description: 'Cozy mountain retreat with ski access',
-      priceRange: '$$$',
-      rating: 4.6,
-      reviewCount: 750,
-      lastUpdated: '2024-03-13',
-      affinityScores: [
-        { affinityId: "aff1", name: 'Business Traveler', score: 5.8 },
-        { affinityId: "aff2", name: 'Family Friendly', score: 7.9 },
-        { affinityId: "aff3", name: 'Luxury Experience', score: 8.3 },
-        { affinityId: "aff4", name: 'Budget Conscious', score: 6.5 },
-        { affinityId: "aff5", name: 'Local Experience', score: 9.2 }
-      ],
-      amenities: ['Ski Storage', 'Restaurant', 'Spa', 'Fireplace', 'Bar', 'Ski Shuttle'],
-      images: [
-        'https://example.com/lodge1.jpg',
-        'https://example.com/lodge2.jpg'
-      ]
-    }
-  ];
+  // Use the Bali properties data instead of mock data
+  const allProperties = baliProperties.map(property => ({
+    id: property.property_id.toString(),
+    name: property.name,
+    location: property.area,
+    address: property.area,
+    propertyType: property.property_type || 'Resort',
+    property_type: property.property_type || 'Resort',
+    type: 'VR', // Vacation Rental type
+    icon: property.icon,
+    secondary_icons: property.secondary_icons,
+    description: `${property.star_rating}-star ${property.property_type || 'resort'} in ${property.area}`,
+    priceRange: property.price_usd_per_night > 400 ? '$$$$' : property.price_usd_per_night > 250 ? '$$$' : '$$',
+    rating: property.review_family_score,
+    review_family_score: property.review_family_score,
+    reviewCount: Math.floor(Math.random() * 1000) + 100,
+    lastUpdated: '2024-03-15',
+    affinityScores: property.affinityScores || [],
+    amenities: property.amenities || [],
+    price: property.price_usd_per_night,
+    price_usd_per_night: property.price_usd_per_night,
+    starRating: property.star_rating,
+    star_rating: property.star_rating,
+    kidsClub: property.kids_club,
+    kitchenette: property.kitchenette,
+    cribAvailable: property.crib_available,
+    poolFence: property.pool_fence,
+    detailedAmenities: property.detailed_amenities || {}
+  }));
   
   // Filter properties based on search term
   const filteredProperties = searchTerm === '*' 
-    ? mockProperties 
-    : mockProperties.filter(property => 
+    ? allProperties 
+    : allProperties.filter(property => 
         property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        property.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.propertyType.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         property.amenities.some(amenity => amenity.toLowerCase().includes(searchTerm.toLowerCase()))
       );
@@ -631,7 +995,18 @@ export const searchProperties = async (searchTerm, page = 1, limit = 10) => {
     totalPages: Math.ceil(filteredProperties.length / limit)
   };
   
-  cacheService.set(cacheKey, paginatedData);
+  console.log('Pagination debug:', { 
+    searchTerm, 
+    page, 
+    limit, 
+    startIndex, 
+    endIndex, 
+    totalItems: filteredProperties.length, 
+    returnedItems: paginatedData.data.length,
+    totalPages: paginatedData.totalPages 
+  });
+  
+  // cacheService.set(cacheKey, paginatedData);
   return paginatedData;
 };
 
@@ -854,15 +1229,22 @@ const properties = [
   }
 ];
 
-export const getProperties = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(properties);
-    }, 500);
-  });
+   const getProperties = async () => {
+  const cacheKey = cacheService.generateKey('properties');
+  const cachedData = cacheService.get(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
+  await delay(300); // Simulate API delay
+
+  // Return the expanded property data
+  const data = baliProperties;
+  cacheService.set(cacheKey, data);
+  return data;
 };
 
-export const getAffinityStats = async () => {
+   const getAffinityStats = async () => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
@@ -875,7 +1257,7 @@ export const getAffinityStats = async () => {
   };
 };
 
-export const getRecentActivity = async () => {
+   const getRecentActivity = async () => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
@@ -902,7 +1284,7 @@ export const getRecentActivity = async () => {
   ];
 };
 
-export const updateFavorites = async (collectionId, isFavorite) => {
+   const updateFavorites = async (collectionId, isFavorite) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -916,7 +1298,7 @@ export const updateFavorites = async (collectionId, isFavorite) => {
   };
 };
 
-export const updateRecentlyViewed = async (affinityId) => {
+   const updateRecentlyViewed = async (affinityId) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -930,7 +1312,7 @@ export const updateRecentlyViewed = async (affinityId) => {
   };
 };
 
-export const deleteCollection = async (collectionId, ownerId) => {
+   const deleteCollection = async (collectionId, ownerId) => {
   try {
     // Simulate API delay
     await delay(1000);
@@ -1050,7 +1432,7 @@ const validateCollection = (data, collections, isUpdate = false) => {
   return errors;
 };
 
-export const createCollection = async (collectionData) => {
+   const createCollection = async (collectionData) => {
   try {
     await delay(1000);
     
@@ -1104,7 +1486,7 @@ export const createCollection = async (collectionData) => {
   }
 };
 
-export const updateCollection = async (collectionId, updates, ownerId) => {
+   const updateCollection = async (collectionId, updates, ownerId) => {
   try {
     await delay(1000);
     
@@ -1175,7 +1557,7 @@ export const updateCollection = async (collectionId, updates, ownerId) => {
   }
 };
 
-export const getCollections = async (ownerId) => {
+   const getCollections = async (ownerId) => {
   try {
     const cacheKey = cacheService.generateKey('collections', { ownerId });
     const cachedData = cacheService.get(cacheKey);
@@ -1213,12 +1595,12 @@ export const getCollections = async (ownerId) => {
 };
 
 // Update clearCollectionsCache to use cacheService
-export const clearCollectionsCache = () => {
+   const clearCollectionsCache = () => {
   cacheService.clearByPrefix('collections');
 };
 
 // Update getAffinityPerformance to use cacheService
-export const getAffinityPerformance = async (affinityId, year, quarter, { page = 1, limit = 10 } = {}) => {
+   const getAffinityPerformance = async (affinityId, year, quarter, { page = 1, limit = 10 } = {}) => {
   try {
     const cacheKey = cacheService.generateKey('performance', { affinityId, year, quarter, page, limit });
     
@@ -1356,7 +1738,7 @@ const mockLifecycleData = {
 };
 
 // New API functions
-export const getLifecycleData = async (affinityName = null) => {
+   const getLifecycleData = async (affinityName = null) => {
   const cacheKey = cacheService.generateKey('lifecycle_data', { affinityName });
   const cachedData = cacheService.get(cacheKey);
   if (cachedData) return cachedData;
@@ -1373,7 +1755,7 @@ export const getLifecycleData = async (affinityName = null) => {
   return data;
 };
 
-export const getRelatedConcepts = async (affinityName) => {
+   const getRelatedConcepts = async (affinityName) => {
   const cacheKey = cacheService.generateKey('related_concepts', { affinityName });
   const cachedData = cacheService.get(cacheKey);
   if (cachedData) return cachedData;
@@ -1456,7 +1838,7 @@ const mockCombinationAnalysis = {
 };
 
 // Additional API functions
-export const analyzeCombination = async (affinities) => {
+   const analyzeCombination = async (affinities) => {
   const cacheKey = cacheService.generateKey('combination_analysis', { affinities: affinities.sort().join('+') });
   const cachedData = cacheService.get(cacheKey);
   if (cachedData) return cachedData;
@@ -1484,7 +1866,7 @@ export const analyzeCombination = async (affinities) => {
   return data;
 };
 
-export const getAffinityDetails = async (affinityName) => {
+   const getAffinityDetails = async (affinityName) => {
   const cacheKey = cacheService.generateKey('affinity_details', { affinityName });
   const cachedData = cacheService.get(cacheKey);
   if (cachedData) return cachedData;
@@ -1514,7 +1896,7 @@ export const getAffinityDetails = async (affinityName) => {
 };
 
 // Add getMetrics function
-export const getMetrics = async () => {
+   const getMetrics = async () => {
   try {
     const cacheKey = cacheService.generateKey('metrics');
     const cachedData = cacheService.get(cacheKey);
@@ -1550,7 +1932,7 @@ export const getMetrics = async () => {
  * @param {Object} filters - Optional filters for the search
  * @returns {Promise<Object>} - The search results
  */
-export async function advancedSearch({ query, context }) {
+   async function advancedSearch({ query, context }) {
   if (typeof query !== 'string') throw new Error('Query must be a string');
   if (query.trim().toLowerCase() === 'test') {
     // Mock affinities with platform_scores and all required metadata
@@ -1661,7 +2043,7 @@ const generateMockSearchResults = (query) => {
 };
 
 // Dashboard configuration and mock data for UI (centralized)
-export const getDashboardConfig = async () => {
+   const getDashboardConfig = async () => {
   // Simulate API delay
   await delay(100);
   // All dashboard stats and progress values in one place
@@ -1756,12 +2138,12 @@ let mockRecentlyViewed = {
   // userId: [affinity, ...]
 };
 
-export const getRecentlyViewed = async (userId) => {
+   const getRecentlyViewed = async (userId) => {
   await delay(100);
   return mockRecentlyViewed[userId] || [];
 };
 
-export const addRecentlyViewed = async (userId, affinity) => {
+   const addRecentlyViewed = async (userId, affinity) => {
   await delay(50);
   if (!mockRecentlyViewed[userId]) mockRecentlyViewed[userId] = [];
   
@@ -1780,7 +2162,7 @@ export const addRecentlyViewed = async (userId, affinity) => {
   return mockRecentlyViewed[userId];
 };
 
-export const mergeRecentlyViewed = async (userId, localList) => {
+ const mergeRecentlyViewed = async (userId, localList) => {
   await delay(100);
   const serverList = mockRecentlyViewed[userId] || [];
   
@@ -1916,7 +2298,7 @@ const getCollectionImplementationReadiness = async (collectionId) => {
  * Returns an object with propertiesTaggedVrbo, propertiesTaggedBex, propertiesTaggedHcom,
  * propertiesScoredVrbo, propertiesScoredBex, propertiesScoredHcom.
  */
-export async function enrichAffinityWithBrandData(affinityId) {
+async function enrichAffinityWithBrandData(affinityId) {
   try {
     await delay(300 + Math.random() * 300); // Simulate network delay
     const affinity = affinityConcepts.find(a => a.id === affinityId);
@@ -1936,10 +2318,72 @@ export async function enrichAffinityWithBrandData(affinityId) {
   }
 }
 
+// Add helper functions for property filtering
+const getUniqueAmenities = (properties) => {
+  const amenitiesSet = new Set();
+  properties.forEach(property => {
+    if (Array.isArray(property.amenities)) {
+      property.amenities.forEach(amenity => {
+        amenitiesSet.add(amenity);
+      });
+    }
+  });
+  return Array.from(amenitiesSet).sort();
+};
+
+const getUniqueAreas = (properties) => {
+  return Array.from(new Set(properties.map(p => p.area))).sort();
+};
+
+const getPriceRange = (properties) => {
+  const prices = properties.map(p => p.price_usd_per_night);
+  return {
+    min: Math.min(...prices),
+    max: Math.max(...prices),
+    avg: prices.reduce((a, b) => a + b, 0) / prices.length
+  };
+};
+
+// Add the getPropertyFilters function
+const getPropertyFilters = async () => {
+  const properties = await getProperties();
+  return {
+    amenities: getUniqueAmenities(properties),
+    areas: getUniqueAreas(properties),
+    priceRange: getPriceRange(properties),
+    starRatings: [3, 4, 5]
+  };
+};
+
 // Export the new functions
 export {
-  // ... existing exports ...
+  getDashboardStats,
+  getAffinities,
+  getProperties,
+  searchProperties,
+  getAffinityStats,
+  getRecentActivity,
+  updateFavorites,
+  updateRecentlyViewed,
+  deleteCollection,
+  createCollection,
+  updateCollection,
+  getCollections,
+  clearCollectionsCache,
+  getAffinityPerformance,
+  getLifecycleData,
+  getRelatedConcepts,
+  analyzeCombination,
+  getAffinityDetails,
+  getMetrics,
+  advancedSearch,
+  getDashboardConfig,
+  getRecentlyViewed,
+  addRecentlyViewed,
+  mergeRecentlyViewed,
   getImplementationReadiness,
   getPlatformPropertyCounts,
-  getCollectionImplementationReadiness
-}; 
+  getCollectionImplementationReadiness,
+  getPropertyFilters,
+  enrichAffinityWithBrandData
+};

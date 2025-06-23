@@ -30,7 +30,7 @@ export const AffinityDataProvider = ({ children }) => {
     setAffinitiesLoading(true);
     setAffinitiesError(null);
     try {
-      const response = await getAffinities();
+      const response = await getAffinities({ page: 1, limit: 500 });
       setAffinities(response.data);
       setAffinitiesLoaded(true);
     } catch (err) {

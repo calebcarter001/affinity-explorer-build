@@ -29,24 +29,25 @@ const ScoringExplorer = () => {
       setLoading(true);
       setError(null);
       
-      // Check cache first
-      const cacheKey = cacheService.generateKey('properties', { page, limit: ITEMS_PER_PAGE });
-      const cachedData = cacheService.get(cacheKey);
+      // Temporarily disable cache for debugging
+      // const cacheKey = cacheService.generateKey('properties', { page, limit: ITEMS_PER_PAGE });
+      // const cachedData = cacheService.get(cacheKey);
       
-      if (cachedData) {
-        setProperties(cachedData.data);
-        setTotalPages(cachedData.totalPages);
-        setLoading(false);
-        return;
-      }
+      // if (cachedData) {
+      //   setProperties(cachedData.data);
+      //   setTotalPages(cachedData.totalPages);
+      //   setLoading(false);
+      //   return;
+      // }
 
-      const loadData = async () => {
+              const loadData = async () => {
         const response = await searchProperties('', page, ITEMS_PER_PAGE);
+        console.log('ScoringExplorer loadData:', response); // Debug log
         setProperties(response.data);
         setTotalPages(response.totalPages);
         
         // Cache the results
-        cacheService.set(cacheKey, response);
+        // cacheService.set(cacheKey, response);
       };
 
       await withRetry(loadData, MAX_RETRIES);
@@ -69,28 +70,29 @@ const ScoringExplorer = () => {
       setIsSearching(true);
       setError(null);
       
-      // Check cache first
-      const cacheKey = cacheService.generateKey('properties_search', { 
-        term: searchTerm, 
-        page: currentPage, 
-        limit: ITEMS_PER_PAGE 
-      });
-      const cachedData = cacheService.get(cacheKey);
+      // Temporarily disable cache for debugging
+      // const cacheKey = cacheService.generateKey('properties_search', { 
+      //   term: searchTerm, 
+      //   page: currentPage, 
+      //   limit: ITEMS_PER_PAGE 
+      // });
+      // const cachedData = cacheService.get(cacheKey);
       
-      if (cachedData) {
-        setProperties(cachedData.data);
-        setTotalPages(cachedData.totalPages);
-        setIsSearching(false);
-        return;
-      }
+      // if (cachedData) {
+      //   setProperties(cachedData.data);
+      //   setTotalPages(cachedData.totalPages);
+      //   setIsSearching(false);
+      //   return;
+      // }
 
       const performSearch = async () => {
         const response = await searchProperties(searchTerm, currentPage, ITEMS_PER_PAGE);
+        console.log('ScoringExplorer search:', response); // Debug log
         setProperties(response.data);
         setTotalPages(response.totalPages);
         
         // Cache the results
-        cacheService.set(cacheKey, response);
+        // cacheService.set(cacheKey, response);
       };
 
       await withRetry(performSearch, MAX_RETRIES);
@@ -259,15 +261,10 @@ const ScoringExplorer = () => {
       );
     }
 
-    // Calculate pagination
-    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-    const currentItems = properties.slice(indexOfFirstItem, indexOfLastItem);
-
     return (
       <div className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
-          {currentItems.map((property) => (
+          {properties.map((property) => (
             <PropertyCard
               key={property.id}
               property={property}
@@ -322,7 +319,7 @@ const ScoringExplorer = () => {
         )}
         
         <div className="mt-2 text-center text-sm text-gray-500">
-          Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, properties.length)} of {properties.length} properties
+          Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, properties.length + ((currentPage - 1) * ITEMS_PER_PAGE))} of {totalPages * ITEMS_PER_PAGE} properties
         </div>
       </div>
     );

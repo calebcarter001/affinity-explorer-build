@@ -935,6 +935,128 @@ section h2 {
 
 /* Font Awesome Icons */
 .fas {
-  font-family: "Font Awesome 6 Free";
+  font-family: "Font Awesome 5 Free";
   font-weight: 900;
+}
+
+/* Clickable Insights Styles */
+.clickable-insight {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.clickable-insight:hover {
+  color: #2563eb !important;
+  text-decoration: underline;
+  text-decoration-color: #2563eb;
+  text-underline-offset: 2px;
+}
+
+.clickable-insight:hover::after {
+  content: "📎";
+  position: absolute;
+  top: -2px;
+  right: -16px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  animation: paperclip-appear 0.2s ease-in-out;
+}
+
+@keyframes paperclip-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced hover states for different insight types */
+.clickable-insight.theme-title:hover {
+  color: #1d4ed8 !important;
+  font-weight: 600;
+}
+
+.clickable-insight.confidence-score:hover {
+  transform: scale(1.05);
+}
+
+.clickable-insight.badge-container:hover .badge {
+  transform: scale(1.02);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Nuance card clickable insights */
+.clickable-insight.nuance-phrase:hover {
+  color: #1e40af !important;
+}
+
+.clickable-insight.nuance-score:hover {
+  transform: scale(1.1);
+}
+
+/* Subtle animation for clickable elements */
+.clickable-insight {
+  animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+/* Remove animation on hover to prevent distraction */
+.clickable-insight:hover {
+  animation: none;
+}
+
+/* Special styles for different context types */
+.clickable-insight[data-context="theme"] {
+  border-bottom: 1px dotted transparent;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.clickable-insight[data-context="theme"]:hover {
+  border-bottom-color: #2563eb;
+}
+
+.clickable-insight[data-context="attribute"]:hover {
+  background-color: rgba(37, 99, 235, 0.05);
+  border-radius: 4px;
+  padding: 1px 2px;
+}
+
+.clickable-insight[data-context="nuance"]:hover {
+  background-color: rgba(16, 185, 129, 0.05);
+  border-radius: 4px;
+  padding: 1px 2px;
+}
+
+/* Focus styles for accessibility */
+.clickable-insight:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Ensure clickable insights don't interfere with layout */
+.clickable-insight {
+  display: inline-block;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .clickable-insight:hover::after {
+    right: -12px;
+    font-size: 0.6rem;
+  }
 } 

@@ -51,6 +51,7 @@ const AffinityLibrary = () => {
   } = useAffinityData();
 
   const searchTimeout = useRef();
+  const detailViewRef = useRef(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { addToRecentlyViewed } = useAppContext();
 
@@ -142,6 +143,12 @@ const AffinityLibrary = () => {
       }
     }
   }, [selectedAffinityIdFromNav, affinities, loading, fetchAffinities, showToast]);
+
+  useEffect(() => {
+    if (selectedAffinity && detailViewRef.current) {
+      detailViewRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedAffinity]);
 
   // Update selectedCollectionId if navigation state changes
   useEffect(() => {
@@ -264,49 +271,48 @@ const AffinityLibrary = () => {
 
   const renderAffinityLibrary = () => {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
-          <div className="bg-white p-4 rounded-lg shadow mb-4">
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
             {/* Search Toggle */}
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex gap-2 items-center">
+            <div className="flex justify-center items-center mb-4 bg-gray-100 rounded-lg p-1">
                 <button
                   onClick={() => handleSearchToggle(false)}
-                  className={`px-3 py-1.5 rounded-md ${!showAdvanced ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700'}`}
+                  className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${!showAdvanced ? 'bg-white shadow text-gray-800' : 'text-gray-500 hover:bg-gray-200'}`}
                 >
                   Basic Search
                 </button>
                 <button
                   onClick={() => handleSearchToggle(true)}
-                  className={`px-3 py-1.5 rounded-md ${showAdvanced ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700'}`}
+                  className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${showAdvanced ? 'bg-white shadow text-gray-800' : 'text-gray-500 hover:bg-gray-200'}`}
                 >
                   Advanced Search
                 </button>
-              </div>
             </div>
             
             {showAdvanced ? (
-              <div className="bg-white p-4 rounded-lg shadow">
+              <div className="p-1">
                 <div className="mb-4">
                   <textarea
-                    placeholder="Describe the affinity you're looking for"
+                    placeholder="Describe the affinity you're looking for..."
                     value={advancedQuery}
                     onChange={e => setAdvancedQuery(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     rows={5}
                   />
                   <textarea
-                    placeholder="Describe the context for this affinity usage (optional)"
+                    placeholder="Add context for this affinity (optional)..."
                     value={advancedContext}
                     onChange={e => setAdvancedContext(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                     rows={2}
                   />
                   <button
                     onClick={handleAdvancedSearch}
-                    className="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                    className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center"
+                    disabled={searchLoading}
                   >
-                    Search
+                    {searchLoading ? 'Searching...' : 'Search'}
                   </button>
                 </div>
                 {searchLoading ? (
@@ -371,7 +377,7 @@ const AffinityLibrary = () => {
         </div>
         
         {/* Right side content - either AffinityDetailView or SearchDetailView */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2" ref={detailViewRef}>
           {showAdvanced && advancedResults?.results?.length > 0 ? (
             <SearchDetailView 
               searchQuery={advancedQuery}
@@ -392,7 +398,7 @@ const AffinityLibrary = () => {
               />
             )
           ) : (
-            <div className="bg-white p-6 rounded-lg shadow flex items-center justify-center h-full">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex items-center justify-center h-full">
               <EmptyStateStyled 
                 icon="inbox"
                 title="No Affinity Selected"
@@ -406,38 +412,55 @@ const AffinityLibrary = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex items-center gap-2">
-            <button
-              onClick={() => handleTabSwitch('library')}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-md ${
-                activeTab === 'library'
-                ? 'bg-blue-100 text-blue-800 font-medium'
-                : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-            <FiBook className="w-4 h-4" />
-            <span>Library</span>
-            </button>
-          
-            <button
-              onClick={() => handleTabSwitch('collections')}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-md ${
-                activeTab === 'collections'
-                ? 'bg-blue-100 text-blue-800 font-medium'
-                : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-            <FiLayers className="w-4 h-4" />
-            <span>Collections</span>
-            </button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="py-6">
+            <h1 className="text-3xl font-bold text-gray-900">Affinity Library</h1>
+            <p className="mt-2 text-gray-600">
+              Explore, search, and manage your organization's affinities.
+            </p>
+          </div>
         </div>
       </div>
-      
-      {activeTab === 'library' ? renderAffinityLibrary() : (
-        <AffinityCollections selectedCollectionId={selectedCollectionId} />
-      )}
+
+      {/* Main Content */}
+      <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12 py-8">
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-1">
+            <nav className="flex space-x-1" aria-label="Tabs">
+              <button
+                onClick={() => handleTabSwitch('library')}
+                className={`flex-1 py-3 px-4 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${
+                  activeTab === 'library'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <FiBook className="w-4 h-4" />
+                <span>Library</span>
+              </button>
+              <button
+                onClick={() => handleTabSwitch('collections')}
+                className={`flex-1 py-3 px-4 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${
+                  activeTab === 'collections'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <FiLayers className="w-4 h-4" />
+                <span>Collections</span>
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        {activeTab === 'library' ? renderAffinityLibrary() : (
+          <AffinityCollections selectedCollectionId={selectedCollectionId} />
+        )}
+      </div>
     </div>
   );
 };

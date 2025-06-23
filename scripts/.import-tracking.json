@@ -1,0 +1,286 @@
+{
+  "lastImport": 1750650015030,
+  "destinations": {
+    "acropolis_greece": {
+      "lastImported": 1750650014538,
+      "lastModified": 1750647796426
+    },
+    "amazon_rainforest_brazil": {
+      "lastImported": 1750650014545,
+      "lastModified": 1750647796183
+    },
+    "amsterdam_netherlands": {
+      "lastImported": 1750650014552,
+      "lastModified": 1750647798323
+    },
+    "anchorage_alaska": {
+      "lastImported": 1750650014559,
+      "lastModified": 1750647797872
+    },
+    "antelope_canyon_usa": {
+      "lastImported": 1750650014565,
+      "lastModified": 1750647797181
+    },
+    "athens_greece": {
+      "lastImported": 1750650014572,
+      "lastModified": 1750647796778
+    },
+    "bagan_myanmar": {
+      "lastImported": 1750650014578,
+      "lastModified": 1750647797211
+    },
+    "banff_national_park_canada": {
+      "lastImported": 1750650014585,
+      "lastModified": 1750647798355
+    },
+    "bangkok_thailand": {
+      "lastImported": 1750650014593,
+      "lastModified": 1750647798259
+    },
+    "bend_oregon": {
+      "lastImported": 1750650014599,
+      "lastModified": 1750647797992
+    },
+    "black_forest_germany": {
+      "lastImported": 1750650014607,
+      "lastModified": 1750647797090
+    },
+    "bora_bora_french_polynesia": {
+      "lastImported": 1750650014616,
+      "lastModified": 1750647796457
+    },
+    "bryce_canyon_usa": {
+      "lastImported": 1750650014624,
+      "lastModified": 1750647798136
+    },
+    "cape_town_south_africa": {
+      "lastImported": 1750650014633,
+      "lastModified": 1750647796617
+    },
+    "chichén_itzá_mexico": {
+      "lastImported": 1750650014640,
+      "lastModified": 1750647797058
+    },
+    "choa_chu_kang_cemetery_singapore": {
+      "lastImported": 1750650014645,
+      "lastModified": 1750647798017
+    },
+    "colosseum_italy": {
+      "lastImported": 1750650014651,
+      "lastModified": 1750647796682
+    },
+    "crater_lake_national_park_oregon": {
+      "lastImported": 1750650014659,
+      "lastModified": 1750647798289
+    },
+    "dargavs_north_ossetia": {
+      "lastImported": 1750650014666,
+      "lastModified": 1750647796369
+    },
+    "dead_sea_israel": {
+      "lastImported": 1750650014674,
+      "lastModified": 1750647796745
+    },
+    "dubai_uae": {
+      "lastImported": 1750650014683,
+      "lastModified": 1750647796555
+    },
+    "edinburgh_scotland": {
+      "lastImported": 1750650014691,
+      "lastModified": 1750647797650
+    },
+    "florence_italy": {
+      "lastImported": 1750650014699,
+      "lastModified": 1750647796905
+    },
+    "fort_canning_park_singapore": {
+      "lastImported": 1750650014706,
+      "lastModified": 1750647797697
+    },
+    "galápagos_islands_ecuador": {
+      "lastImported": 1750650014713,
+      "lastModified": 1750647796810
+    },
+    "gardens_by_the_bay_singapore": {
+      "lastImported": 1750650014720,
+      "lastModified": 1750647797930
+    },
+    "gates_of_the_arctic_national_park_and_preserve_alaska": {
+      "lastImported": 1750650014726,
+      "lastModified": 1750647796585
+    },
+    "ghana_africa": {
+      "lastImported": 1750650014733,
+      "lastModified": 1750647798165
+    },
+    "giants_causeway_uk": {
+      "lastImported": 1750650014742,
+      "lastModified": 1750647796247
+    },
+    "golden_circle_iceland": {
+      "lastImported": 1750650014750,
+      "lastModified": 1750647798195
+    },
+    "grand_canyon_usa": {
+      "lastImported": 1750650014757,
+      "lastModified": 1750647798386
+    },
+    "great_barrier_reef_australia": {
+      "lastImported": 1750650014764,
+      "lastModified": 1750647797241
+    },
+    "ha_long_bay_vietnam": {
+      "lastImported": 1750650014770,
+      "lastModified": 1750647798226
+    },
+    "hanoi_vietnam": {
+      "lastImported": 1750650014776,
+      "lastModified": 1750647796714
+    },
+    "havana_cuba": {
+      "lastImported": 1750650014783,
+      "lastModified": 1750647797121
+    },
+    "haw_par_villa_singapore": {
+      "lastImported": 1750650014788,
+      "lastModified": 1750647796394
+    },
+    "iguazu_falls_brazil": {
+      "lastImported": 1750650014793,
+      "lastModified": 1750647796999
+    },
+    "istanbul_turkey": {
+      "lastImported": 1750650014801,
+      "lastModified": 1750647798048
+    },
+    "jeita_grotto_lebanon": {
+      "lastImported": 1750650014808,
+      "lastModified": 1750647796839
+    },
+    "jerusalem_israel": {
+      "lastImported": 1750650014818,
+      "lastModified": 1750647796280
+    },
+    "jos_nigeria": {
+      "lastImported": 1750650014825,
+      "lastModified": 1750647796213
+    },
+    "kamchatka_peninsula_russia": {
+      "lastImported": 1750650014831,
+      "lastModified": 1750647797810
+    },
+    "kizhi_island_russia": {
+      "lastImported": 1750650014837,
+      "lastModified": 1750647797026
+    },
+    "kyoto_japan": {
+      "lastImported": 1750650014843,
+      "lastModified": 1750647797785
+    },
+    "lake_baikal_russia": {
+      "lastImported": 1750650014851,
+      "lastModified": 1750647797271
+    },
+    "lena_pillars_russia": {
+      "lastImported": 1750650014856,
+      "lastModified": 1750647798106
+    },
+    "littleton_colorado": {
+      "lastImported": 1750650014862,
+      "lastModified": 1750647798447
+    },
+    "machu_picchu_peru": {
+      "lastImported": 1750650014868,
+      "lastModified": 1750647797370
+    },
+    "maldives": {
+      "lastImported": 1750650014874,
+      "lastModified": 1750647797841
+    },
+    "marrakech_morocco": {
+      "lastImported": 1750650014880,
+      "lastModified": 1750647797755
+    },
+    "mount_kilimanjaro_tanzania": {
+      "lastImported": 1750650014885,
+      "lastModified": 1750647797726
+    },
+    "new_york_city_usa": {
+      "lastImported": 1750650014892,
+      "lastModified": 1750647798418
+    },
+    "niagara_falls_usa": {
+      "lastImported": 1750650014899,
+      "lastModified": 1750647796488
+    },
+    "oxford_uk": {
+      "lastImported": 1750650014906,
+      "lastModified": 1750647797340
+    },
+    "paris_france": {
+      "lastImported": 1750650014914,
+      "lastModified": 1750647797467
+    },
+    "prague_czech_republic": {
+      "lastImported": 1750650014921,
+      "lastModified": 1750647797305
+    },
+    "reykjavik_iceland": {
+      "lastImported": 1750650014927,
+      "lastModified": 1750647796311
+    },
+    "reynisdrangar_basalt_columns_iceland": {
+      "lastImported": 1750650014934,
+      "lastModified": 1750647796935
+    },
+    "rome_italy": {
+      "lastImported": 1750650014942,
+      "lastModified": 1750647797961
+    },
+    "santorini_greece": {
+      "lastImported": 1750650014948,
+      "lastModified": 1750647796649
+    },
+    "scottish_highlands_scotland": {
+      "lastImported": 1750650014957,
+      "lastModified": 1750647797403
+    },
+    "seattle_washington": {
+      "lastImported": 1750650014966,
+      "lastModified": 1750647796342
+    },
+    "serengeti_national_park_tanzania": {
+      "lastImported": 1750650014971,
+      "lastModified": 1750647798080
+    },
+    "siem_reap_cambodia": {
+      "lastImported": 1750650014977,
+      "lastModified": 1750647796870
+    },
+    "sydney_australia": {
+      "lastImported": 1750650014984,
+      "lastModified": 1750647797903
+    },
+    "tokyo_japan": {
+      "lastImported": 1750650014991,
+      "lastModified": 1750647797498
+    },
+    "uluru_australia": {
+      "lastImported": 1750650014997,
+      "lastModified": 1750647796969
+    },
+    "venice_italy": {
+      "lastImported": 1750650015005,
+      "lastModified": 1750647796522
+    },
+    "victoria_falls_zimbabwe": {
+      "lastImported": 1750650015013,
+      "lastModified": 1750647797151
+    },
+    "yosemite_national_park_usa": {
+      "lastImported": 1750650015019,
+      "lastModified": 1750647797436
+    }
+  },
+  "version": "1.0.0"
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiSearch, FiChevronDown } from 'react-icons/fi';
 import { searchProperties } from '../../services/apiService';
 import EmptyStateStyled from '../common/EmptyStateStyled';
@@ -16,6 +16,7 @@ import {
 const AgentView = () => {
   const [activeTab, setActiveTab] = useState('verification');
   const [searchTerm, setSearchTerm] = useState('');
+  const [actualSearchTerm, setActualSearchTerm] = useState(''); // Track the actual search being performed
   const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -24,11 +25,7 @@ const AgentView = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 5;
-
-  // Calculate pagination values
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProperties = properties.slice(indexOfFirstItem, indexOfLastItem);
+  const detailViewRef = useRef(null);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -39,27 +36,37 @@ const AgentView = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await searchProperties(searchTerm || '*', currentPage, itemsPerPage);
+        // Use a unique cache-busting parameter to avoid stale cached data
+        const searchQuery = actualSearchTerm || '*';
+        const response = await searchProperties(searchQuery, currentPage, itemsPerPage);
+        console.log('Fetched properties:', response); // Debug log
         setProperties(response.data);
         setTotalPages(response.totalPages);
       } catch (err) {
+        console.error('Error fetching properties:', err); // Debug log
         setError(err.message);
       }
       setLoading(false);
     };
 
     fetchProperties();
-  }, [searchTerm, currentPage, itemsPerPage]);
+  }, [actualSearchTerm, currentPage, itemsPerPage]);
 
   const handleSearch = () => {
-    if (searchTerm.trim()) {
-      setSearchTerm(searchTerm.trim());
-      setCurrentPage(1); // Reset to first page when new search results arrive
-    }
+    const trimmedSearch = searchTerm.trim();
+    setActualSearchTerm(trimmedSearch);
+    setCurrentPage(1); // Reset to first page when new search results arrive
   };
 
   const handlePropertySelect = (property) => {
     setSelectedProperty(property);
+    // Auto-scroll to detail view when property is selected
+    if (detailViewRef.current) {
+      detailViewRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
   };
 
   const togglePanel = (panelId) => {
@@ -124,7 +131,7 @@ const AgentView = () => {
     return (
       <>
         <div className="space-y-4">
-          {currentProperties.map((property) => (
+          {properties.map((property) => (
             <PropertyCard
               key={property.id}
               property={property}
@@ -196,7 +203,7 @@ const AgentView = () => {
         </div>
 
         {/* Agent View Section - Right Side */}
-        <div className="col-span-8">
+        <div className="col-span-8" ref={detailViewRef}>
           {selectedProperty ? (
             <div className="bg-white h-full rounded-lg shadow-sm border border-gray-200 flex flex-col overflow-hidden">
               {/* Property Details Section */}

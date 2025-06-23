@@ -10,118 +10,406 @@ class DataLoader {
     this.dataPath = DESTINATION_CONFIG.DATA_PATH;
     this.availableDestinations = DESTINATION_CONFIG.AVAILABLE_DESTINATIONS;
     this.validateOnLoad = DESTINATION_CONFIG.VALIDATE_DATA_ON_LOAD;
+    this.exportConfig = DESTINATION_CONFIG.EXPORT_DATA_CONFIG;
   }
 
   /**
-   * Load destination data (themes and evidence)
-   * @param {string} destinationId - e.g., 'new_york__usa', 'paris__france', 'tokyo__japan'
-   * @returns {Promise<{themes: Object, evidence: Object}>}
+   * Enhanced destination loading with export data only
+   * @param {string} destinationId 
+   * @returns {Promise<Object>}
    */
   async loadDestination(destinationId) {
-    // Validate destination is configured
-    const destinationConfig = this.getDestinationConfig(destinationId);
-    if (!destinationConfig) {
-      throw new Error(`Destination '${destinationId}' is not configured. Available destinations: ${this.availableDestinations.map(d => d.id).join(', ')}`);
-    }
-
     const cacheKey = `destination_${destinationId}`;
     
-    // Return cached data if available
+    // Check cache first
     if (this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey);
       if (Date.now() - cached.timestamp < this.cacheTimeout) {
-        console.log(`Loading ${destinationId} from cache`);
+        console.log(`Using cached data for ${destinationId}`);
         return cached.data;
       }
     }
 
     try {
-      // Load enhanced themes data using configured file name
-      const enhancedPath = `${this.dataPath}${destinationConfig.dataFiles.enhanced}`;
-      const enhancedResponse = await fetch(enhancedPath);
-      if (!enhancedResponse.ok) {
-        throw new Error(`Failed to load enhanced data from ${enhancedPath}: ${enhancedResponse.status}`);
-      }
-      const enhancedData = await enhancedResponse.json();
-
-      // Load evidence data using configured file name
-      let evidenceData = null;
-      try {
-        const evidencePath = `${this.dataPath}${destinationConfig.dataFiles.evidence}`;
-        const evidenceResponse = await fetch(evidencePath);
-        if (evidenceResponse.ok) {
-          evidenceData = await evidenceResponse.json();
-        } else {
-          console.warn(`Evidence data not available at ${evidencePath}: ${evidenceResponse.status}`);
-        }
-      } catch (error) {
-        console.warn(`Evidence data not available for ${destinationId}:`, error);
-      }
-
-      // Validate data if configured to do so
-      if (this.validateOnLoad) {
-        this._validateThemeData(enhancedData);
-        if (evidenceData) {
-          this._validateEvidenceData(evidenceData);
-        }
-      }
-
-      // Process and normalize the data
-      const processedData = this.processThemeData(enhancedData, evidenceData);
-
-      // Cache the result
+      // Load export data (only format we support now)
+      const exportData = await this.loadExportData(destinationId);
+      if (exportData) {
+        const transformedData = this.transformExportData(exportData);
       this.cache.set(cacheKey, {
-        data: processedData,
+          data: transformedData,
         timestamp: Date.now()
       });
-
-      console.log(`Loaded ${processedData.length} themes for ${destinationId} from configuration`);
-      return processedData;
-
-    } catch (error) {
-      console.error(`Error loading destination data for ${destinationId}:`, error);
-      throw error;
+        console.log(`Loaded export data for ${destinationId}`);
+        return transformedData;
+      }
+      
+      throw new Error(`No export data available for destination: ${destinationId}`);
+      
+    } catch (err) {
+      console.error('Error loading destination data:', err);
+      throw new Error(`Failed to load destination data: ${err.message}`);
     }
   }
 
   /**
-   * Internal method to load destination data from files
-   * @private
+   * Load export data from the new format
+   * @param {string} destinationId 
+   * @returns {Promise<Object|null>}
    */
-  async _loadDestinationData(destinationId) {
+  async loadExportData(destinationId) {
+    const destinationConfig = this.getDestinationConfig(destinationId);
+    if (!destinationConfig) {
+      console.error(`[Debug] No config found for destinationId: ${destinationId}`);
+      return null;
+    }
+
+    const completeDataPath = `export/${destinationId}/data/${destinationId}_complete.json`;
+    console.log(`[Debug] Attempting to load complete data from: ${this.dataPath}${completeDataPath}`);
+    
     try {
-      // Load both theme and evidence data in parallel
-      const [themesResponse, evidenceResponse] = await Promise.all([
-        fetch(`/data/${destinationId}_enhanced.json`),
-        fetch(`/data/${destinationId}_evidence.json`)
+      const completeResponse = await fetch(`${this.dataPath}${completeDataPath}`);
+      console.log(`[Debug] Fetch response status for ${completeDataPath}: ${completeResponse.status}`);
+      
+      if (completeResponse.ok) {
+        const completeData = await completeResponse.json();
+        console.log('[Debug] Successfully parsed complete data JSON.');
+        console.log('[Debug] Complete data structure keys:', Object.keys(completeData));
+        console.log('[Debug] Consolidated data keys:', Object.keys(completeData.consolidated_data || {}));
+        
+        const exportData = {
+          themes: completeData.consolidated_data?.themes,
+          nuances: completeData.consolidated_data?.nuances,
+          evidence: completeData.consolidated_data?.evidence,
+          similarDestinations: completeData.consolidated_data?.similar_destinations,
+          metadata: completeData.consolidated_data?.metadata,
+          dataType: 'complete_export'
+        };
+        
+        console.log('[Debug] Export data structure:', {
+          hasThemes: !!exportData.themes,
+          hasNuances: !!exportData.nuances,
+          hasEvidence: !!exportData.evidence,
+          hasSimilarDestinations: !!exportData.similarDestinations,
+          hasMetadata: !!exportData.metadata
+        });
+
+        return exportData;
+      }
+    } catch (error) {
+      console.error(`[Debug] Error loading or parsing complete data for ${destinationId}:`, error);
+    }
+
+    // Fallback to separate files (this part should not be hit if complete data exists)
+    console.log(`[Debug] Falling back to separate files for ${destinationId}`);
+    const { themes: themesPath, nuances: nuancesPath, evidence: evidencePath } = destinationConfig.dataFiles;
+    
+    try {
+      // Load all three files in parallel with better error handling
+      const [themesResponse, nuancesResponse, evidenceResponse] = await Promise.all([
+        fetch(`${this.dataPath}${themesPath}`).catch(err => ({ ok: false, status: 404, error: err })),
+        fetch(`${this.dataPath}${nuancesPath}`).catch(err => ({ ok: false, status: 404, error: err })),
+        fetch(`${this.dataPath}${evidencePath}`).catch(err => ({ ok: false, status: 404, error: err }))
       ]);
 
-      if (!themesResponse.ok) {
-        throw new Error(`Failed to load themes for ${destinationId}: ${themesResponse.statusText}`);
+      // Check if any responses failed
+      if (!themesResponse.ok || !nuancesResponse.ok || !evidenceResponse.ok) {
+        const failedFiles = [];
+        if (!themesResponse.ok) failedFiles.push(`themes (${themesResponse.status})`);
+        if (!nuancesResponse.ok) failedFiles.push(`nuances (${nuancesResponse.status})`);
+        if (!evidenceResponse.ok) failedFiles.push(`evidence (${evidenceResponse.status})`);
+        throw new Error(`Missing files: ${failedFiles.join(', ')}`);
       }
 
-      if (!evidenceResponse.ok) {
-        throw new Error(`Failed to load evidence for ${destinationId}: ${evidenceResponse.statusText}`);
-      }
-
-      const [themes, evidence] = await Promise.all([
-        themesResponse.json(),
-        evidenceResponse.json()
+      // Parse JSON with better error handling
+      const [themesData, nuancesData, evidenceData] = await Promise.all([
+        themesResponse.json().catch(err => {
+          console.error(`Failed to parse themes.json for ${destinationId}:`, err);
+          throw new Error(`Invalid themes JSON: ${err.message}`);
+        }),
+        nuancesResponse.json().catch(err => {
+          console.error(`Failed to parse nuances.json for ${destinationId}:`, err);
+          throw new Error(`Invalid nuances JSON: ${err.message}`);
+        }),
+        evidenceResponse.json().catch(err => {
+          console.error(`Failed to parse evidence.json for ${destinationId}:`, err);
+          throw new Error(`Invalid evidence JSON: ${err.message}`);
+        })
       ]);
-
-      // Validate data structure
-      this._validateThemeData(themes);
-      this._validateEvidenceData(evidence);
 
       return {
-        themes,
-        evidence,
-        loadedAt: new Date().toISOString()
+        themes: themesData,
+        nuances: nuancesData,
+        evidence: evidenceData,
+        similarDestinations: null, // Not available in separate files format
+        dataType: 'export'
       };
     } catch (error) {
-      console.error(`Error loading destination data for ${destinationId}:`, error);
-      throw new Error(`Failed to load destination data: ${error.message}`);
+      console.warn(`Failed to load export data for ${destinationId}:`, error.message);
+      return null;
     }
+  }
+
+  /**
+   * Transform export data to application format
+   * @param {Object} exportData 
+   * @returns {Object}
+   */
+  transformExportData(exportData) {
+    console.log('[Debug] transformExportData received:', exportData);
+    const { themes, nuances, evidence, similarDestinations, metadata, dataType } = exportData;
+    
+    // Since the import script now properly structures the data, we can access it directly
+    const themeData = themes || {};
+    const nuanceData = nuances || {};
+    const evidenceData = evidence || {};
+    const similarDestData = similarDestinations || {};
+    
+    console.log('[Debug] Data structure keys:', {
+      themes: Object.keys(themeData),
+      nuances: Object.keys(nuanceData),
+      similarDest: Object.keys(similarDestData)
+    });
+
+    // Extract themes from the properly structured data
+    const themesArray = themeData.themes_data?.affinities || [];
+    console.log('[Debug] Themes array found:', themesArray.length, 'themes');
+
+    const transformed = {
+      themes: this.transformExportThemes(themesArray),
+      nuances: this.transformExportNuances(nuanceData),
+      evidence: evidenceData.evidence_data?.evidence || [],
+      similarDestinations: this.transformSimilarDestinations(similarDestData),
+      intelligenceInsights: themeData.themes_data?.intelligence_insights || {},
+      dataType: dataType,
+      metadata: {
+        destination: metadata?.destination || themeData?.destination,
+        exportVersion: metadata?.enhanced_metadata?.export_version || themes?.export_metadata?.export_version,
+        schemaVersion: metadata?.enhanced_metadata?.schema_version || themes?.export_metadata?.schema_version,
+        processingMetadata: metadata
+      }
+    };
+    
+    const totalNuances = (transformed.nuances?.destination_nuances?.length || 0) + 
+                        (transformed.nuances?.hotel_expectations?.length || 0) + 
+                        (transformed.nuances?.vacation_rental_expectations?.length || 0);
+    
+    console.log('[Debug] Data after transformation:', {
+      themesCount: transformed.themes?.length || 0,
+      nuancesCount: totalNuances,
+      nuancesBreakdown: {
+        destination: transformed.nuances?.destination_nuances?.length || 0,
+        hotel: transformed.nuances?.hotel_expectations?.length || 0,
+        vacation_rental: transformed.nuances?.vacation_rental_expectations?.length || 0
+      },
+      evidenceCount: transformed.evidence?.length || 0,
+      similarDestinationsCount: transformed.similarDestinations?.similarDestinations?.length || 0
+    });
+    return transformed;
+  }
+
+  /**
+   * Transform export themes to application format
+   * @param {Array} exportThemes 
+   * @returns {Array}
+   */
+  transformExportThemes(exportThemes) {
+    return exportThemes.map(theme => ({
+      // Preserve existing structure for backward compatibility
+      id: theme.theme || `theme_${Math.random().toString(36).substr(2, 9)}`,
+      name: theme.theme,
+      theme: theme.theme,
+      category: theme.category,
+      confidence: theme.confidence || 0.5,
+      rationale: theme.rationale,
+      description: theme.rationale,
+      
+      // Enhanced data from export
+      sub_themes: theme.sub_themes || [],
+      nano_themes: theme.nano_themes || [],
+      subThemes: theme.sub_themes || [],
+      nanoThemes: theme.nano_themes || [],
+      
+      // Intelligence analysis
+      depth_analysis: theme.depth_analysis || {},
+      authenticity_analysis: theme.authenticity_analysis || {},
+      hidden_gem_score: theme.hidden_gem_score || {},
+      emotional_profile: theme.emotional_profile || {},
+      experience_intensity: theme.experience_intensity || {},
+      cultural_sensitivity: theme.cultural_sensitivity || {},
+      
+      // Contextual information
+      contextual_info: theme.contextual_info || {},
+      seasonality: theme.seasonality || {},
+      price_insights: theme.price_insights || {},
+      traveler_types: theme.traveler_types || [],
+      
+      // Evidence data
+      comprehensive_attribute_evidence: theme.comprehensive_attribute_evidence || {},
+      
+      // Processing metadata
+      processing_metadata: theme.processing_metadata || {},
+      
+      // Derived fields for UI
+      bestFor: this.extractBestFor(theme),
+      timeNeeded: this.extractTimeNeeded(theme),
+      intensity: this.extractIntensity(theme),
+      priceRange: this.extractPriceRange(theme),
+      emotions: this.extractEmotions(theme),
+      bestSeason: this.extractBestSeason(theme),
+      intelligenceBadges: this.generateIntelligenceBadges(theme)
+    }));
+  }
+
+  /**
+   * Transform export nuances to application format
+   * @param {Object} nuancesData 
+   * @returns {Object}
+   */
+  transformExportNuances(nuancesData) {
+    console.log('[Debug] transformExportNuances received:', nuancesData);
+    
+    // Import script ensures proper structure, so we can access directly
+    const nuances = nuancesData.nuances_data || {};
+    
+    const destinationNuances = nuances.destination_nuances || [];
+    const hotelNuances = nuances.hotel_expectations || [];
+    const vacationRentalNuances = nuances.vacation_rental_expectations || [];
+    
+    console.log('[Debug] Nuance counts from structured data:', {
+      destination: destinationNuances.length,
+      hotel: hotelNuances.length,
+      vacation_rental: vacationRentalNuances.length
+    });
+    
+    return {
+      destination_nuances: destinationNuances,
+      hotel_expectations: hotelNuances,
+      vacation_rental_expectations: vacationRentalNuances,
+      overall_nuance_quality_score: nuances.overall_nuance_quality_score || 0.8
+    };
+  }
+
+  /**
+   * Generate intelligence badges from theme data
+   * @param {Object} theme 
+   * @returns {Array}
+   */
+  generateIntelligenceBadges(theme) {
+    const badges = [];
+    
+    // Depth badge
+    if (theme.depth_analysis?.depth_level) {
+      badges.push(`📊 ${theme.depth_analysis.depth_level}`);
+    }
+    
+    // Authenticity badge
+    if (theme.authenticity_analysis?.authenticity_level) {
+      const level = theme.authenticity_analysis.authenticity_level;
+      if (level === 'local_influenced') {
+        badges.push('🌟 local influenced');
+      } else {
+        badges.push('⚖️ balanced');
+      }
+    }
+    
+    // Hidden gem badge
+    if (theme.hidden_gem_score?.hidden_gem_level) {
+      const level = theme.hidden_gem_score.hidden_gem_level;
+      if (level === 'local favorite') {
+        badges.push('⭐ local favorite');
+      } else if (level === 'off the beaten path') {
+        badges.push('🗺️ off beaten path');
+      }
+    }
+    
+    // Intensity badge
+    if (theme.experience_intensity?.overall_intensity) {
+      badges.push(`⚡ ${theme.experience_intensity.overall_intensity}`);
+  }
+
+    // Emotion badges
+    if (theme.emotional_profile?.primary_emotions) {
+      theme.emotional_profile.primary_emotions.forEach(emotion => {
+        badges.push(`✨ ${emotion}`);
+      });
+    }
+    
+    return badges;
+  }
+
+  /**
+   * Extract best for information
+   * @param {Object} theme 
+   * @returns {string}
+   */
+  extractBestFor(theme) {
+    if (theme.contextual_info?.demographic_suitability) {
+      return theme.contextual_info.demographic_suitability.join(', ');
+    }
+    return 'All travelers';
+  }
+
+  /**
+   * Extract time needed information
+   * @param {Object} theme 
+   * @returns {string}
+   */
+  extractTimeNeeded(theme) {
+    if (theme.contextual_info?.time_commitment) {
+      return theme.contextual_info.time_commitment;
+    }
+    return 'Flexible';
+  }
+
+  /**
+   * Extract intensity information
+   * @param {Object} theme 
+   * @returns {string}
+   */
+  extractIntensity(theme) {
+    if (theme.experience_intensity?.overall_intensity) {
+      return theme.experience_intensity.overall_intensity;
+    }
+    return 'Moderate';
+  }
+
+  /**
+   * Extract price range information
+   * @param {Object} theme 
+   * @returns {string}
+   */
+  extractPriceRange(theme) {
+    if (theme.price_insights?.price_category) {
+      return theme.price_insights.price_category;
+    }
+    if (theme.price_point) {
+      return theme.price_point;
+    }
+    return 'Mid';
+  }
+
+  /**
+   * Extract emotions information
+   * @param {Object} theme 
+   * @returns {Array}
+   */
+  extractEmotions(theme) {
+    if (theme.emotional_profile?.primary_emotions) {
+      return theme.emotional_profile.primary_emotions;
+    }
+    return ['contemplative'];
+  }
+
+  /**
+   * Extract best season information
+   * @param {Object} theme 
+   * @returns {string}
+   */
+  extractBestSeason(theme) {
+    if (theme.seasonality?.peak) {
+      return theme.seasonality.peak.join(', ');
+    }
+    return 'Year-round';
   }
 
   /**
@@ -150,46 +438,56 @@ class DataLoader {
   }
 
   /**
-   * Validate that all configured destinations have their data files available
-   * @returns {Promise<Array<{destination: string, status: string, error?: string}>>}
+   * Validate data availability for a destination
+   * @param {string} destinationId 
+   * @returns {Promise<Object>}
+   */
+  async validateDestination(destinationId) {
+    try {
+      await this.loadDestination(destinationId);
+      return {
+        destination: destinationId,
+        status: 'available',
+        dataType: 'export'
+      };
+    } catch (error) {
+    return {
+        destination: destinationId,
+        status: 'error',
+        error: error.message
+    };
+  }
+  }
+
+  /**
+   * Validate all destinations
+   * @returns {Promise<Array>}
    */
   async validateAllDestinations() {
-    const results = [];
+    const destinations = this.getAvailableDestinations();
+    const validationPromises = destinations.map(dest => 
+      this.validateDestination(dest.id).catch(error => ({
+        destination: dest.id,
+        status: 'error',
+        error: error.message
+      }))
+    );
     
-    for (const destination of this.availableDestinations) {
-      try {
-        const enhancedPath = `${this.dataPath}${destination.dataFiles.enhanced}`;
-        const evidencePath = `${this.dataPath}${destination.dataFiles.evidence}`;
-        
-        const [enhancedResponse, evidenceResponse] = await Promise.all([
-          fetch(enhancedPath),
-          fetch(evidencePath)
-        ]);
+    return await Promise.all(validationPromises);
+  }
 
-        const status = {
-          destination: destination.id,
-          enhanced: enhancedResponse.ok,
-          evidence: evidenceResponse.ok,
-          status: enhancedResponse.ok && evidenceResponse.ok ? 'available' : 'partial'
-        };
-
-        if (!enhancedResponse.ok) {
-          status.error = `Enhanced data not found at ${enhancedPath}`;
-        } else if (!evidenceResponse.ok) {
-          status.error = `Evidence data not found at ${evidencePath}`;
-        }
-
-        results.push(status);
-      } catch (error) {
-        results.push({
-          destination: destination.id,
-          status: 'error',
-          error: error.message
-        });
-      }
+  /**
+   * Clear cache for a specific destination or all destinations
+   * @param {string} destinationId - Optional, clears all if not provided
+   */
+  clearCache(destinationId = null) {
+    if (destinationId) {
+      this.cache.delete(`destination_${destinationId}`);
+      console.log(`Cache cleared for ${destinationId}`);
+    } else {
+      this.cache.clear();
+      console.log('All cache cleared');
     }
-
-    return results;
   }
 
   /**
@@ -199,222 +497,59 @@ class DataLoader {
   async preloadAll() {
     const destinations = this.getAvailableDestinations();
     const loadPromises = destinations.map(dest => 
-      this.loadDestination(dest.key).catch(error => {
+      this.loadDestination(dest.id).catch(error => {
         console.warn(`Failed to preload ${dest.name}:`, error);
         return null;
       })
     );
     
     await Promise.all(loadPromises);
+    console.log('Preloading completed');
   }
 
   /**
-   * Clear cache
+   * Transform similar destinations data to application format
+   * @param {Object} similarDestinationsData 
+   * @returns {Object|null}
    */
-  clearCache() {
-    this.cache.clear();
-  }
-
-  /**
-   * Validate theme data structure
-   * @private
-   */
-  _validateThemeData(data) {
-    if (!data || typeof data !== 'object') {
-      throw new Error('Invalid theme data structure');
+  transformSimilarDestinations(similarDestinationsData) {
+    console.log('[Debug] transformSimilarDestinations called with:', similarDestinationsData);
+    
+    if (!similarDestinationsData) {
+      console.log('[Debug] No similar destinations data provided');
+      return null;
+    }
+    
+    // Import script ensures proper structure
+    const data = similarDestinationsData.similar_destinations_data || {};
+    
+    if (!data.similar_destinations) {
+      console.log('[Debug] No similar_destinations array found');
+      return null;
     }
 
-    if (!data.destination || !Array.isArray(data.affinities)) {
-      throw new Error('Theme data missing required fields (destination, affinities)');
-    }
+    console.log('[Debug] Found similar destinations:', data.similar_destinations.length);
 
-    // Validate at least one theme exists
-    if (data.affinities.length === 0) {
-      throw new Error('No themes found in data');
-    }
-
-    // Validate theme structure
-    data.affinities.forEach((theme, index) => {
-      if (!theme.theme || !theme.category) {
-        throw new Error(`Theme at index ${index} missing required fields`);
-      }
-    });
-  }
-
-  /**
-   * Validate evidence data structure
-   * @private
-   */
-  _validateEvidenceData(data) {
-    if (!data || typeof data !== 'object') {
-      throw new Error('Invalid evidence data structure');
-    }
-
-    if (!data.destination_name || !data.theme_evidence) {
-      throw new Error('Evidence data missing required fields');
-    }
-  }
-
-  /**
-   * Get cache statistics
-   * @returns {Object}
-   */
-  getCacheStats() {
     return {
-      size: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      similarDestinations: data.similar_destinations.map(dest => ({
+        destination: dest.destination,
+        similarityScore: dest.similarity_score,
+        confidence: dest.confidence,
+        similarityReasons: dest.similarity_reasons || [],
+        geographicProximity: dest.geographic_proximity || 0,
+        culturalSimilarity: dest.cultural_similarity || 0,
+        experienceSimilarity: dest.experience_similarity || 0,
+        contributingModels: dest.contributing_models || [],
+        sourceUrls: dest.source_urls || [],
+        validationData: dest.validation_data || {}
+      })),
+      qualityScore: data.quality_score || 0,
+      processingMetadata: data.processing_metadata || {},
+      statistics: data.statistics || {}
     };
-  }
-
-  // Process and normalize theme data from different possible structures
-  processThemeData(enhancedData, evidenceData) {
-    let themes = [];
-
-    // Handle different possible data structures
-    if (enhancedData.affinities) {
-      // Structure: { affinities: [...] } - This is the actual structure
-      themes = enhancedData.affinities;
-    } else if (enhancedData.themes && enhancedData.themes.affinities) {
-      // Structure: { themes: { affinities: [...] } }
-      themes = enhancedData.themes.affinities;
-    } else if (Array.isArray(enhancedData)) {
-      // Structure: [theme1, theme2, ...]
-      themes = enhancedData;
-    } else if (enhancedData.destination_themes) {
-      // Structure: { destination_themes: [...] }
-      themes = enhancedData.destination_themes;
-    } else {
-      console.warn('Unknown data structure, attempting to extract themes');
-      themes = [];
-    }
-
-    console.log(`Found ${themes.length} themes in data structure`);
-    
-    // Normalize each theme to a consistent structure
-    return themes.map((theme, index) => this.normalizeTheme(theme, index, evidenceData));
-  }
-
-  // Normalize a theme object to a consistent structure
-  normalizeTheme(theme, index, evidenceData) {
-    const normalized = {
-      id: theme.id || theme.theme || `theme_${index}`,
-      name: theme.name || theme.theme || `Theme ${index + 1}`,
-      description: theme.description || theme.rationale || '',
-      category: theme.category || 'experience',
-      confidence: theme.confidence || 0.85,
-      
-      // Sub-themes and nano themes
-      subThemes: theme.subThemes || theme.sub_themes || [],
-      nanoThemes: theme.nanoThemes || theme.nano_themes || [],
-      
-      // Attributes
-      bestFor: theme.bestFor || this.extractBestFor(theme),
-      timeNeeded: theme.timeNeeded || this.extractTimeNeeded(theme),
-      intensity: theme.intensity || this.extractIntensity(theme),
-      priceRange: theme.priceRange || theme.price_point || 'Mid',
-      emotions: theme.emotions || this.extractEmotions(theme),
-      bestSeason: theme.bestSeason || this.extractBestSeason(theme),
-      culturalSensitivity: theme.culturalSensitivity || this.extractCulturalSensitivity(theme),
-      
-      // Advanced metadata
-      sourceQuality: theme.sourceQuality || this.generateSourceQuality(),
-      emotionalProfile: theme.emotionalProfile || theme.emotional_profile || this.generateEmotionalProfile(theme),
-      intelligenceBadges: theme.intelligenceBadges || this.generateIntelligenceBadges(theme),
-      
-      // Keep original data for evidence system
-      originalData: theme,
-      evidenceData: evidenceData
-    };
-
-    return normalized;
-  }
-
-  // Helper methods to extract data from different structures
-  extractBestFor(theme) {
-    if (theme.contextual_info?.demographic_suitability) {
-      return Array.isArray(theme.contextual_info.demographic_suitability) 
-        ? theme.contextual_info.demographic_suitability.join(', ')
-        : theme.contextual_info.demographic_suitability;
-    }
-    return 'All travelers';
-  }
-
-  extractTimeNeeded(theme) {
-    return theme.contextual_info?.time_commitment || 'Flexible';
-  }
-
-  extractIntensity(theme) {
-    return theme.experience_intensity?.overall_intensity || 'Moderate';
-  }
-
-  extractEmotions(theme) {
-    if (theme.emotional_profile?.primary_emotions) {
-      return theme.emotional_profile.primary_emotions;
-    }
-    return ['inspiring'];
-  }
-
-  extractBestSeason(theme) {
-    if (theme.seasonality?.peak) {
-      return Array.isArray(theme.seasonality.peak) 
-        ? theme.seasonality.peak.join(', ')
-        : theme.seasonality.peak;
-    }
-    return 'Year-round';
-  }
-
-  extractCulturalSensitivity(theme) {
-    if (theme.cultural_sensitivity?.considerations) {
-      return Array.isArray(theme.cultural_sensitivity.considerations)
-        ? theme.cultural_sensitivity.considerations.join(', ')
-        : theme.cultural_sensitivity.considerations;
-    }
-    return null;
-  }
-
-  // Generate mock data for missing fields
-  generateSourceQuality() {
-    return {
-      authority: 0.8 + Math.random() * 0.2,
-      relevance: 0.85 + Math.random() * 0.15,
-      recency: 0.7 + Math.random() * 0.3
-    };
-  }
-
-  generateEmotionalProfile(theme) {
-    const emotions = theme.emotional_profile || {};
-    const defaultProfile = {
-      inspiring: 0.8,
-      peaceful: 0.6,
-      exciting: 0.7,
-      contemplative: 0.5
-    };
-    
-    return Object.keys(emotions).length > 0 ? emotions : defaultProfile;
-  }
-
-  generateIntelligenceBadges(theme) {
-    const badges = ['📊 nano'];
-    
-    if (theme.category === 'culture') {
-      badges.push('🌟 local influenced');
-    } else {
-      badges.push('🌟 balanced');
-    }
-    
-    badges.push('⭐ off beaten path');
-    
-    const emotions = this.extractEmotions(theme);
-    if (emotions.length > 0) {
-      badges.push(`✨ ${emotions[0]}`);
-    }
-    
-    return badges;
   }
 }
 
-// Create singleton instance
+// Create and export a singleton instance
 export const dataLoader = new DataLoader();
-
-// Export class for testing
-export { DataLoader }; 
+export default dataLoader; 
