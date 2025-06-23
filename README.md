@@ -1,72 +1,14 @@
 # Affinity Explorer
 
-A modern web application for exploring and analyzing property affinities, built with React, Vite, and TailwindCSS.
+A comprehensive web application for exploring, analyzing, and managing property affinities and destination insights. Built with modern React architecture, the application provides advanced analytics, agent-based analysis, and rich destination theme exploration capabilities.
 
-## Features
+## 🚀 Quick Start
 
-### Core Affinity Analysis
-- Interactive dashboard with property insights
-- Workbench: advanced analysis and implementation readiness for collections and affinities
-- Affinity Combination: combine and analyze multiple affinities
-- Lifecycle Tracker: track lifecycle stages of affinities
-- Implementation Guide: step-by-step implementation instructions
-- Reports & Analytics: generate and view detailed reports
-- Agent-based analysis views (Verification, Discovery, Sentiment, Competitive, Bias Detection, Trend)
-- Affinity library management
-- Affinity Scores
-- Lifecycle tracking
-- Implementation guides
-- Reports and analytics
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn package manager
 
-### Enhanced Destination Themes System
-- **Evidence-Backed Insights**: Every data point includes clickable evidence links with source URLs
-- **Professional Dashboard**: Real-time statistics showing theme counts, confidence scores, and coverage metrics
-- **Interactive Theme Cards**: Clean, modern design with comprehensive paperclip evidence system
-- **Intelligence Badges**: Visual indicators (nano, balanced, local, moderate, contemplative) with gradient styling
-- **Confidence Color Coding**: High (green), medium (yellow), perfect (blue) confidence levels
-- **Comprehensive Evidence Modal**: Detailed validation metrics, source quality scores, and multiple URL evidences per insight
-- **Multi-Destination Support**: Paris, New York, Tokyo with real JSON data from external travel sources
-- **Search & Filtering**: Real-time theme search across names, categories, and descriptions
-- **Text Management**: Smart truncation with expand/collapse for long content
-- **Configurable Architecture**: Destination configuration system with data validation
-- **Professional Validation Metrics**: Authority scores, quality ratings, relevance scores for all evidence
-
-### System Features
-- Settings & Help: user settings and help/support
-- Notifications: in-app notification system
-- User authentication (login/logout, user context)
-- Toast notifications for user feedback
-- Error boundaries for robust error handling
-- Performance monitoring utilities
-- Validation utilities for forms and data
-- Caching (in-memory and localStorage)
-- Unit and integration tests for components and utilities
-
-## Tech Stack
-
-- React 18
-- Vite
-- TailwindCSS
-- React Router DOM
-- Chart.js
-- Font Awesome Icons
-- React Icons (Feather Icons)
-- Heroicons (for destination themes UI)
-- React Context API (Auth, Toast, App, AffinityData)
-- Custom analytics, validation, formatting, error handling, and performance monitoring utilities
-- In-memory and localStorage caching
-- Vitest, React Testing Library, Jest-DOM (testing)
-- Python (for backend scripts: affinityIndexer.py, affinitySearchAPI.py)
-- Custom design system (CSS and JS)
-
-### Destination Themes Architecture
-- **Data Sources**: Real JSON files from external travel data sources (~23MB total)
-- **Evidence System**: Multi-layered evidence validation with URL sources
-- **Configuration System**: Centralized destination management with validation
-- **Modular Components**: Reusable cards, modals, and service layers
-- **Professional UI**: TailwindCSS with custom gradient badges and confidence indicators
-
-## Getting Started
+### Installation & Setup
 
 1. **Clone the repository**
 ```bash
@@ -85,157 +27,530 @@ npm run dev
 ```
 The application will be available at `http://localhost:3000`
 
-4. **Access Destination Themes**
-Navigate to the "Destination Insights" tab to explore the enhanced destination themes system with evidence-backed insights.
-
-5. **Run tests**
+4. **Run tests (optional)**
 ```bash
 npm test
-# or
-npx vitest
+# or for coverage
+npm run test:coverage
+# or for UI testing
+npm run test:ui
 ```
 
-6. **(Optional) Python Backend Scripts**
-If you want to use the backend scripts for data processing:
-- Ensure you have Python 3.8+ installed.
-- See `src/affinityIndexer.py` and `src/affinitySearchAPI.py` for details.
+5. **Build for production**
+```bash
+npm run build
+npm run preview
+```
 
-7. **Environment Variables**
-- If you need to connect to a real backend, set the appropriate environment variables in a `.env` file (see Vite docs for details).
+### Data Import Scripts (Optional)
+```bash
+# Import destination data
+npm run import:data
 
-## Enhanced Destination Themes System
+# Clean import (removes existing data first)
+npm run import:data:clean
+```
 
-The application includes a sophisticated destination analysis system that provides evidence-backed insights for travel destinations.
+## 🏗️ Application Architecture
 
-### Key Features
-- **Real Data Sources**: Uses actual travel data from external JSON files (~23MB total)
-- **Evidence-Based**: Every insight includes clickable evidence with source URLs from real travel blogs and sites
-- **Professional UI**: Clean, modern design with TailwindCSS styling
-- **Interactive Elements**: Expandable cards, evidence modals, search functionality
-- **Multi-Destination**: Currently supports Paris, New York, and Tokyo
+### Tech Stack
+- **Frontend**: React 18, React Router DOM 6
+- **Build Tool**: Vite 6.3+
+- **Styling**: TailwindCSS 3.4+, PostCSS, Autoprefixer
+- **Charts**: Chart.js 4.4+, React-ChartJS-2
+- **Icons**: React Icons (Feather), Heroicons, Font Awesome
+- **UI Components**: Headless UI, Styled Components
+- **Testing**: Vitest, React Testing Library, Jest-DOM
+- **State Management**: React Context API
+- **HTTP Client**: Axios
+- **Utilities**: React-Use hooks library
 
-### Data Structure
+### Project Structure
+```
+src/
+├── components/          # Reusable UI components
+│   ├── admin/          # Admin dashboard components
+│   ├── affinity/       # Affinity-specific components
+│   ├── agent/          # AI agent analysis components
+│   ├── auth/           # Authentication components
+│   ├── collections/    # Collection management
+│   ├── common/         # Shared components
+│   ├── destinations/   # Destination theme components
+│   ├── goals/          # Goal tracking components
+│   ├── navigation/     # Navigation components
+│   ├── performance/    # Performance metrics
+│   ├── scoring/        # Scoring visualization
+│   └── tabs/           # Main application views
+├── contexts/           # React Context providers
+├── services/           # API and data services
+├── utils/             # Utility functions
+├── styles/            # CSS and design system
+├── pages/             # Page components
+└── config/            # Application configuration
+```
+
+## 📱 Application Views & Features
+
+### 1. Dashboard (Home)
+**Route**: `/` or `/dashboard`
+**Purpose**: Central hub providing overview of all affinity data and system health
+
+**Key Features**:
+- **Summary Cards**: Total affinities, active collections, system performance metrics
+- **Recent Activity**: Recently viewed affinities and collections
+- **Performance Metrics**: System health indicators, data quality scores
+- **Quick Actions**: Fast access to common tasks
+- **Analytics Overview**: High-level charts and trends
+
+**Rich Data Available**:
+- Real-time affinity counts and distribution
+- Performance benchmarks and system health
+- User activity tracking and engagement metrics
+- Data quality indicators and validation status
+
+### 2. Affinity Library
+**Route**: `/affinities`
+**Purpose**: Comprehensive catalog of all available property affinities
+
+**Key Features**:
+- **Advanced Search**: Full-text search across affinity names, descriptions, categories
+- **Filtering**: Multi-dimensional filtering by category, type, status, coverage
+- **Pagination**: Efficient browsing of large affinity datasets
+- **Detailed View**: In-depth affinity information with auto-scroll functionality
+- **Score Visualization**: Interactive charts showing affinity performance
+
+**Rich Data Available**:
+- **Affinity Metadata**: Name, type (Platform/Concept Score), category, definition
+- **Performance Metrics**: Average scores, coverage percentages, validation status
+- **Usage Statistics**: Application frequency, entity coverage (Property/Destination/POI)
+- **Implementation Details**: Technical requirements, scoring algorithms
+- **Related Properties**: Properties utilizing each affinity with scores
+
+**Sample Data Structure**:
 ```javascript
-// Destination themes data structure
 {
-  "destination": "Paris, France",
-  "affinities": [
-    {
-      "theme": "Revolutionary Paris History",
-      "category": "Historical",
-      "confidence": 0.92,
-      "intelligence_badges": ["contemplative", "local"],
-      "sub_themes": ["French Revolution Sites", "Political History"],
-      "nano_themes": ["Bastille Day", "Revolutionary Museums"],
-      "rationale": "Evidence-backed description...",
-      // ... additional attributes with evidence
-    }
-  ]
+  id: "aff1",
+  name: "Pet-Friendly",
+  type: "Platform Score",
+  category: "Family",
+  definition: "Properties that welcome pets with amenities...",
+  averageScore: 7.2,
+  coverage: 72,
+  status: "Active",
+  applicableEntities: ["Property", "Destination"]
 }
 ```
 
-### Configuration
-Destinations are configured in `src/config/appConfig.js`:
+### 3. Property Affinity Scores
+**Route**: `/scoring`
+**Purpose**: Detailed scoring analysis and property-affinity relationships
+
+**Key Features**:
+- **Score Distribution**: Visual representation of affinity scores across properties
+- **Property Comparison**: Side-by-side property analysis
+- **Trend Analysis**: Historical scoring patterns and changes
+- **Threshold Management**: Configure scoring thresholds and alerts
+- **Export Capabilities**: Data export for external analysis
+
+**Rich Data Available**:
+- Property-specific affinity scores (0-10 scale)
+- Score confidence intervals and validation metrics
+- Historical score evolution and trend data
+- Comparative analysis across property types and locations
+- Performance benchmarking against market segments
+
+### 4. Destination Insights ⭐
+**Route**: `/destination-insights`
+**Purpose**: Advanced destination theme analysis with evidence-backed insights
+
+**Key Features**:
+- **Multi-Destination Support**: 65+ destinations worldwide including Paris, Tokyo, New York, Rome, Bali, and more
+- **Evidence-Based Analysis**: Every data point includes clickable evidence (📎) with source URLs
+- **Interactive Theme Cards**: Professional design with confidence color-coding
+- **Intelligence Badges**: Visual indicators (nano, balanced, local, moderate, contemplative)
+- **Search & Filtering**: Real-time theme search across names, categories, descriptions
+- **Evidence Modal**: Comprehensive validation metrics and source quality scores
+- **Similar Destinations**: AI-powered destination similarity analysis
+- **Nuance System**: Three-tier nuance analysis (destination, hotel, vacation rental)
+
+**Rich Data Available**:
+- **Destination Themes**: 65+ destinations with comprehensive theme analysis
+- **Evidence Sources**: Real URLs from travel blogs, tourism boards, expert reviews
+- **Confidence Scores**: AI-validated confidence levels (0.0-1.0)
+- **Intelligence Insights**: Sub-themes, nano-themes, emotional profiles
+- **Validation Metrics**: Authority scores, quality ratings, relevance scores
+- **Seasonal Data**: Time-based insights and seasonal variations
+- **Demographic Suitability**: Target audience analysis and recommendations
+
+**Sample Theme Structure**:
 ```javascript
-AVAILABLE_DESTINATIONS: [
-  {
-    id: 'paris__france',
-    name: 'Paris, France',
-    flag: '🇫🇷',
-    dataFiles: {
-      enhanced: 'paris__france_enhanced.json',
-      evidence: 'paris__france_evidence.json'
+{
+  theme: "Revolutionary Paris History",
+  category: "Historical",
+  confidence: 0.92,
+  intelligence_badges: ["contemplative", "local"],
+  sub_themes: ["French Revolution Sites", "Political History"],
+  nano_themes: ["Bastille Day", "Revolutionary Museums"],
+  best_for: "History enthusiasts, Cultural explorers",
+  price_range: "€25-50 per attraction",
+  time_commitment: "Half-day to full-day",
+  experience_intensity: "Moderate",
+  emotional_profile: ["Inspiring", "Educational", "Reflective"],
+  comprehensive_attribute_evidence: {
+    main_theme: {
+      evidence_pieces: [{
+        source_url: "https://parismuseum.org/revolution",
+        authority_score: 0.95,
+        text_content: "Evidence content..."
+      }]
     }
   }
-  // ... additional destinations
-]
+}
 ```
 
-### Components
-- **DestinationThemeCard**: Interactive theme cards with evidence paperclips
-- **EvidenceModal**: Professional evidence display with validation metrics
-- **DestinationInsightsPage**: Main dashboard with stats and destination switching
-- **destinationThemeService**: Data loading and processing service
+### 5. Content Studio
+**Route**: `/content-studio`
+**Purpose**: Content creation and management for affinity-based marketing
 
-## Development
+**Key Features**:
+- **Content Templates**: Pre-built templates for different content types
+- **Affinity Integration**: Content suggestions based on affinity data
+- **Multi-Channel Support**: Content optimization for various platforms
+- **Performance Tracking**: Content effectiveness metrics
+- **Collaboration Tools**: Team-based content creation workflows
 
-The project uses:
-- Vite for fast development and building
-- TailwindCSS for styling
-- React Router for navigation
-- Chart.js for data visualization
-- React Context for state management
-- Custom utilities for analytics, validation, error handling, and performance
-- Error boundaries for robust UI error handling
-- In-memory and localStorage caching for API responses
-- Unit and integration testing with Vitest and React Testing Library
+**Rich Data Available**:
+- Content performance analytics and engagement metrics
+- Affinity-driven content recommendations
+- A/B testing results and optimization suggestions
+- Multi-channel distribution tracking
+- Content lifecycle management data
 
-## License
+### 6. Agent View
+**Route**: `/agents`
+**Purpose**: AI-powered analysis through specialized agent perspectives
 
-MIT
+**Key Features**:
+- **Multiple Agent Types**: 
+  - **Verification Agent**: Data validation and accuracy checking
+  - **Discovery Agent**: New pattern and trend identification
+  - **Sentiment Agent**: Emotional analysis and sentiment tracking
+  - **Competitive Agent**: Market comparison and competitive analysis
+  - **Bias Detection Agent**: Algorithmic bias identification
+  - **Trend Agent**: Market trend analysis and forecasting
+- **Agent Insights**: Specialized analysis from each agent perspective
+- **Interactive Dashboards**: Agent-specific visualizations and metrics
+- **Property Analysis**: Deep-dive property analysis through agent lenses
 
-## Data Loading and API Service
+**Rich Data Available**:
+- Agent-specific insights and recommendations
+- Validation scores and confidence metrics
+- Trend predictions and market analysis
+- Bias detection reports and mitigation suggestions
+- Competitive positioning data and market share analysis
 
-All data for the app is loaded through the file `src/services/apiService.js`. This file simulates remote API calls and acts as the main data provider for the application. In a production environment, these functions would be replaced with real API calls to a backend service.
+### 7. Lifecycle Tracker
+**Route**: `/lifecycle-tracker`
+**Purpose**: Track affinity development and implementation stages
 
-- Each exported function in `apiService.js` should be treated as a remote function call.
-- When maintaining or extending the app, **do not refactor these functions into local data access**; always treat them as asynchronous remote calls, even if they return mock data.
-- This ensures the app structure is ready for future backend integration and keeps the UI logic decoupled from data source details.
+**Key Features**:
+- **Stage Management**: Track affinities through development phases
+- **Progress Visualization**: Visual progress indicators and timelines
+- **Milestone Tracking**: Key deliverable and deadline management
+- **Team Collaboration**: Multi-user lifecycle management
+- **Automated Workflows**: Stage transition automation
 
-### Example Remote Function Call Comments
+**Rich Data Available**:
+- Lifecycle stage definitions and requirements
+- Progress metrics and completion percentages
+- Timeline data and milestone tracking
+- Resource allocation and team assignment data
+- Historical lifecycle performance analytics
 
-Below is an example of how to document each remote function in `apiService.js`:
+### 8. Affinity Combination
+**Route**: `/combine`
+**Purpose**: Analyze combinations of multiple affinities for enhanced insights
 
-```js
-// <do not refactor anything>
-// REMOTE FUNCTION: getAffinities
-// Simulates fetching a paginated list of affinities from the backend.
-// Accepts optional pagination and search parameters.
-export const getAffinities = async ({ page = 1, limit = 10, searchTerm = '' } = {}) => { ... }
+**Key Features**:
+- **Multi-Affinity Selection**: Choose multiple affinities for combination analysis
+- **Compatibility Scoring**: Analyze how well affinities work together
+- **Property Matching**: Find properties that match multiple affinity criteria
+- **Visualization Tools**: Charts and graphs showing combination effectiveness
+- **Export Results**: Save and share combination analysis results
 
-// REMOTE FUNCTION: getCollections
-// Simulates fetching all collections for a given owner/user from the backend.
-export const getCollections = async (ownerId) => { ... }
+**Rich Data Available**:
+- Affinity compatibility matrices and correlation scores
+- Multi-dimensional property matching results
+- Combination performance metrics and success rates
+- Historical combination analysis data
+- Recommendation algorithms for optimal affinity combinations
 
-// REMOTE FUNCTION: enrichAffinityWithBrandData
-// Simulates fetching brand-specific property data for a given affinity from the backend.
-export async function enrichAffinityWithBrandData(affinityId) { ... }
+### 9. Workbench
+**Route**: `/workbench`
+**Purpose**: Advanced analysis workspace with multiple specialized tabs
+
+**Sub-Features**:
+- **Performance Tab**: Detailed performance metrics and analysis tools
+- **Compare Tab**: Side-by-side comparison of affinities, properties, or destinations
+- **Prepare Tab**: Data preparation and preprocessing tools
+
+**Key Features**:
+- **Advanced Analytics**: Complex data analysis and visualization tools
+- **Custom Queries**: Build custom analysis queries and reports
+- **Data Export**: Multiple export formats for external analysis
+- **Collaboration**: Share workbench sessions and analysis results
+- **Integration**: Connect with external data sources and tools
+
+### 10. Implementation Guide
+**Route**: `/implementation`
+**Purpose**: Step-by-step guidance for implementing affinity-based solutions
+
+**Key Features**:
+- **Implementation Roadmaps**: Detailed step-by-step implementation guides
+- **Technical Documentation**: API documentation and integration guides
+- **Best Practices**: Industry best practices and recommendations
+- **Code Examples**: Sample code and implementation examples
+- **Troubleshooting**: Common issues and solutions
+
+### 11. Reports & Analytics
+**Route**: `/reports`
+**Purpose**: Comprehensive reporting and analytics dashboard
+
+**Key Features**:
+- **Pre-built Reports**: Standard reports for common use cases
+- **Custom Report Builder**: Create custom reports and dashboards
+- **Scheduled Reports**: Automated report generation and distribution
+- **Data Visualization**: Advanced charting and visualization options
+- **Export Options**: Multiple export formats (PDF, Excel, CSV)
+
+### 12. Settings & Administration
+**Route**: `/settings`
+**Purpose**: Application configuration and user management
+
+**Key Features**:
+- **User Preferences**: Personalized application settings
+- **System Configuration**: Application-wide configuration options
+- **Data Management**: Data import/export and backup options
+- **Integration Settings**: Third-party service configurations
+- **Security Settings**: Authentication and authorization management
+
+## 🗄️ Data Architecture
+
+### API Service Layer
+All data is managed through `src/services/apiService.js`, which simulates remote API calls and provides:
+
+- **Affinity Management**: CRUD operations for affinity data
+- **Property Analysis**: Property-affinity relationship management
+- **Collection Management**: Affinity collection organization
+- **Destination Data**: Theme and evidence data loading
+- **Performance Metrics**: System and data quality metrics
+- **Caching**: Intelligent data caching for performance optimization
+
+### Mock Data Structure
+The application includes comprehensive mock data for development and testing:
+
+- **Affinities**: 50+ sample affinities across multiple categories
+- **Properties**: 100+ sample properties with realistic affinity scores
+- **Destinations**: 65+ destinations with rich theme data
+- **Collections**: Sample affinity collections and groupings
+- **Evidence**: Realistic evidence data with source URLs and validation metrics
+
+### Destination Theme Data
+**65+ Destinations Available**:
+- Acropolis Greece, Amazon Rainforest Brazil, Amsterdam Netherlands
+- Bangkok Thailand, Banff National Park Canada, Bora Bora French Polynesia
+- Cape Town South Africa, Dubai UAE, Edinburgh Scotland
+- Florence Italy, Grand Canyon USA, Great Barrier Reef Australia
+- Istanbul Turkey, Kyoto Japan, Machu Picchu Peru
+- New York City USA, Paris France, Rome Italy, Tokyo Japan
+- And 45+ more destinations worldwide
+
+**Data Structure**:
+```javascript
+// Comprehensive destination data
+{
+  themes: {
+    themes_data: {
+      affinities: [/* Enhanced themes with sub/nano themes */],
+      intelligence_insights: {/* Aggregated analytics */}
+    }
+  },
+  nuances: {
+    nuances_data: {
+      destination_nuances: [/* Destination-specific insights */],
+      hotel_expectations: [/* Hotel nuances */],
+      vacation_rental_expectations: [/* Vacation rental nuances */]
+    }
+  },
+  evidence: {
+    evidence_data: {
+      evidence: [/* Comprehensive evidence pieces with URLs */]
+    }
+  }
+}
 ```
 
-Add similar comments to any new remote function you create in `apiService.js`.
+## 🔧 Development & Configuration
 
-## Caching
+### Environment Variables
+Create a `.env` file for custom configuration:
+```bash
+VITE_API_BASE_URL=http://localhost:9000
+VITE_ENABLE_ANALYTICS=true
+VITE_DEBUG_MODE=false
+```
 
-The app uses both in-memory and localStorage caching to optimize performance and reduce unnecessary API calls.
-- Caching utilities are provided in `src/services/cacheService.js` and `src/utils/cache.js`.
-- API responses, recently viewed items, and other data are cached.
-- In-memory cache is fast but volatile (cleared on reload); localStorage cache persists across sessions.
-- In production, manage cache expiration, invalidation, and storage limits carefully to avoid stale or excessive data.
+### Feature Flags
+Configure features in `src/config/appConfig.js`:
+```javascript
+const FEATURE_FLAGS = {
+  CONTENT_STUDIO_ENABLED: true,
+  ADVANCED_SEARCH: true,
+  COLLECTIONS: true,
+  DESTINATION_INSIGHTS: true
+};
+```
 
-## Authentication
+### Caching System
+The application implements multi-layer caching:
+- **In-Memory Cache**: Fast access for frequently used data
+- **LocalStorage Cache**: Persistent cache across sessions
+- **API Response Cache**: Optimized API response caching
 
-Authentication is managed via the React Context API in `src/contexts/AuthContext.jsx`.
-- In development, a default user is used for convenience.
-- In production, replace the login logic in `AuthContext` with a real authentication API call (e.g., OAuth, JWT, SSO, etc.).
-- User session data is stored in localStorage and expires after a set timeout (default: 30 minutes).
-- The app supports role-based and permission-based route protection.
-- To integrate a real auth service:
-  - Replace the login function in `AuthContext` to call your backend and handle tokens securely.
-  - Store tokens in httpOnly cookies or secure storage (avoid localStorage for sensitive tokens in production).
-  - Update logout to clear all sensitive data.
+### Authentication
+- **Development**: Default user authentication for convenience
+- **Production**: Configurable authentication system (OAuth, JWT, SSO)
+- **Permissions**: Role-based access control (read, write, admin)
 
-## localStorage Usage & Production Considerations
+## 🧪 Testing
 
-- localStorage is used for:
-  - User session persistence (current user info)
-  - Recently viewed affinities
-  - Optionally, for caching API responses
-- In production:
-  - Do not store sensitive tokens or credentials in localStorage; use httpOnly cookies or secure alternatives.
-  - Always clear localStorage on logout and when cache entries expire.
-  - Monitor storage limits and handle quota errors gracefully.
+### Test Suite
+- **Unit Tests**: Component and utility function testing
+- **Integration Tests**: API and service integration testing
+- **E2E Tests**: End-to-end user workflow testing
 
-## Support & Contact
+### Test Commands
+```bash
+npm test              # Run test suite
+npm run test:coverage # Generate coverage report
+npm run test:ui       # Interactive test UI
+```
 
-For questions, support, or to report issues, contact:
-- Caleb Carter: calcarter@expediagroup.com
+### Test Coverage
+- Components: 85%+ coverage target
+- Services: 90%+ coverage target
+- Utilities: 95%+ coverage target
+
+## 🚀 Deployment
+
+### Build Process
+```bash
+npm run build    # Production build
+npm run preview  # Preview production build locally
+```
+
+### Production Considerations
+- **Environment Variables**: Configure production API endpoints
+- **Authentication**: Implement secure authentication system
+- **Caching**: Configure appropriate cache expiration policies
+- **Monitoring**: Set up application performance monitoring
+- **Security**: Implement security headers and HTTPS
+
+### Performance Optimization
+- **Code Splitting**: Lazy loading of route components
+- **Bundle Optimization**: Tree shaking and dead code elimination
+- **Image Optimization**: Optimized image loading and caching
+- **API Optimization**: Request batching and intelligent caching
+
+## 📊 Data Sources & Integration
+
+### Primary Data Sources
+- **Internal APIs**: Property and affinity management systems
+- **External APIs**: Tourism boards, travel data providers
+- **Third-Party Services**: Review platforms, booking systems
+- **User-Generated Content**: Reviews, ratings, feedback
+
+### Integration Capabilities
+- **REST APIs**: Standard HTTP API integration
+- **GraphQL**: Advanced query capabilities
+- **Webhooks**: Real-time data synchronization
+- **File Import**: CSV, JSON, Excel data import
+- **Database Integration**: Direct database connections
+
+## 🔒 Security & Privacy
+
+### Security Features
+- **Authentication**: Multi-factor authentication support
+- **Authorization**: Role-based access control
+- **Data Encryption**: At-rest and in-transit encryption
+- **Input Validation**: Comprehensive input sanitization
+- **CSRF Protection**: Cross-site request forgery protection
+
+### Privacy Compliance
+- **GDPR Compliance**: European privacy regulation compliance
+- **Data Minimization**: Collect only necessary data
+- **User Consent**: Explicit consent management
+- **Data Retention**: Configurable data retention policies
+- **Audit Logging**: Comprehensive audit trail
+
+## 📈 Analytics & Monitoring
+
+### Built-in Analytics
+- **User Behavior**: Page views, user interactions, session tracking
+- **Performance Metrics**: Load times, error rates, system health
+- **Business Metrics**: Affinity usage, conversion rates, engagement
+- **Data Quality**: Validation scores, completeness metrics
+
+### Monitoring Integration
+- **Error Tracking**: Comprehensive error monitoring and alerting
+- **Performance Monitoring**: Real-time performance tracking
+- **Uptime Monitoring**: Service availability monitoring
+- **Custom Metrics**: Business-specific metric tracking
+
+## 🤝 Contributing
+
+### Development Workflow
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+### Code Standards
+- **ESLint**: JavaScript/React code linting
+- **Prettier**: Code formatting
+- **Conventional Commits**: Standardized commit messages
+- **Code Review**: Required for all changes
+
+## 📞 Support & Contact
+
+### Documentation
+- **API Documentation**: `/docs/api.md`
+- **Component Library**: Storybook documentation
+- **User Guides**: Comprehensive user documentation
+- **FAQ**: Frequently asked questions
+
+### Support Channels
+- **Email**: calcarter@expediagroup.com
+- **GitHub Issues**: Bug reports and feature requests
+- **Documentation**: Comprehensive online documentation
+- **Community**: Developer community and forums
+
+### Maintenance
+- **Regular Updates**: Monthly feature updates
+- **Security Patches**: Immediate security updates
+- **Performance Optimization**: Quarterly performance reviews
+- **Data Updates**: Weekly data refresh cycles
+
+---
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
+
+---
+
+*Last Updated: January 2025*
+*Version: 0.1.0*
+*Maintained by: Caleb Carter (calcarter@expediagroup.com)*

@@ -457,11 +457,20 @@ const DESTINATION_CONFIG = {
   }
 };
 
+// Feature flags configuration
+const FEATURE_FLAGS = {
+  CONTENT_STUDIO_ENABLED: true, // Toggle to enable/disable Content Studio tab
+  ADVANCED_SEARCH: true,
+  COLLECTIONS: true,
+  DESTINATION_INSIGHTS: true
+};
+
 // Application Configuration
 const APP_CONFIG = {
   API: API_CONFIG,
-  DESTINATIONS: DESTINATION_CONFIG
+  DESTINATIONS: DESTINATION_CONFIG,
+  FEATURES: FEATURE_FLAGS
 };
 
-export { API_CONFIG, DESTINATION_CONFIG };
+export { API_CONFIG, DESTINATION_CONFIG, FEATURE_FLAGS };
 export default APP_CONFIG; 

@@ -16,6 +16,7 @@ const Dashboard = lazy(() => import('./components/Dashboard'));
 const AgentView = lazy(() => import('./components/tabs/AgentView'));
 const AffinityLibrary = lazy(() => import('./components/tabs/AffinityLibrary'));
 const ScoringExplorer = lazy(() => import('./components/tabs/ScoringExplorer'));
+const ContentStudio = lazy(() => import('./components/tabs/ContentStudio'));
 const LifecycleTracker = lazy(() => import('./components/tabs/LifecycleTracker'));
 const AffinityCombination = lazy(() => import('./components/tabs/AffinityCombination'));
 const ImplementationGuide = lazy(() => import('./components/tabs/ImplementationGuide'));
@@ -137,6 +138,14 @@ const App = () => {
                         <ProtectedRoute requiredPermissions={['read']}>
                           <AppLayout>
                             <DestinationInsightsPage />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/content-studio" element={
+                        <ProtectedRoute requiredPermissions={['read', 'write']}>
+                          <AppLayout>
+                            <ContentStudio />
                           </AppLayout>
                         </ProtectedRoute>
                       } />

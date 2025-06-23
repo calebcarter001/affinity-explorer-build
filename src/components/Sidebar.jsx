@@ -12,17 +12,20 @@ import {
   FiSettings,
   FiHelpCircle,
   FiGrid,
-  FiMap
+  FiMap,
+  FiEdit3
 } from 'react-icons/fi';
+import { FEATURE_FLAGS } from '../config/appConfig';
 
 const Sidebar = () => {
   const location = useLocation();
 
-  const navItems = [
+  const baseNavItems = [
     { path: '/', icon: <FiHome size={20} />, text: 'Dashboard' },
     { path: '/affinities', icon: <FiBook size={20} />, text: 'Affinity Library' },
     { path: '/scoring', icon: <FiBarChart2 size={20} />, text: 'Property Affinity Scores' },
     { path: '/destination-insights', icon: <FiMap size={20} />, text: 'Destination Insights' },
+    ...(FEATURE_FLAGS.CONTENT_STUDIO_ENABLED ? [{ path: '/content-studio', icon: <FiEdit3 size={20} />, text: 'Content Studio' }] : []),
     { path: '/lifecycle-tracker', icon: <FiActivity size={20} />, text: 'Lifecycle Tracker' },
     { path: '/agents', icon: <FiCpu size={20} />, text: 'Agent View' },
     { path: '/combine', icon: <FiLayers size={20} />, text: 'Affinity Combination' },
@@ -30,6 +33,8 @@ const Sidebar = () => {
     { path: '/implementation', icon: <FiCode size={20} />, text: 'Implementation Guide' },
     { path: '/reports', icon: <FiFileText size={20} />, text: 'Reports & Analytics' },
   ];
+
+  const navItems = baseNavItems;
 
   const bottomNavItems = [
     { path: '/settings', icon: <FiSettings size={20} />, text: 'Settings' },
