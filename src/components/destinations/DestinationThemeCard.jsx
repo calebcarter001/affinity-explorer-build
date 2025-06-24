@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CopyInsightButton from '../common/CopyInsightButton';
 
 const DestinationThemeCard = ({ theme, selectedDestination, onEvidenceClick }) => {
   const [expandedSections, setExpandedSections] = useState({});
@@ -179,6 +180,16 @@ const DestinationThemeCard = ({ theme, selectedDestination, onEvidenceClick }) =
               >
                 {themeName}
               </ClickableInsight>
+              <CopyInsightButton
+                insight={{ 
+                  label: 'Complete Theme', 
+                  value: themeName,
+                  theme: theme
+                }}
+                context={{ field: 'Complete Theme', type: 'complete', source: 'Destination Themes' }}
+                format="detailed"
+                size="sm"
+              />
             </div>
             <div className="flex items-center gap-2">
               <ClickableInsight
@@ -209,6 +220,7 @@ const DestinationThemeCard = ({ theme, selectedDestination, onEvidenceClick }) =
               >
                 {Math.round(confidence * 100)}%
               </ClickableInsight>
+
             </div>
             <div className="text-xs text-gray-500">confidence</div>
           </div>
@@ -255,9 +267,23 @@ const DestinationThemeCard = ({ theme, selectedDestination, onEvidenceClick }) =
           {/* Sub-themes */}
           {(theme.subThemes || theme.sub_themes) && (theme.subThemes || theme.sub_themes).length > 0 && (
             <div className="bg-gray-50 border border-gray-200 p-3 rounded-lg">
-              <h4 className="font-medium text-gray-900 text-sm mb-2">
-                🎯 Sub-themes:
-              </h4>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-medium text-gray-900 text-sm">
+                  🎯 Sub-themes:
+                </h4>
+                <CopyInsightButton
+                  insight={{ 
+                    label: 'Sub-themes', 
+                    value: (theme.subThemes || theme.sub_themes).join(', '),
+                    type: 'list'
+                  }}
+                  context={{ field: 'Sub-themes', type: 'content', source: `${themeName} Theme` }}
+                  format="detailed"
+                  size="sm"
+                  variant="default"
+                  showLabel={true}
+                />
+              </div>
               <ClickableInsight
                 as="p"
                 className="text-xs text-gray-600"
@@ -280,9 +306,23 @@ const DestinationThemeCard = ({ theme, selectedDestination, onEvidenceClick }) =
           {/* Nano Themes */}
           {(theme.nanoThemes || theme.nano_themes) && (theme.nanoThemes || theme.nano_themes).length > 0 && (
             <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-              <h4 className="font-medium text-gray-900 text-sm mb-2">
-                🔬 Nano Themes:
-              </h4>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-medium text-gray-900 text-sm">
+                  🔬 Nano Themes:
+                </h4>
+                <CopyInsightButton
+                  insight={{ 
+                    label: 'Nano Themes', 
+                    value: (theme.nanoThemes || theme.nano_themes).join(', '),
+                    type: 'list'
+                  }}
+                  context={{ field: 'Nano Themes', type: 'content', source: `${themeName} Theme` }}
+                  format="detailed"
+                  size="sm"
+                  variant="default"
+                  showLabel={true}
+                />
+              </div>
               <ClickableInsight
                 as="p"
                 className="text-xs text-gray-600"
