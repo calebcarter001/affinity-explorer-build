@@ -1,10 +1,38 @@
 import React, { useState } from 'react';
 import { MagnifyingGlassIcon, LinkIcon } from '@heroicons/react/24/outline';
+import SearchableDropdown from '../common/SearchableDropdown';
 
 const SimilarDestinationsTab = ({ similarDestinations, onEvidenceClick }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('similarity_score');
   const [filterBy, setFilterBy] = useState('all');
+
+  // Clickable insight component
+  const ClickableInsight = ({ children, context, className = "", as = "span" }) => {
+    const Component = as;
+    return (
+      <Component
+        className={`cursor-pointer hover:text-blue-600 hover:underline transition-colors ${className}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (onEvidenceClick) {
+            onEvidenceClick({
+              type: 'similar_destination',
+              destination: context.destination,
+              sourceUrls: context.sourceUrls,
+              validationData: context.validationData,
+              similarityReasons: context.similarityReasons,
+              field: context.field,
+              value: context.value
+            });
+          }
+        }}
+        title={`Click to view evidence for ${context.field}`}
+      >
+        {children}
+      </Component>
+    );
+  };
 
   if (!similarDestinations || !similarDestinations.similarDestinations) {
     return (
@@ -138,26 +166,32 @@ const SimilarDestinationsTab = ({ similarDestinations, onEvidenceClick }) => {
         </div>
         
         <div className="flex gap-2">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="similarity_score">Sort by Similarity</option>
-            <option value="confidence">Sort by Confidence</option>
-            <option value="name">Sort by Name</option>
-          </select>
+          <SearchableDropdown
+            options={[
+              { value: 'similarity_score', label: 'Sort by Similarity' },
+              { value: 'confidence', label: 'Sort by Confidence' },
+              { value: 'name', label: 'Sort by Name' }
+            ]}
+            value={{ value: sortBy, label: sortBy === 'similarity_score' ? 'Sort by Similarity' : sortBy === 'confidence' ? 'Sort by Confidence' : 'Sort by Name' }}
+            onChange={(option) => setSortBy(option?.value || 'similarity_score')}
+            placeholder="Sort by..."
+            className="w-44"
+            noOptionsMessage="No sort options found"
+          />
           
-          <select
-            value={filterBy}
-            onChange={(e) => setFilterBy(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="all">All Similarities</option>
-            <option value="geographic">Geographic Focus</option>
-            <option value="cultural">Cultural Focus</option>
-            <option value="experience">Experience Focus</option>
-          </select>
+          <SearchableDropdown
+            options={[
+              { value: 'all', label: 'All Similarities' },
+              { value: 'geographic', label: 'Geographic Focus' },
+              { value: 'cultural', label: 'Cultural Focus' },
+              { value: 'experience', label: 'Experience Focus' }
+            ]}
+            value={{ value: filterBy, label: filterBy === 'all' ? 'All Similarities' : filterBy === 'geographic' ? 'Geographic Focus' : filterBy === 'cultural' ? 'Cultural Focus' : 'Experience Focus' }}
+            onChange={(option) => setFilterBy(option?.value || 'all')}
+            placeholder="Filter by..."
+            className="w-44"
+            noOptionsMessage="No filter options found"
+          />
         </div>
       </div>
 
@@ -178,7 +212,20 @@ const SimilarDestinationsTab = ({ similarDestinations, onEvidenceClick }) => {
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${rankBadge.color}`}>
                     {rankBadge.text}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">{destination.destination}</h3>
+                  <ClickableInsight
+                    as="h3"
+                    context={{
+                      field: 'Destination Name',
+                      value: destination.destination,
+                      destination: destination.destination,
+                      sourceUrls: destination.sourceUrls,
+                      validationData: destination.validationData,
+                      similarityReasons: destination.similarityReasons
+                    }}
+                    className="text-lg font-semibold text-gray-900"
+                  >
+                    {destination.destination}
+                  </ClickableInsight>
                 </div>
                 
                 {destination.sourceUrls && destination.sourceUrls.length > 0 && (
@@ -209,17 +256,37 @@ const SimilarDestinationsTab = ({ similarDestinations, onEvidenceClick }) => {
                         style={{ width: `${destination.similarityScore * 100}%` }}
                       ></div>
                     </div>
-                    <span className="text-sm font-semibold text-cyan-600">
+                    <ClickableInsight
+                      context={{
+                        field: 'Similarity Score',
+                        value: destination.similarityScore,
+                        destination: destination.destination,
+                        sourceUrls: destination.sourceUrls,
+                        validationData: destination.validationData,
+                        similarityReasons: destination.similarityReasons
+                      }}
+                      className="text-sm font-semibold text-cyan-600"
+                    >
                       {(destination.similarityScore * 100).toFixed(0)}%
-                    </span>
+                    </ClickableInsight>
                   </div>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-700">Confidence:</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getConfidenceColor(destination.confidence)}`}>
+                  <ClickableInsight
+                    context={{
+                      field: 'Confidence Score',
+                      value: destination.confidence,
+                      destination: destination.destination,
+                      sourceUrls: destination.sourceUrls,
+                      validationData: destination.validationData,
+                      similarityReasons: destination.similarityReasons
+                    }}
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getConfidenceColor(destination.confidence)}`}
+                  >
                     {(destination.confidence * 100).toFixed(0)}%
-                  </span>
+                  </ClickableInsight>
                 </div>
               </div>
 
