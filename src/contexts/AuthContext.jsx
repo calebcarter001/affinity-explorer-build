@@ -7,10 +7,10 @@ const AuthContext = createContext();
 // Default user for development
 const DEFAULT_USER = {
   id: '1',
-  username: 'demo',
-  email: 'demo@example.com',
-  firstName: 'Demo',
-  lastName: 'User',
+  username: 'calcarter',
+  email: 'calcarter@expediagroup.com',
+  firstName: 'Caleb',
+  lastName: 'Carter',
   role: 'admin',
   permissions: ['read', 'write', 'admin']
 };

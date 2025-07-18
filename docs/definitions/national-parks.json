@@ -1,0 +1,498 @@
+{
+  "urn": "urn:expe:taxo:insights:national-parks",
+  "label": "national parks",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "brand": "vrbo",
+        "lodgingType": "Any",
+        "version": "1"
+      },
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-parks-nearby",
+                    "source": "review-sentiments",
+                    "label": "Parks nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-scenery",
+                    "source": "review-sentiments",
+                    "label": "Location scenery"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:mountain-view-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Mountain view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:panoramic-mountain-views-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Panoramic mountain views sentiment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:on-site-hiking-and-biking-sentiment",
+                    "source": "review-sentiments",
+                    "label": "On-site hiking and biking"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:national-parks"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.3,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#933ad085-4f94-4ad7-a441-09346fdc7fa0",
+                    "source": "attribute",
+                    "label": "NationalPark:SiteLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.2,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ff31de5a-baaf-11e8-b633-529269fb1459",
+                    "source": "attribute",
+                    "label": "NatureReserves:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#dc299180-5875-4138-b226-a402762f1adc",
+                    "source": "attribute",
+                    "label": "Mountains:SiteLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d5867861-b986-4aa1-87b7-12f62ab798c9",
+                    "source": "attribute",
+                    "label": "Lake:SiteLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:national-parks"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_DISTANCE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:geo",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#cabb64fb-229e-4c2a-a85e-2d1caa4af540",
+                    "source": "places",
+                    "label": "National Park"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.85,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#9b570f47-14ec-4341-9137-4c2a20b9a86e",
+                    "source": "places",
+                    "label": "Campground"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 1,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#ea58c966-41ce-4d2c-a648-40847bfd0785",
+                    "source": "places",
+                    "label": "Trail Access"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 2,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#edae2421-bbc2-47b4-bf81-8b4f7d90b144",
+                    "source": "places",
+                    "label": "Forest"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 3,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:national-parks"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:mountain",
+                    "source": "media-descriptors",
+                    "label": "Mountain"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:body-of-water",
+                    "source": "media-descriptors",
+                    "label": "Body of water"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-activity",
+                    "source": "media-descriptors",
+                    "label": "Outdoor activity"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:beach",
+                    "source": "media-descriptors",
+                    "label": "Beach"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:winter",
+                    "source": "media-descriptors",
+                    "label": "Winter"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:summer",
+                    "source": "media-descriptors",
+                    "label": "Summer"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:winter-sports",
+                    "source": "media-descriptors",
+                    "label": "Winter sports"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:shuttle",
+                    "source": "media-descriptors",
+                    "label": "Shuttle"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-dining",
+                    "source": "media-descriptors",
+                    "label": "Outdoor dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:national-parks"
+        }
+      ],
+      "formula": {
+        "type": "VariableNode",
+        "name": "WEIGHTED_AVERAGE_SCORE"
+      },
+      "status": "STAGED"
+    }
+  ]
+}

@@ -3,9 +3,14 @@ import { dataLoader } from '../services/destinationThemeService';
 import DestinationThemeCard from '../components/destinations/DestinationThemeCard';
 import NuancesTab from '../components/destinations/NuancesTab';
 import SimilarDestinationsTab from '../components/destinations/SimilarDestinationsTab';
+import DestinationLandmarksTab from '../components/destinations/DestinationLandmarksTab';
+import PhotogenicHotspotsTab from '../components/destinations/PhotogenicHotspotsTab';
+import KnownForTab from '../components/destinations/KnownForTab';
+import LocalInsiderTab from '../components/destinations/LocalInsiderTab';
 import EvidenceModal from '../components/destinations/EvidenceModal';
 import { MagnifyingGlassIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { DESTINATION_CONFIG } from '../config/appConfig';
+import SearchableDropdown from '../components/common/SearchableDropdown';
 
 const DestinationInsightsPage = () => {
   const [selectedDestination, setSelectedDestination] = useState(DESTINATION_CONFIG.DEFAULT_DESTINATION);
@@ -15,6 +20,10 @@ const DestinationInsightsPage = () => {
   const [nuances, setNuances] = useState(null);
   const [similarDestinations, setSimilarDestinations] = useState(null);
   const [intelligenceInsights, setIntelligenceInsights] = useState(null);
+  const [landmarks, setLandmarks] = useState([]);
+  const [photogenicHotspots, setPhotogenicHotspots] = useState([]);
+  const [knownFor, setKnownFor] = useState([]);
+  const [localInsider, setLocalInsider] = useState([]);
   const [filteredThemes, setFilteredThemes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -69,6 +78,166 @@ const DestinationInsightsPage = () => {
     initializeDestinations();
   }, []);
 
+  // Load mock data for all tabs to prevent component remounting
+  const loadMockDataForTabs = (destination) => {
+    const normalizeDestinationKey = (dest) => {
+      const key = dest.toLowerCase();
+      const keyMappings = {
+        'paris_france': 'paris',
+        'paris, france': 'paris',
+        'tokyo_japan': 'tokyo',
+        'tokyo, japan': 'tokyo',
+        'london_uk': 'london',
+        'london, uk': 'london'
+      };
+      return keyMappings[key] || key.split('_')[0].split(',')[0].trim();
+    };
+
+    const destinationKey = normalizeDestinationKey(destination);
+
+    // Mock landmarks data
+    const mockLandmarks = {
+      'paris': [
+        {
+          landmark_name: 'Eiffel Tower',
+          landmark_description: 'Iron lattice tower, symbol of Paris and architectural marvel',
+          landmark_type: 'architectural',
+          confidence_score: 0.95
+        },
+        {
+          landmark_name: 'Louvre Museum',
+          landmark_description: 'World\'s largest art museum and historic monument',
+          landmark_type: 'museum',
+          confidence_score: 0.92
+        }
+      ],
+      'tokyo': [
+        {
+          landmark_name: 'Tokyo Tower',
+          landmark_description: 'Communications tower inspired by Eiffel Tower',
+          landmark_type: 'architectural',
+          confidence_score: 0.88
+        }
+      ],
+      'london': [
+        {
+          landmark_name: 'Big Ben',
+          landmark_description: 'Iconic clock tower at Palace of Westminster',
+          landmark_type: 'architectural',
+          confidence_score: 0.94
+        }
+      ]
+    };
+
+    // Mock photogenic hotspots data
+    const mockHotspots = {
+      'paris': [
+        {
+          location_name: { primary_name: 'Trocadéro Gardens' },
+          photo_worthiness: { why_instagram_worthy: 'Perfect Eiffel Tower views' },
+          confidence_score: 0.92
+        },
+        {
+          location_name: { primary_name: 'Pont Alexandre III' },
+          photo_worthiness: { why_instagram_worthy: 'Ornate bridge with golden details' },
+          confidence_score: 0.89
+        }
+      ],
+      'tokyo': [
+        {
+          location_name: { primary_name: 'Shibuya Crossing' },
+          photo_worthiness: { why_instagram_worthy: 'Iconic urban intersection' },
+          confidence_score: 0.91
+        }
+      ],
+      'london': [
+        {
+          location_name: { primary_name: 'Tower Bridge' },
+          photo_worthiness: { why_instagram_worthy: 'Victorian Gothic architecture' },
+          confidence_score: 0.93
+        }
+      ]
+    };
+
+    // Mock known for data
+    const mockKnownFor = {
+      'paris': [
+        {
+          attribute_name: 'Culinary Excellence',
+          attribute_description: 'World-renowned cuisine and dining culture',
+          confidence_score: 0.95
+        },
+        {
+          attribute_name: 'Romantic Atmosphere',
+          attribute_description: 'City of love and romance',
+          confidence_score: 0.92
+        }
+      ],
+      'tokyo': [
+        {
+          attribute_name: 'Technology Innovation',
+          attribute_description: 'Cutting-edge technology and innovation',
+          confidence_score: 0.94
+        }
+      ],
+      'london': [
+        {
+          attribute_name: 'Royal Heritage',
+          attribute_description: 'Rich royal history and traditions',
+          confidence_score: 0.91
+        }
+      ]
+    };
+
+    // Mock local insider data
+    const mockLocalInsider = {
+      'paris': [
+        {
+          id: 'greeting-shops',
+          category: 'Social Rules',
+          insight_title: 'Greeting Shopkeepers',
+          description: 'Always say "Bonjour" when entering shops',
+          confidence_level: 'High',
+          consensus_score: 0.95
+        },
+        {
+          id: 'cafe-etiquette',
+          category: 'Food Culture',
+          insight_title: 'Café Standing vs Sitting',
+          description: 'Different prices for bar vs table service',
+          confidence_level: 'High',
+          consensus_score: 0.89
+        }
+      ],
+      'tokyo': [
+        {
+          id: 'bowing-etiquette',
+          category: 'Social Rules',
+          insight_title: 'Proper Bowing',
+          description: 'Quick shallow nods for casual interactions',
+          confidence_level: 'High',
+          consensus_score: 0.88
+        }
+      ],
+      'london': [
+        {
+          id: 'tube-etiquette',
+          category: 'Transportation',
+          insight_title: 'Escalator Rules',
+          description: 'Stand right, walk left on escalators',
+          confidence_level: 'High',
+          consensus_score: 0.96
+        }
+      ]
+    };
+
+    // Set the data in parent state
+    setLandmarks(mockLandmarks[destinationKey] || []);
+    setPhotogenicHotspots(mockHotspots[destinationKey] || []);
+    setKnownFor(mockKnownFor[destinationKey] || []);
+    setLocalInsider(mockLocalInsider[destinationKey] || []);
+  };
+
   // Load destination data when destination changes
   useEffect(() => {
     const loadDestinationData = async () => {
@@ -87,6 +256,9 @@ const DestinationInsightsPage = () => {
         setNuances(data?.nuances || null);
         setSimilarDestinations(data?.similarDestinations || null);
         setIntelligenceInsights(data?.intelligenceInsights || null);
+        
+        // Load mock data for other tabs to prevent component remounting
+        loadMockDataForTabs(selectedDestination);
         
         console.log('[Debug-Page] State after setting data:', {
           themesCount: data?.themes?.length || 0,
@@ -258,24 +430,32 @@ const DestinationInsightsPage = () => {
                 </div>
                 
                 <div className="flex-shrink-0">
-                  <select
-                    id="destination"
-                    value={selectedDestination}
-                    onChange={(e) => handleDestinationChange(e.target.value)}
-                    className="text-lg font-medium px-4 py-3 bg-white bg-opacity-95 backdrop-blur-sm border-2 border-white border-opacity-30 rounded-lg shadow-lg focus:border-white focus:ring-2 focus:ring-white focus:ring-opacity-50 focus:outline-none min-w-[220px]"
-                  >
-                    {destinations.map(dest => {
+                  <SearchableDropdown
+                    options={destinations.map(dest => {
                       const validation = dataValidation?.find(v => v.destination === dest.id);
-                      const isAvailable = validation?.status === 'available';
                       const hasIssues = validation && validation.status !== 'available';
                       
-                      return (
-                        <option key={dest.id} value={dest.id} disabled={hasIssues}>
-                          {dest.flag} {dest.name} {hasIssues ? '⚠️' : ''}
-                        </option>
-                      );
+                      return {
+                        value: dest.id,
+                        label: `${dest.flag} ${dest.name}${hasIssues ? ' ⚠️' : ''}`,
+                        destination: dest,
+                        isDisabled: hasIssues
+                      };
                     })}
-                  </select>
+                    value={selectedDestination ? {
+                      value: selectedDestination,
+                      label: (() => {
+                        const dest = destinations.find(d => d.id === selectedDestination);
+                        const validation = dataValidation?.find(v => v.destination === selectedDestination);
+                        const hasIssues = validation && validation.status !== 'available';
+                        return dest ? `${dest.flag} ${dest.name}${hasIssues ? ' ⚠️' : ''}` : selectedDestination;
+                      })()
+                    } : null}
+                    onChange={(option) => handleDestinationChange(option?.value || '')}
+                    placeholder="Choose destination..."
+                    className="w-48"
+                    noOptionsMessage="No destinations found"
+                  />
                 </div>
               </div>
             </div>
@@ -725,6 +905,46 @@ const DestinationInsightsPage = () => {
               >
                 🗺️ Similar Destinations ({similarDestinations?.similarDestinations?.length || 0})
               </button>
+              <button
+                onClick={() => setActiveTab('landmarks')}
+                className={`flex-1 py-3 px-4 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${
+                  activeTab === 'landmarks'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                🏛️ Destination Landmarks (12)
+              </button>
+              <button
+                onClick={() => setActiveTab('photogenic')}
+                className={`flex-1 py-3 px-4 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${
+                  activeTab === 'photogenic'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                📸 Photogenic Hotspots (5)
+              </button>
+              <button
+                onClick={() => setActiveTab('known_for')}
+                className={`flex-1 py-3 px-4 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${
+                  activeTab === 'known_for'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                ✨ Known For (8)
+              </button>
+              <button
+                onClick={() => setActiveTab('local_insider')}
+                className={`flex-1 py-3 px-4 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-2 ${
+                  activeTab === 'local_insider'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                🎯 Local Insider (8)
+              </button>
             </nav>
           </div>
         </div>
@@ -787,6 +1007,42 @@ const DestinationInsightsPage = () => {
             {activeTab === 'similar' && (
               <SimilarDestinationsTab 
                 similarDestinations={similarDestinations}
+                onEvidenceClick={handleEvidenceClick}
+              />
+            )}
+
+            {/* Destination Landmarks Tab */}
+            {activeTab === 'landmarks' && (
+              <DestinationLandmarksTab 
+                landmarks={landmarks}
+                selectedDestination={selectedDestination}
+                onEvidenceClick={handleEvidenceClick}
+              />
+            )}
+
+            {/* Photogenic Hotspots Tab */}
+            {activeTab === 'photogenic' && (
+              <PhotogenicHotspotsTab 
+                hotspots={photogenicHotspots}
+                selectedDestination={selectedDestination}
+                onEvidenceClick={handleEvidenceClick}
+              />
+            )}
+
+            {/* Known For Tab */}
+            {activeTab === 'known_for' && (
+              <KnownForTab 
+                attributes={knownFor}
+                selectedDestination={selectedDestination}
+                onEvidenceClick={handleEvidenceClick}
+              />
+            )}
+
+            {/* Local Insider Tab */}
+            {activeTab === 'local_insider' && (
+              <LocalInsiderTab 
+                insights={localInsider}
+                selectedDestination={selectedDestination}
                 onEvidenceClick={handleEvidenceClick}
               />
             )}

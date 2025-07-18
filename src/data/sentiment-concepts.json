@@ -1,0 +1,3145 @@
+{
+  "totalConcepts": 520,
+  "categories": [
+    "Pool",
+    "L1 Concepts",
+    "Negative",
+    "General",
+    "Positive",
+    "Location",
+    "Family Friendly",
+    "Business Friendly",
+    "Views",
+    "L3 Concepts",
+    "Bar",
+    "Restaurant",
+    "Parking",
+    "L2 Concepts",
+    "Fitness",
+    "Beach",
+    "Room Cleanliness",
+    "WiFi"
+  ],
+  "concepts": [
+    {
+      "id": "lap-pool-sentiment",
+      "label": "Exercise pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "living-areas",
+      "label": "Living areas",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "stains",
+      "label": "Stains",
+      "category": "Negative",
+      "definition": "a review concept used for when the traveler has seen stained linens or inexplicable blotches of unknown origin in the room or around the property"
+    },
+    {
+      "id": "Listing-accuracy-negative-sentiment",
+      "label": "Listing accuracy (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "boutique-hotel-sentiment",
+      "label": "Boutique hotel",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "slow-check-in",
+      "label": "Slow check-in",
+      "category": "Negative",
+      "definition": "a review concept used to illustrate that the process for checking in to the property took too long"
+    },
+    {
+      "id": "on-site-ecotours-sentiment",
+      "label": "On-site ecotours",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "summer-season",
+      "label": "Summer season",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "modern-appliances",
+      "label": "Modern appliances",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "mountain-location-sentiment",
+      "label": "Mountain location",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "inconvenient-location",
+      "label": "Inconvenient (location)",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "location-nightlife-sentiment",
+      "label": "Location nightlife",
+      "category": "Location",
+      "definition": "Rating about nightlife at the property location, based on user-generated content"
+    },
+    {
+      "id": "private-hot-tub",
+      "label": "Private hot tub",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "on-site-nightclubs-sentiment",
+      "label": "On-site nightclubs",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "lake-sentiment",
+      "label": "Lake",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "treehouse-sentiment",
+      "label": "Treehouse",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "private-pool-positive-sentiment",
+      "label": "Private pool (positive sentiment)",
+      "category": "Pool",
+      "definition": "A review sentiment used for positive reactions to the property's private pool"
+    },
+    {
+      "id": "dirty-kitchen",
+      "label": "Dirty kitchen",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "childcare",
+      "label": "Childcare",
+      "category": "Family Friendly",
+      "definition": null
+    },
+    {
+      "id": "fall-season",
+      "label": "Fall season",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "welcome-drinks",
+      "label": "Welcome drinks",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "business-friendly-positive-sentiment",
+      "label": "Business-friendly (positive sentiment)",
+      "category": "Business Friendly",
+      "definition": null
+    },
+    {
+      "id": "unhelpful",
+      "label": "Unhelpful",
+      "category": "Negative",
+      "definition": "a review concept used for when the employees of the property do not offer to help the travelers or are reluctant to help them, especially when the travelers are experiencing a problem or difficulty"
+    },
+    {
+      "id": "poor-value-sentiment",
+      "label": "Poor value for money",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "slow-service",
+      "label": "Slow service",
+      "category": "Negative",
+      "definition": "a review concept used for any time the employees or services took to long to arrive or respond to traveler needs"
+    },
+    {
+      "id": "limited-wifi",
+      "label": "Limited WiFi",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "lake-view-sentiment",
+      "label": "Lake view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "towels-and-linens-provided",
+      "label": "Towels and linens provided",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "complimentary-cream-tea-sentiment",
+      "label": "Complimentary cream tea",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "indoor-tennis-court-sentiment",
+      "label": "Indoor tennis court sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "spacious-living-areas",
+      "label": "Spacious living areas",
+      "category": "L3 Concepts",
+      "definition": null
+    },
+    {
+      "id": "airport-sentiment",
+      "label": "Airport shuttle",
+      "category": "L1 Concepts",
+      "definition": "Rating about distance and connections of a property to an airport, based on user-generated content"
+    },
+    {
+      "id": "chic-vibe-sentiment",
+      "label": "Chic vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "dirty-room",
+      "label": "Dirty (room)",
+      "category": "Negative",
+      "definition": "This is a reviews concept. it refers to how dirty the reviewer thought the room was."
+    },
+    {
+      "id": "public-transit-sentiment",
+      "label": "Public transit",
+      "category": "General",
+      "definition": "Rating about public transit options around a property, based on user-generated content"
+    },
+    {
+      "id": "white-sand-beach",
+      "label": "White sand beach",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "clean-beach",
+      "label": "Clean beach",
+      "category": "L3 Concepts",
+      "definition": null
+    },
+    {
+      "id": "marble-floors",
+      "label": "Marble floors",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "english-breakfast",
+      "label": "English breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "sunrise-views-sentiment",
+      "label": "Sunrise views",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "parking-available",
+      "label": "Parking available",
+      "category": "Positive",
+      "definition": "Review sentiments expressing there is parking available at the property"
+    },
+    {
+      "id": "living-areas-positive-sentiment",
+      "label": "Living areas (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "microwave-positive-sentiment",
+      "label": "Microwave (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-staff-and-services",
+      "label": "Other negative sentiments (staff and services)",
+      "category": "Negative",
+      "definition": "this is a reviews concept and covers anything else not specified in the other categories for negative sentiments"
+    },
+    {
+      "id": "room-noise-positive-sentiment",
+      "label": "Room noise (positive sentiment)",
+      "category": "Positive",
+      "definition": "This is a reviews concept - it means that the reviewer has commented on the level of noise in the room they stayed in a specifically positive sentiment."
+    },
+    {
+      "id": "on-site-massage-services",
+      "label": "On-site massage services",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "bar-negative-sentiment",
+      "label": "Bar (negative sentiment)",
+      "category": "Bar",
+      "definition": "Negative review sentiments about the bar at the property "
+    },
+    {
+      "id": "horseback-riding-sentiment",
+      "label": "Horseback riding",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "restaurant-positive-sentiment",
+      "label": "Restaurant (positive sentiment)",
+      "category": "Restaurant",
+      "definition": "A review concept used when the restaurant amenity was represented as expected"
+    },
+    {
+      "id": "rooftop-bar",
+      "label": "Rooftop bar",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "television-unavailable",
+      "label": "Television unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "recently-renovated",
+      "label": "Recently renovated",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "pet-access-negative-sentiment",
+      "label": "Pet access (negative sentiment)",
+      "category": "General",
+      "definition": "A review concept used when the pet access amenity or policy was not represented as expected"
+    },
+    {
+      "id": "fitness-facilities-available",
+      "label": "Fitness facilities available",
+      "category": "Positive",
+      "definition": "Review sentiments confirming that fitness facilities are available at the property"
+    },
+    {
+      "id": "poorly-stocked-kitchen",
+      "label": "Poorly stocked kitchen",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "hot-tub-unavailable",
+      "label": "Hot tub unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "free-buffet-breakfast",
+      "label": "Free buffet breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "restaurant-unavailable",
+      "label": "Restaurant unavailable",
+      "category": "Negative",
+      "definition": "It has been confirmed that there is no restaurant at the property"
+    },
+    {
+      "id": "pet-access-sentiment",
+      "label": "Pet access",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "quiet-location",
+      "label": "Quiet (location)",
+      "category": "Location",
+      "definition": "It refers to the area around the hotel - it could be the street, neighborhood, or city."
+    },
+    {
+      "id": "ecotours-sentiment",
+      "label": "Ecotours",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "property-condition-negative-sentiment",
+      "label": "Property condition (negative sentiment)",
+      "category": "Negative",
+      "definition": "a concept used to review or provide negative opinions about the property and it's upkeep"
+    },
+    {
+      "id": "free-parking",
+      "label": "Free parking",
+      "category": "Parking",
+      "definition": null
+    },
+    {
+      "id": "movie-room-sentiment",
+      "label": "Movie room",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "uncomfortable-beds",
+      "label": "Uncomfortable beds",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "bed-negative-sentiment",
+      "label": "Bed (negative sentiment)",
+      "category": "Negative",
+      "definition": "\\ta concept use to provide a negative review for the property's bed (s)"
+    },
+    {
+      "id": "accessibility-sentiment",
+      "label": "Accessibility",
+      "category": "L1 Concepts",
+      "definition": "a review concept used for the impressions of the properties accessibility amenities."
+    },
+    {
+      "id": "dirty-location",
+      "label": "Dirty (location)",
+      "category": "Location",
+      "definition": "It refers to the area around the hotel - it could be the street, neighborhood, or city."
+    },
+    {
+      "id": "room-cleanliness-sentiment",
+      "label": "Room cleanliness",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "golf-course-sentiment",
+      "label": "Golf course",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "rainfall-shower",
+      "label": "Rainfall shower",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "beach-view-sentiment",
+      "label": "Beach view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "room-layout",
+      "label": "Room layout",
+      "category": "General",
+      "definition": "This is a reviews concept. It refers to how pleasing or displeasing the traveler found the organization of furniture and the physical arrangement of the room they stayed in."
+    },
+    {
+      "id": "delayed-check-in",
+      "label": "Delayed check-in",
+      "category": "Negative",
+      "definition": "a review concept used to express that the check-in process was prevented by something that was perhaps in the property's control\\n"
+    },
+    {
+      "id": "spa-sentiment",
+      "label": "Spa",
+      "category": "L1 Concepts",
+      "definition": "A review concept used to gather impressions of the property's spa"
+    },
+    {
+      "id": "heated-pool-sentiment",
+      "label": "Heated pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "pick-your-own-garden-sentiment",
+      "label": "Pick-your-own garden",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "fishing-sentiment",
+      "label": "Fishing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "terrible-view",
+      "label": "Terrible view",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "espresso-maker-in-room",
+      "label": "Espresso maker in room",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "review-sentiments",
+      "label": "Review sentiments",
+      "category": "General",
+      "definition": "ratings based on UGC (user generated content) as well as other review sources"
+    },
+    {
+      "id": "location-quiet",
+      "label": "Quiet location",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "kids-pool-sentiment",
+      "label": "Kids pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "tasty-breakfast",
+      "label": "Tasty breakfast",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "limited-breakfast-options",
+      "label": "Limited breakfast options",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "beachy-vibe-sentiment",
+      "label": "Beachy vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "great-amenities",
+      "label": "Great amenities",
+      "category": "Positive",
+      "definition": "amenities were of high quality"
+    },
+    {
+      "id": "furniture-in-poor-condition",
+      "label": "Furniture in poor condition",
+      "category": "Negative",
+      "definition": "a review concept used for negative feelings of the way the furniture felt or looked (uncomfortable, broken, etc)"
+    },
+    {
+      "id": "nice-views",
+      "label": "Nice views",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "location-beach-nearby",
+      "label": "Beach nearby",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "few-amenities",
+      "label": "Few amenities",
+      "category": "Negative",
+      "definition": "too few amenities; not enough amenities; the amenities present were limited, scarce, not numerous"
+    },
+    {
+      "id": "dishwasher-unavailable",
+      "label": "Dishwasher unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "dining-area-positive-sentiment",
+      "label": "Dining area (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "coffee-tea-maker-in-room",
+      "label": "Coffee/tea maker in room",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "balcony-positive-sentiment",
+      "label": "Balcony (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "art-deco-style",
+      "label": "Art deco style",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "high-ceilings",
+      "label": "High ceilings",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "beach-equipment",
+      "label": "Beach equipment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "champagne-service-sentiment",
+      "label": "Champagne service",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "on-site-winery-sentiment",
+      "label": "On-site winery",
+      "category": "General",
+      "definition": "Review sentiments about a winery that is on-site to the property "
+    },
+    {
+      "id": "value-positive-sentiment",
+      "label": "Value (positive sentiment)",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "poor-room-service",
+      "label": "Poor room service",
+      "category": "Negative",
+      "definition": "reviewers have described the room service provided as poor, e.g. very slow, with limited availability or options"
+    },
+    {
+      "id": "free-airport-shuttle-sentiment",
+      "label": "Free airport shuttle",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "ocean-view-sentiment",
+      "label": "Ocean view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "backpackers-hostel-sentiment",
+      "label": "Backpacker's hostel",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "good-property-condition",
+      "label": "Good property condition",
+      "category": "Positive",
+      "definition": "reviewers have described the property as being in good condition, e.g. with recently updated decor, good services, or high quality facilities\\n"
+    },
+    {
+      "id": "decor-negative-sentiment",
+      "label": "Decor",
+      "category": "Negative",
+      "definition": "a review concept used for negative sentiments towards the way the property and fixings are decorated."
+    },
+    {
+      "id": "hard-to-find",
+      "label": "Hard to find",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "outdoor-space",
+      "label": "Outdoor space",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "wine-country-sentiment",
+      "label": "Wine country",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "clear-water-beach",
+      "label": "Clear water beach",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "breakfast-negative-sentiment",
+      "label": "Breakfast (negative sentiment)",
+      "category": "General",
+      "definition": "A review concept used when the breakfast amenity was not represented as expected"
+    },
+    {
+      "id": "great-shopping",
+      "label": "Great shopping",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "sailing-sentiment",
+      "label": "Sailing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "on-site-windsurfing",
+      "label": "On-site windsurfing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-breakfast",
+      "label": "Other negative sentiments (breakfast)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "wifi-unavailable",
+      "label": "WiFi unavailable",
+      "category": "Negative",
+      "definition": "It has been confirmed that wifi is unavailable at the property"
+    },
+    {
+      "id": "skiing-nearby",
+      "label": "Skiing nearby",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "spacious-balcony",
+      "label": "Spacious balcony",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "river-view-sentiment",
+      "label": "River view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "staff-and-services-negative-sentiment",
+      "label": "Staff and services (negative sentiment)",
+      "category": "Negative",
+      "definition": "a concept used to review or provide negative opinions about the employees and  intangible products"
+    },
+    {
+      "id": "fitness-facilities-unavailable",
+      "label": "Fitness facilities unavailable",
+      "category": "Negative",
+      "definition": "It has been confirmed that fitness facilities are unavailable at the property"
+    },
+    {
+      "id": "on-site-games",
+      "label": "On-site games",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "views-sentiment",
+      "label": "Views",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "poor-wifi",
+      "label": "Poor WiFi",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "waterslide-sentiment",
+      "label": "Water slide",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "family-beach",
+      "label": "Family beach",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "sheets-and-towels-negative-sentiment",
+      "label": "Sheets and towels",
+      "category": "Negative",
+      "definition": "a review concept used for negative sentiments the traveler has with the quality or feeling of the linens in the room or on the property"
+    },
+    {
+      "id": "listing-not-as-expected",
+      "label": "Listing not as expected",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "pet-friendly-sentiment",
+      "label": "Pet-friendly",
+      "category": "General",
+      "definition": "A review sentiment for indicating if the property is or is not welcoming to pets, such as having special amenities that cater to them."
+    },
+    {
+      "id": "unprofessional",
+      "label": "Unprofessional",
+      "category": "Negative",
+      "definition": "a review concept used for when the staff or employees behave in a manner that the reviewer considers to be unprofessional, impolite, etc."
+    },
+    {
+      "id": "private-plunge-pool-sentiment",
+      "label": "Private plunge pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "parking-unavailable",
+      "label": "Parking unavailable",
+      "category": "Negative",
+      "definition": "Review sentiments expressing parking is unavailable at the property "
+    },
+    {
+      "id": "inaccurate-pet-policy-information",
+      "label": "Inaccurate pet policy information",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "air-conditioning-negative-sentiment",
+      "label": "Air conditioning (negative sentiment)",
+      "category": "L2 Concepts",
+      "definition": "A review concept used when the air conditioning amenity was not represented as expected"
+    },
+    {
+      "id": "outdoor-bath-sentiment",
+      "label": "Outdoor bath",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "fitness-facilities-positive-sentiment",
+      "label": "Fitness facilities (positive sentiment)",
+      "category": "Fitness",
+      "definition": "A review concept used when the fitness facility amenities were represented as expected"
+    },
+    {
+      "id": "room-service-unavailable",
+      "label": "Room service unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "spacious-property",
+      "label": "Spacious property",
+      "category": "L3 Concepts",
+      "definition": null
+    },
+    {
+      "id": "large-kitchen",
+      "label": "Large kitchen",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "hardwood-floors",
+      "label": "Hardwood floors",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "quiet-room-sentiment",
+      "label": "Quiet (room)",
+      "category": "Positive",
+      "definition": "This is a reviews concept.- it means that the reviewer has commented on the level of noise in the room they stayed in and it's specifically a positive sentiment saying that the room was quiet"
+    },
+    {
+      "id": "dishwasher-negative-sentiment",
+      "label": "Dishwasher (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "outdoor-tennis-court-sentiment",
+      "label": "Outdoor tennis court sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "fast-wifi",
+      "label": "Fast WiFi",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "on-site-archery-sentiment",
+      "label": "On-site archery",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "theme-rooms-sentiment",
+      "label": "Theme rooms",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "cabin",
+      "label": "Cabin",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "swanky-vibe-sentiment",
+      "label": "Swanky vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "limited-bar-hours",
+      "label": "Limited bar hours",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "highly-recommended",
+      "label": "Highly recommended ",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "mineral-hot-springs-sentiment",
+      "label": "Mineral hot springs",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "mold-or-mildew",
+      "label": "Mold or mildew",
+      "category": "Negative",
+      "definition": "a review concept used when the traveler has found mold or mildew in the room or property"
+    },
+    {
+      "id": "airport-shuttle-available",
+      "label": "Airport shuttle available",
+      "category": "Positive",
+      "definition": "Review sentiments expressing there is an airport shuttle service offered by the property "
+    },
+    {
+      "id": "negative-sentiment",
+      "label": "Negative sentiment concepts ",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "casino-positive-sentiment",
+      "label": "Casino (positive sentiment)",
+      "category": "General",
+      "definition": "A review sentiment used for positive impressions of the casino"
+    },
+    {
+      "id": "panoramic-views-sentiment",
+      "label": "Panoramic views",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "beach-positive-sentiment",
+      "label": "Beach (positive sentiment)",
+      "category": "Beach",
+      "definition": null
+    },
+    {
+      "id": "poorly-equipped-kitchen",
+      "label": "Poorly equipped kitchen",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "air-conditioning-positive-sentiment",
+      "label": "Air conditioning (positive sentiment)",
+      "category": "L2 Concepts",
+      "definition": "A review concept used when the air conditioning amenity was represented as expected"
+    },
+    {
+      "id": "artistic-vibe-sentiment",
+      "label": "Artistic vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "budget",
+      "label": "Budget",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "mountain-sunset-view-sentiment",
+      "label": "Mountain sunset view sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "dirty-fitness-facilities",
+      "label": "Dirty fitness facilities",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "eco-friendly-sentiment",
+      "label": "Eco-friendly",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "wrap-around-porch-sentiment",
+      "label": "Wrap-around porch",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "check-in-positive-sentiment",
+      "label": "Check-in (positive sentiment)",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "location-activities-attractions-nearby",
+      "label": "Activities and attractions nearby ",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "indoor-pool-sentiment",
+      "label": "Indoor pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "overcrowded-fitness-facilities",
+      "label": "Overcrowded fitness facilities ",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "unfriendly-staff",
+      "label": "Unfriendly staff",
+      "category": "Negative",
+      "definition": "a concept used to review or provide negative opinions about the employees"
+    },
+    {
+      "id": "free-wifi-sentiment",
+      "label": "Free wifi",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "pizza-oven-sentiment",
+      "label": "Pizza oven",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "expensive-bar-prices",
+      "label": "Expensive bar prices",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "lakefront",
+      "label": "Lakefront",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "friendly-staff",
+      "label": "Friendly staff",
+      "category": "Positive",
+      "definition": "concept used to review or provide positive opinions about the employees"
+    },
+    {
+      "id": "airport-shuttle-negative-sentiment",
+      "label": "Airport shuttle (negative sentiment)",
+      "category": "L2 Concepts",
+      "definition": "A review concept used when the airport shuttle amenity was not represented as expected"
+    },
+    {
+      "id": "property-size-negative-sentiment",
+      "label": "Property size (negative sentiment)",
+      "category": "L2 Concepts",
+      "definition": null
+    },
+    {
+      "id": "room-size-negative-sentiment",
+      "label": "Room size (negative sentiment)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "houseboat-sentiment",
+      "label": "Houseboat",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "kitchen-positive-sentiment",
+      "label": "Kitchen (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "value-sentiment",
+      "label": "Value",
+      "category": "L1 Concepts",
+      "definition": "Rating about the value for money for a stay at a property, based on user-generated content"
+    },
+    {
+      "id": "value-negative-sentiment",
+      "label": "Value (negative sentiment)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "location-near-the-strip",
+      "label": "Near the strip",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "dirty-pool",
+      "label": "Dirty pool",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "on-site-horseback-riding-sentiment",
+      "label": "On-site horseback riding",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "well-stocked-kitchen",
+      "label": "Well stocked kitchen",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "spa-services-sentiment",
+      "label": "Spa services",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "kitchen-sentiment",
+      "label": "Kitchen",
+      "category": "L1 Concepts",
+      "definition": "a review concept used for impressions of a property's kitchen amenity"
+    },
+    {
+      "id": "quirky-vibe-sentiment",
+      "label": "Quirky vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "limited-parking-spaces",
+      "label": "Limited parking spaces",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "free-continental-breakfast",
+      "label": "Free continental breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "slow-wifi",
+      "label": "Slow WiFi",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "sunset-views-sentiment",
+      "label": "Sunset views",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "good-dining",
+      "label": "Good dining",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "on-site-sledding-sentiment",
+      "label": "On-site sledding",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "well-stocked-breakfast",
+      "label": "Well stocked breakfast",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "complicated-check-in",
+      "label": "Complicated check-in",
+      "category": "Negative",
+      "definition": "a review concept used to express a negative feeling that the check-in process was difficult to figure out"
+    },
+    {
+      "id": "panoramic-lake-views-sentiment",
+      "label": "Panoramic lake views sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "pool-unavailable",
+      "label": "Pool unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "refrigerator-unavailable",
+      "label": "Refrigerator unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "high-restaurant-prices",
+      "label": "Expensive restaurant prices ",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "on-site-sailing-sentiment",
+      "label": "On-site sailing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "property-cleanliness-sentiment",
+      "label": "Property cleanliness",
+      "category": "L1 Concepts",
+      "definition": "A review concept related to how clean people found the property"
+    },
+    {
+      "id": "shopping-sentiment",
+      "label": "Shopping",
+      "category": "General",
+      "definition": "Rating about shopping occasions near a property, based on user-generated content"
+    },
+    {
+      "id": "bohemian-vibe-sentiment",
+      "label": "Bohemian vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "adults-only",
+      "label": "Adults only",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "air-conditioning-unavailable",
+      "label": "Air conditioning unavailable",
+      "category": "Negative",
+      "definition": "It has been confirmed that air conditioning is unavailable at the property"
+    },
+    {
+      "id": "garden-sentiment",
+      "label": "Garden",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "spa-positive-sentiment",
+      "label": "Spa (positive sentiment)",
+      "category": "Positive",
+      "definition": "A review concept used when the spa amenity was represented as expected"
+    },
+    {
+      "id": "heated-floors-sentiment",
+      "label": "Heated floors",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "cooking-lessons-sentiment",
+      "label": "Cooking lessons",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "pool-positive-sentiment",
+      "label": "Pool (positive sentiment)",
+      "category": "Pool",
+      "definition": "A review concept used when the pool amenity was represented as expected"
+    },
+    {
+      "id": "other-negative-sentiments-kitchen",
+      "label": "Other negative sentiments (kitchen)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-room-cleanliness",
+      "label": "Other negative sentiments (room cleanliness)",
+      "category": "Negative",
+      "definition": "this is a review concept used for any other negative aspects related to how clean the room was"
+    },
+    {
+      "id": "room-comfort-negative-sentiment",
+      "label": "Room comfort (negative sentiment)",
+      "category": "Negative",
+      "definition": "This is a reviews concept. it refers to any negative feelings the reviewer had about the room's comfort"
+    },
+    {
+      "id": "poolside-bar-sentiment",
+      "label": "Poolside bar",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "location-parks-nearby",
+      "label": "Parks nearby",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "quick-check-in",
+      "label": "Quick check-in",
+      "category": "Positive",
+      "definition": "a review concept used when the check-in process was rapid and didn't take a long time"
+    },
+    {
+      "id": "pool-table",
+      "label": "Pool table",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "spring-season",
+      "label": "Spring season",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "hot-tub-sentiment",
+      "label": "Hot tub",
+      "category": "General",
+      "definition": "A review sentiment to represent impressions of the hot tub. A fixed or permanent large basin of heated water, mixed with air jets to create a relaxing and hydrotherapeutic effect"
+    },
+    {
+      "id": "mountain-view-sentiment",
+      "label": "Mountain view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "restaurant-available",
+      "label": "Restaurant available",
+      "category": "Positive",
+      "definition": "It has been confirmed there is a restaurant available at the property"
+    },
+    {
+      "id": "ski-in-ski-out-access-sentiment",
+      "label": "Ski-in/Ski-out access",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "complicated-parking",
+      "label": "Complicated parking",
+      "category": "Negative",
+      "definition": "Reviews sentiments indicating that the parking at the property is complicated"
+    },
+    {
+      "id": "recommend-negative-sentiment",
+      "label": "Recommend (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "safe-location",
+      "label": "Safe (location)",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "trendy-vibe-sentiment",
+      "label": "Trendy vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "location-convenient",
+      "label": "Convenient location ",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "scenic-flight-tours-sentiment",
+      "label": "Scenic flight tours",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "variety-of-breakfast-options",
+      "label": "Variety of breakfast options",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "spacious-kitchen",
+      "label": "Spacious kitchen",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "cosy-restaurant",
+      "label": "Cosy restaurant",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "24-hour-health-club-sentiment",
+      "label": "24-hour health club",
+      "category": "Fitness",
+      "definition": null
+    },
+    {
+      "id": "bar-sentiment",
+      "label": "Bar",
+      "category": "L1 Concepts",
+      "definition": "Review sentiments about the quality of onsite bar(s) at a property, based on user-generated content"
+    },
+    {
+      "id": "L1-concepts",
+      "label": "L1 sentiment concepts",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "Listing-as-expected",
+      "label": "Listing as expected",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "comfortable-living-areas",
+      "label": "Comfortable living areas",
+      "category": "L3 Concepts",
+      "definition": null
+    },
+    {
+      "id": "gulf-view-sentiment",
+      "label": "Gulf view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "property-condition-sentiment",
+      "label": "Property condition",
+      "category": "General",
+      "definition": "a concept used to review or provide opinions about the property and it's upkeep"
+    },
+    {
+      "id": "medieval-vibe-sentiment",
+      "label": "Medieval vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "restaurant-negative-sentiment",
+      "label": "Restaurant (negative sentiment)",
+      "category": "Restaurant",
+      "definition": "A review concept used when the restaurant amenity was not represented as expected"
+    },
+    {
+      "id": "check-in-unavailable",
+      "label": "Check-in unavailable",
+      "category": "Negative",
+      "definition": "a review concept used to express distaste when the check-in process was not open to the traveler"
+    },
+    {
+      "id": "on-site-fishing-sentiment",
+      "label": "On-site fishing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "room-cleanliness-positive-sentiment",
+      "label": "Room cleanliness (positive sentiment)",
+      "category": "Room Cleanliness",
+      "definition": "This is a reviews concept. it refers to any positive feelings the reviewer had about the room's propriety."
+    },
+    {
+      "id": "other-negative-sentiments-parking",
+      "label": "Other negative sentiments (parking)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "casino-sentiment",
+      "label": "Casino",
+      "category": "L1 Concepts",
+      "definition": "A review sentiment used for feelings about the casino"
+    },
+    {
+      "id": "ski-sentiment",
+      "label": "Ski",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "water-view-sentiment",
+      "label": "Water view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "continental-breakfast",
+      "label": "Continental breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "location-sightseeing-sentiment",
+      "label": "Location sightseeing",
+      "category": "Location",
+      "definition": "Rating about sightseeing opportunities at a property location, based on user-generated content"
+    },
+    {
+      "id": "recommend-positive-sentiment",
+      "label": "Recommend (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "room-reviews",
+      "label": "Room reviews",
+      "category": "General",
+      "definition": "concepts used to review or provide opinions about rooms"
+    },
+    {
+      "id": "great-for-entertaining",
+      "label": "Great for entertaining",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-fitness-facilities",
+      "label": "Other negative sentiments (fitness facilities)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "luxury",
+      "label": "Luxury",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "comfortable-sentiment",
+      "label": "Comfortable",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "refrigerator",
+      "label": "Refrigerator",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "panoramic-ocean-views-sentiment",
+      "label": "Panoramic ocean views sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "good-value-sentiment",
+      "label": "Good value for money",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "nightclub-sentiment",
+      "label": "Nightclub",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "lgbtqia+-friendly",
+      "label": "LGBTQIA+ friendly ",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "room-noise-negative-sentiment",
+      "label": "Room noise (negative sentiment)",
+      "category": "Negative",
+      "definition": "This is a reviews concept - it means that the reviewer has commented on the level of noise in the room they stayed in a specifically negative sentiment."
+    },
+    {
+      "id": "easy-parking",
+      "label": "Easy parking",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "parking-sentiment",
+      "label": "Parking",
+      "category": "L1 Concepts",
+      "definition": "Rating on the available parking options offered by a property, based on user-generated content"
+    },
+    {
+      "id": "24-hour-fitness-facilities-sentiment",
+      "label": "24-hour fitness facilities",
+      "category": "Fitness",
+      "definition": null
+    },
+    {
+      "id": "swim-up-bar-sentiment",
+      "label": "Swim-up bar",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "large-garden",
+      "label": "Large garden",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "spa-available",
+      "label": "Spa available",
+      "category": "Positive",
+      "definition": "It has been confirmed there is a spa available at the property"
+    },
+    {
+      "id": "chinese-breakfast",
+      "label": "Chinese breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "lush-garden",
+      "label": "Lush garden",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "ranch-sentiment",
+      "label": "Ranch",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "bed-sentiment",
+      "label": "Beds",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "property-condition-positive-sentiment",
+      "label": "Property condition (positive sentiment)",
+      "category": "Positive",
+      "definition": "a concept used to review or provide positive opinions about the property and it's upkeep"
+    },
+    {
+      "id": "barbecue-grill",
+      "label": "Barbecue grill",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "hiking-and-biking-sentiment",
+      "label": "Hiking and biking",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-wifi",
+      "label": "Other negative sentiments (WiFi)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "bed-positive-sentiment",
+      "label": "Bed (positive sentiment)",
+      "category": "Positive",
+      "definition": "a concept use to provide a positive review for the property's bed (s)"
+    },
+    {
+      "id": "other-negative-sentiments-property-condition",
+      "label": "Other negative sentiments (property condition)",
+      "category": "Negative",
+      "definition": "a review concept used for feelings of displeasure towards the way the property is set up that aren't covered in the other narrower concepts in this category"
+    },
+    {
+      "id": "beach-sentiment",
+      "label": "Beach",
+      "category": "L1 Concepts",
+      "definition": "Review sentiments on the beach(es) and beach amenities at a property"
+    },
+    {
+      "id": "rooftop-terrace-sentiment",
+      "label": "Rooftop terrace",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "charming-vibe-sentiment",
+      "label": "Charming vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "winter-season",
+      "label": "Winter season",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "suitable-for-weddings",
+      "label": "Suitable for weddings",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "boat-sentiment",
+      "label": "Boat",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "breakfast-positive-sentiment",
+      "label": "Breakfast (positive sentiment)",
+      "category": "General",
+      "definition": "A review concept used when the breakfast amenity was represented as expected"
+    },
+    {
+      "id": "fine-dining-sentiment",
+      "label": "Fine dining",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "well-equipped-kitchen",
+      "label": "Well equipped kitchen",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "hot-breakfast",
+      "label": "Hot breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "black-sand-beach",
+      "label": "Black sand beach",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "private-pool-negative-sentiment",
+      "label": "Private pool (negative sentiment)",
+      "category": "Pool",
+      "definition": "A review sentiment used for negative reactions to the property's private pool"
+    },
+    {
+      "id": "elevator-negative-sentiment",
+      "label": "Elevator (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "spa-negative-sentiment",
+      "label": "Spa (negative sentiment)",
+      "category": "Negative",
+      "definition": "A review concept used when the spa amenity was not represented as expected"
+    },
+    {
+      "id": "elevator-unavailable",
+      "label": "Elevator unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "pool-sentiment",
+      "label": "Pool",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "location-transport-options",
+      "label": "Location transport options",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "family-friendly-sentiment",
+      "label": "Family friendly",
+      "category": "L1 Concepts",
+      "definition": "Rating about services, amenities, and activities suitable for family and kids offered by a property, based on user-generated content"
+    },
+    {
+      "id": "bar-positive-sentiment",
+      "label": "Bar (positive sentiment)",
+      "category": "Bar",
+      "definition": "Positive review sentiments about the bar at the property "
+    },
+    {
+      "id": "location-sentiment",
+      "label": "Location",
+      "category": "L1 Concepts",
+      "definition": "Rating about the location of a property, based on user-generated content"
+    },
+    {
+      "id": "panoramic-mountain-views-sentiment",
+      "label": "Panoramic mountain views sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "poor-property-condition",
+      "label": "Poor property condition",
+      "category": "Negative",
+      "definition": "reviewers have described the property as being in poor condition, e.g. with old decor, limited services, or poor quality facilities"
+    },
+    {
+      "id": "small-room",
+      "label": "Small room",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "noisy-room",
+      "label": "Noisy (room)",
+      "category": "Negative",
+      "definition": "This is a reviews concept.- it means that the reviewer has commented on the level of noise in the room they stayed in and it's specifically a negative sentiment saying that the room was noisy"
+    },
+    {
+      "id": "game-room-sentiment",
+      "label": "Game room",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "location-central-sentiment",
+      "label": "Central location",
+      "category": "Location",
+      "definition": "Rating on the centrality of property location, based on user-generated content"
+    },
+    {
+      "id": "parking-negative-sentiment",
+      "label": "Parking (negative sentiment)",
+      "category": "Parking",
+      "definition": "A review concept used when the parking amenity was not represented as expected"
+    },
+    {
+      "id": "multilingual-staff",
+      "label": "Multilingual staff ",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "wine-country",
+      "label": "Wine country",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "room-service-positive-sentiment",
+      "label": "Room service (positive sentiment)",
+      "category": "Positive",
+      "definition": "This is a reviews concept. It refers to a  specifically positive sentiment about the service at a hotel or other property allowing guests to order food and drink straight to their rooms"
+    },
+    {
+      "id": "safari-sentiment",
+      "label": "Safari",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "bungalow-sentiment",
+      "label": "Bungalow",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "easy-check-in",
+      "label": "Easy check-in",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "winter-sports-sentiment",
+      "label": "Winter sports",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "room-noise-sentiment",
+      "label": "Room noise",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "comfortable-room",
+      "label": "Comfortable room",
+      "category": "Positive",
+      "definition": "This is a reviews concept. it refers specifically to the comfort the customer experienced in the room. How well they slept, etc."
+    },
+    {
+      "id": "on-site-snowtubing-sentiment",
+      "label": "On-site snowtubing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "location-parking",
+      "label": "Location parking ",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "location-scenery",
+      "label": "Location scenery",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "delayed-airport-shuttle",
+      "label": "Delayed airport shuttle",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "on-site-skydiving-sentiment",
+      "label": "On-site skydiving sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "rock-climbing-sentiment",
+      "label": "Rock climbing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "clean-pool",
+      "label": "Clean pool",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "pet-access-positive-sentiment",
+      "label": "Pet access (positive sentiment)",
+      "category": "General",
+      "definition": "A review concept used when the pet access amenity or policy was represented as expected"
+    },
+    {
+      "id": "tennis-court-sentiment",
+      "label": "Tennis court",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "pet-friendly-negative-sentiment",
+      "label": "Pet-friendly (negative sentiment)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "room-size-positive-sentiment",
+      "label": "Room size (positive sentiment)",
+      "category": "Positive",
+      "definition": "This is a reviews concept. It refers to a  specifically positive sentiment about the size of the room."
+    },
+    {
+      "id": "awesome-check-in-service",
+      "label": "Awesome check-in service",
+      "category": "Positive",
+      "definition": "a review concept used for when the process of checking into the property went well and the traveler has very good things to say\n"
+    },
+    {
+      "id": "walkable",
+      "label": "Walkable",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "workspace",
+      "label": "Workspace",
+      "category": "L1 Concepts",
+      "definition": "Review sentiments about a space or area designated for or well equipped for undertaking work, usually containing furniture such as desks, tables, etc. or facilities such as laptop docking or charging points, WiFi, etc.\n\nIn Vacation Rentals, such a space is likely to be less formal or well-equipped than similar spaces in Conventional Lodging"
+    },
+    {
+      "id": "retro-vibe-sentiment",
+      "label": "Retro vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "designer-sentiment",
+      "label": "Designer",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "clean-fitness-facilities",
+      "label": "Clean fitness facilities ",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "cold-pool",
+      "label": "Cold pool",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "room-service-sentiment",
+      "label": "Room service",
+      "category": "General",
+      "definition": "A service at a hotel or other property allowing guests to order food and drink straight to their rooms"
+    },
+    {
+      "id": "air-conditioning-available",
+      "label": "Air conditioning available",
+      "category": "Positive",
+      "definition": "It has been confirmed that the rooms and/or property are air conditioned"
+    },
+    {
+      "id": "on-site-snowshoeing-sentiment",
+      "label": "On-site snowshoeing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "pool-negative-sentiment",
+      "label": "Pool (negative sentiment)",
+      "category": "Pool",
+      "definition": "A review concept used when the pool amenity was not represented as expected"
+    },
+    {
+      "id": "hot-tub-negative-sentiment",
+      "label": "Hot tub (negative sentiment)",
+      "category": "General",
+      "definition": "A review sentiment for negative reactions to the property's hot tub"
+    },
+    {
+      "id": "uncrowded-beach",
+      "label": "Uncrowded beach",
+      "category": "L3 Concepts",
+      "definition": null
+    },
+    {
+      "id": "on-site-mountain-biking-sentiment",
+      "label": "On-site mountain biking",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "slow-restaurant-service",
+      "label": "Slow restaurant service ",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "on-site-snowmobiling-sentiment",
+      "label": "On-site snowmobiling",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "dangerous-location",
+      "label": "Dangerous (location)",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "pets-not-allowed",
+      "label": "Pets not allowed",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "breakfast-available",
+      "label": "Breakfast available",
+      "category": "Positive",
+      "definition": "It has been confirmed that breakfast is available at the property"
+    },
+    {
+      "id": "wrong-check-in-information",
+      "label": "Wrong check-in information",
+      "category": "Negative",
+      "definition": "a review concept used when the traveler discovered their check-in information was wrong"
+    },
+    {
+      "id": "24-hour-business-center-sentiment",
+      "label": "24-hour business center",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "bugs",
+      "label": "Bugs",
+      "category": "Negative",
+      "definition": "a review concept used when the traveler has seen insects in the bed or room or elsewhere in the property where they don't belong."
+    },
+    {
+      "id": "kids-toys-provided",
+      "label": "Kids toys provided",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "location-wineries-nearby",
+      "label": "Location - Wineries nearby",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "location-dining-options",
+      "label": "Location dining options ",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "microwave-negative-sentiment",
+      "label": "Microwave (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "renewable-energy-sentiment",
+      "label": "Renewable energy",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "recommend-sentiment",
+      "label": "Recommend",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "location-airport-nearby",
+      "label": "Airport nearby ",
+      "category": "Location",
+      "definition": null
+    },
+    {
+      "id": "business-friendly-sentiment",
+      "label": "Business-friendly",
+      "category": "L1 Concepts",
+      "definition": "a review concept used for indicating whether or not the property is welcoming to business travelers"
+    },
+    {
+      "id": "hotel-location-sentiment",
+      "label": "Property location",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "limited-pool-hours",
+      "label": "Limited pool hours",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "on-site-snorkeling-sentiment",
+      "label": "On-site snorkeling",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "dishwasher",
+      "label": "Dishwasher",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "business-friendly-negative-sentiment",
+      "label": "Business-friendly (negative sentiment)",
+      "category": "Business Friendly",
+      "definition": null
+    },
+    {
+      "id": "staff-sentiment",
+      "label": "Staff and services",
+      "category": "L1 Concepts",
+      "definition": "Rating on the staff of a property, based on user-generated content"
+    },
+    {
+      "id": "location-forests-nearby",
+      "label": "Location - Forests nearby ",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "check-in-sentiment",
+      "label": "Check-in",
+      "category": "L1 Concepts",
+      "definition": "a review concept used for people's feelings surrounding the check- in process"
+    },
+    {
+      "id": "breakfast-unavailable",
+      "label": "Breakfast unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-pet-policy",
+      "label": "Other negative sentiments (pet policy)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "stargazing",
+      "label": "Stargazing",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "restaurant-sentiment",
+      "label": "Restaurant",
+      "category": "L1 Concepts",
+      "definition": "Rating about the onsite restaurant(s) at the property, based on user-generated content"
+    },
+    {
+      "id": "Listing-accuracy-positive-sentiment",
+      "label": "Listing accuracy (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "elevator",
+      "label": "Elevator",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "garden-positive-sentiment",
+      "label": "Garden (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "on-site-ice-skating-sentiment",
+      "label": "On-site ice skating sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "microwave-unavailable",
+      "label": "Microwave unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "good-room-service",
+      "label": "Good room service",
+      "category": "Positive",
+      "definition": "reviewers have described room service at the property as good, e.g. fast, efficient, good availability, with many options"
+    },
+    {
+      "id": "free-breakfast-sentiment",
+      "label": "Free breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "bottomless-pool-sentiment",
+      "label": "Bottomless pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "not-recommended",
+      "label": "Not recommended",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "on-site-snowboarding-sentiment",
+      "label": "On-site snowboarding",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "on-site-rock-climbing-sentiment",
+      "label": "On-site rock climbing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "suitable-for-groups",
+      "label": "Suitable for groups",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-restaurant",
+      "label": "Other negative sentiments (restaurant)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "vibes-sentiments",
+      "label": "Vibes",
+      "category": "L1 Concepts",
+      "definition": "A grouping concept for all the reviews related to vibes"
+    },
+    {
+      "id": "kitchenette-unavailable",
+      "label": "Kitchenette unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "fitness-facilities-sentiment",
+      "label": "Fitness facilities",
+      "category": "L1 Concepts",
+      "definition": "A review concept used for impressions of the property's fitness facilities"
+    },
+    {
+      "id": "L2Concepts",
+      "label": "L2 sentiment concepts",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "terrible-dining",
+      "label": "Terrible dining",
+      "category": "Negative",
+      "definition": "a review concept used for negative feelings about the food or the experience eating on the property"
+    },
+    {
+      "id": "Listing-accuracy-sentiment",
+      "label": "Listing accuracy",
+      "category": "General",
+      "definition": "A concept to reflect review sentiments indicating if the property met expectations "
+    },
+    {
+      "id": "listing-better-than-expected",
+      "label": "Listing better than expected",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "wifi-positive-sentiment",
+      "label": "Wifi (positive sentiment)",
+      "category": "WiFi",
+      "definition": "A review concept used when the wifi amenity was represented as expected"
+    },
+    {
+      "id": "clean-kitchen",
+      "label": "Clean kitchen",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "amenities",
+      "label": "Amenities",
+      "category": "L1 Concepts",
+      "definition": "Review sentiment capturing generic reviews about the range and quality of the property amenities "
+    },
+    {
+      "id": "walkability-sentiment",
+      "label": "Walkability",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "romantic-vibe-sentiment",
+      "label": "Romantic vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "electric-car-charger-sentiment",
+      "label": "Electric car charging",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "host",
+      "label": "Host",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "american-breakfast",
+      "label": "American breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "not-what-i-booked",
+      "label": "Not what I booked",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "on-site-waterpark",
+      "label": "On-site waterpark",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "staff-and-services-positive-sentiment",
+      "label": "Staff and services (positive sentiment)",
+      "category": "Positive",
+      "definition": "a concept used to review or provide positive opinions about the employees and intangible products"
+    },
+    {
+      "id": "room-sentiment-concepts",
+      "label": "Room sentiment concepts",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "winery-sentiment",
+      "label": "Winery",
+      "category": "L1 Concepts",
+      "definition": "Review sentiments about a Winery "
+    },
+    {
+      "id": "room-comfort-level-of-sentiment",
+      "label": "Room comfort (level of) ",
+      "category": "General",
+      "definition": "This is a reviews concept. It means that the traveller comments on the level of comfort of their room, how comfortable it was to stay in it, how well they slept, how nice the furniture was, etc. It may be a positive or negative review."
+    },
+    {
+      "id": "private-pool-sentiment",
+      "label": "Private pool",
+      "category": "Pool",
+      "definition": "A review sentiment used for impressions of the property's private pool"
+    },
+    {
+      "id": "wifi-sentiment",
+      "label": "WiFi",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "24-hour-front-desk-sentiment",
+      "label": "24-hour front desk",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "water-sports-sentiment",
+      "label": "Water sports",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "uncomfortable-room",
+      "label": "Uncomfortable room",
+      "category": "Negative",
+      "definition": "This is a reviews concept. it refers specifically to the discomfort the customer experienced in the room. How badly they slept, etc."
+    },
+    {
+      "id": "balcony",
+      "label": "Balcony",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "archery-sentiment",
+      "label": "Archery",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "recreation",
+      "label": "Recreation",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "panoramic-river-views-sentiment",
+      "label": "Panoramic river views sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "campfire-sentiment",
+      "label": "Campfire",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "pets-allowed-at-lodging",
+      "label": "Pets allowed (at lodging)",
+      "category": "Positive",
+      "definition": "This is a review concept. It has been confirmed that pets are allowed at the property"
+    },
+    {
+      "id": "direct-beach-access",
+      "label": "Direct beach access",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "bar-unavailable",
+      "label": "Bar unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "television-negative-sentiment",
+      "label": "Television (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "rooftop-pool-sentiment",
+      "label": "Rooftop pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "ice-skating-sentiment",
+      "label": "Ice skating",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "room-cleanliness-negative-sentiment",
+      "label": "Room cleanliness (negative sentiment)",
+      "category": "Room Cleanliness",
+      "definition": "This is a reviews concept. it refers to any negative feelings the reviewer had about the room's propriety."
+    },
+    {
+      "id": "kitchen-unavailable",
+      "label": "Kitchen unavailable ",
+      "category": "Negative",
+      "definition": "Review sentiments on a kitchen/kitchenette being unavailable at the property/unit/room"
+    },
+    {
+      "id": "smoking-allowed",
+      "label": "Smoking allowed",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "air-conditioning-sentiment",
+      "label": "Air conditioning",
+      "category": "L1 Concepts",
+      "definition": "Review concept used for impressions of the room or property's air conditioning"
+    },
+    {
+      "id": "beach-bar-sentiment",
+      "label": "Beach bar",
+      "category": "Bar",
+      "definition": null
+    },
+    {
+      "id": "comfortable-beds-sentiment",
+      "label": "Comfortable beds",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "property-size-positive-sentiment",
+      "label": "Property size (positive sentiment)",
+      "category": "L2 Concepts",
+      "definition": null
+    },
+    {
+      "id": "on-site-golf-course-sentiment",
+      "label": "On-site golf course",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "noisy-location",
+      "label": "Noisy (location)",
+      "category": "Location",
+      "definition": "It refers to the area around the hotel - it could be the street, neighborhood, or city."
+    },
+    {
+      "id": "panoramic-countryside-views-sentiment",
+      "label": "Panoramic countryside views sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "varied-restaurant-menu",
+      "label": "Varied restaurant menu",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "rude-staff",
+      "label": "Rude staff",
+      "category": "Negative",
+      "definition": "a concept used to review or provide negative opinions about the employees when they were not polite"
+    },
+    {
+      "id": "fireplace-sentiment",
+      "label": "Fireplace",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "wind-powered-sentiment",
+      "label": "Wind-powered",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "room-decor",
+      "label": "Room decor",
+      "category": "General",
+      "definition": "the decorations, interior design, fixtures and fittings such as curtains, etc. in a room.\\n\\nIn reviews, this concept is used when travellers describe how pleasant or unpleasant they thought the room had been decorated - whether they liked the colors and finishes, whether they thought the carpet was nice or horrible, etc."
+    },
+    {
+      "id": "michelin-star-restaurant-sentiment",
+      "label": "Michelin star restaurant",
+      "category": "Restaurant",
+      "definition": null
+    },
+    {
+      "id": "open-floor-plan",
+      "label": "Open floor plan",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "on-site-boats-sentiment",
+      "label": "On-site boats",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "microwave",
+      "label": "Microwave",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "modern-vibe-sentiment",
+      "label": "Modern vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "bad-smell-or-odor",
+      "label": "Bad smell or odor",
+      "category": "Negative",
+      "definition": "a review concept used for when the traveler experiences a terrible smell that cannot be explained somewhere in the room or property"
+    },
+    {
+      "id": "fitness-facilities-negative-sentiment",
+      "label": "Fitness facilities (negative sentiment)",
+      "category": "Fitness",
+      "definition": "A review concept used when the fitness facility amenities were not represented as expected"
+    },
+    {
+      "id": "victorian-style-sentiment",
+      "label": "Victorian style",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "television-positive-sentiment",
+      "label": "Television (positive sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "other-room-review-sentiments",
+      "label": "Other room review sentiments",
+      "category": "General",
+      "definition": "Grouping concept for review sentiments not being used by XMD"
+    },
+    {
+      "id": "limited-bar-menu",
+      "label": "Limited bar menu",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "inaccurate-airport-shuttle-information",
+      "label": "Inaccurate airport shuttle information",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "good-wifi",
+      "label": "Good WiFi",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "expensive-pet-policy-fees",
+      "label": "Expensive pet policy fees",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "elegant-vibe-sentiment",
+      "label": "Elegant vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "dining-area",
+      "label": "Dining area",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "room-comfort-positive-sentiment",
+      "label": "Room comfort (positive sentiment)",
+      "category": "Positive",
+      "definition": "This is a reviews concept. it refers to any positive feelings the reviewer had about the room's comfort"
+    },
+    {
+      "id": "pests",
+      "label": "Pests",
+      "category": "Negative",
+      "definition": "a review concept for when the traveler has seen rodents or other undesirable creatures aside from insects in the room or on the property where they shouldn't be"
+    },
+    {
+      "id": "relaxing-vibe-sentiment",
+      "label": "Relaxing vibe sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "wifi-negative-sentiment",
+      "label": "Wifi  (negative sentiment)",
+      "category": "WiFi",
+      "definition": "A review concept used when the wifi amenity was not represented as expected"
+    },
+    {
+      "id": "clean-room",
+      "label": "Clean (room)",
+      "category": "Positive",
+      "definition": "This is a reviews concept. it refers to how clean the reviewer thought the room was."
+    },
+    {
+      "id": "lacked-training",
+      "label": "Lacked training",
+      "category": "Negative",
+      "definition": "this is a review concept and refers to the employees at the property when they don't seem to know the answer to key questions that should have been covered in their onboarding process."
+    },
+    {
+      "id": "early-check-in",
+      "label": "Early check-in",
+      "category": "Positive",
+      "definition": "the option to check in to a property or rental prior to the standard check-in time"
+    },
+    {
+      "id": "spacious-dining-area",
+      "label": "Spacious dining area",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "television",
+      "label": "Television",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "kitchen-negative-sentiment",
+      "label": "Kitchen (negative sentiment)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "secluded",
+      "label": "Secluded",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "all-inclusive-sentiment",
+      "label": "All-inclusive",
+      "category": "L1 Concepts",
+      "definition": "Review sentiments about the property being of an all-inclusive board type "
+    },
+    {
+      "id": "casino-negative-sentiment",
+      "label": "Casino (negative sentiment)",
+      "category": "General",
+      "definition": "A review sentiment used for negative impressions of the casino"
+    },
+    {
+      "id": "buffet-breakfast",
+      "label": "Buffet breakfast",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "poor-restaurant-quality",
+      "label": "Poor restaurant quality",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "concierge-service-sentiment",
+      "label": "Concierge service",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "location-markets-nearby",
+      "label": "Location - Markets nearby",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "cathedral-ceilings",
+      "label": "Cathedral ceilings",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "location-safety-level-sentiment",
+      "label": "Safe location",
+      "category": "Location",
+      "definition": "Rating about safety at the property location, based on user-generated content"
+    },
+    {
+      "id": "traveler-sentiment",
+      "label": "Traveler sentiment",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "property-size",
+      "label": "Property size",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "on-site-cooking-lessons-sentiment",
+      "label": "On-site cooking lessons",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-bar",
+      "label": "Other negative sentiments (bar)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "limited-restaurant-menu",
+      "label": "Limited restaurant menu",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "ornate-decor",
+      "label": "Ornate decor ",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "affordable-restaurant-prices",
+      "label": "Affordable restaurant prices",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "recommend",
+      "label": "Recommend",
+      "category": "Positive",
+      "definition": "This is the verb form - to recommend, make a recommendation, say that the lodging is good, etc."
+    },
+    {
+      "id": "spa-unavailable",
+      "label": "Spa unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "desert-sunset-view-sentiment",
+      "label": "Desert sunset view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "pool-available",
+      "label": "Pool available",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "understaffed",
+      "label": "Understaffed",
+      "category": "Negative",
+      "definition": "a review sentiment used for when the property doesn't have enough people employed for the required tasks"
+    },
+    {
+      "id": "other-negative-sentiments-pool",
+      "label": "Other negative sentiments (pool)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "poor-quality-breakfast",
+      "label": "Poor quality breakfast",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "other-negative-sentiments-airport-shuttle",
+      "label": "Other negative sentiments (airport shuttle)",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "airport-shuttle-positive-sentiment",
+      "label": "Airport shuttle (positive sentiment)",
+      "category": "General",
+      "definition": "A review concept used when the airport shuttle amenity was represented as expected"
+    },
+    {
+      "id": "parking-positive-sentiment",
+      "label": "Parking (positive sentiment)",
+      "category": "Parking",
+      "definition": "A review concept used when the parking amenity was represented as expected"
+    },
+    {
+      "id": "other-negative-sentiments-check-in",
+      "label": "Other negative sentiments (check-in)",
+      "category": "Negative",
+      "definition": "a review concept used to illustrate any other negative feelings encountered during the check-in process that aren't otherwise covered by the narrower categories"
+    },
+    {
+      "id": "on-site-hiking-and-biking-sentiment",
+      "label": "On-site hiking and biking",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "laundry-facilities",
+      "label": "Laundry facilities",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "room-service-negative-sentiment",
+      "label": "Room service (negative sentiment)",
+      "category": "Negative",
+      "definition": "This is a reviews concept. It refers to a  specifically negative sentiment about the service at a hotel or other property allowing guests to order food and drink straight to their rooms"
+    },
+    {
+      "id": "location-noise-level-sentiment",
+      "label": "Location noise level",
+      "category": "Location",
+      "definition": "Rating about noise at the property location, based on user-generated content"
+    },
+    {
+      "id": "campsite-sentiment",
+      "label": "Campsite",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "infinity-pool-sentiment",
+      "label": "Infinity pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "wellness",
+      "label": "Wellness",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "bathroom-sentiment",
+      "label": "Bathroom",
+      "category": "L1 Concepts",
+      "definition": "Rating on the bathroom(s) at a property, based on user-generated content "
+    },
+    {
+      "id": "geothermal-sentiment",
+      "label": "Geothermal",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "wifi-available",
+      "label": "WiFi available",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "breakfast-sentiment",
+      "label": "Breakfast",
+      "category": "L1 Concepts",
+      "definition": "Rating on the breakfast at a property, based on user-generated content"
+    },
+    {
+      "id": "bicycle-friendly-sentiment",
+      "label": "Bicycle friendly",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "beachfront-sentiment",
+      "label": "Beachfront",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "national-park-sentiment",
+      "label": "Location - National parks nearby",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "on-site-waterskiing-sentiment",
+      "label": "On-site waterskiing",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "housekeeping-unavailable",
+      "label": "Housekeeping unavailable",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "hot-tub-positive-sentiment",
+      "label": "Hot tub (positive sentiment)",
+      "category": "General",
+      "definition": "A review sentiment for positive reactions to the property's hot tub"
+    },
+    {
+      "id": "airport-shuttle-unavailable",
+      "label": "Airport shuttle unavailable",
+      "category": "Negative",
+      "definition": "Review sentiments expressing there is no airport shuttle service offered by the property "
+    },
+    {
+      "id": "on-site-vegetable-garden-sentiment",
+      "label": "On-site vegetable garden",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "limited-airport-shuttle-availability",
+      "label": "Limited airport shuttle availability",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "outdoor-fireplace-sentiment",
+      "label": "Outdoor fireplace",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "pet-friendly-positive-sentiment",
+      "label": "Pet-friendly (positive sentiment)",
+      "category": "Positive",
+      "definition": null
+    },
+    {
+      "id": "check-in-negative-sentiment",
+      "label": "Check-in (negative sentiment)",
+      "category": "Negative",
+      "definition": "a review concept used to group the negative feelings about the check-in process"
+    },
+    {
+      "id": "outdoor-pool-sentiment",
+      "label": "Outdoor pool",
+      "category": "Pool",
+      "definition": null
+    },
+    {
+      "id": "expensive-parking-fees",
+      "label": "Expensive parking fees",
+      "category": "Negative",
+      "definition": "Review sentiments indicating that the parking is expensive"
+    },
+    {
+      "id": "beach-toys-provided",
+      "label": "Beach toys provided",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "countryside-view-sentiment",
+      "label": "Countryside view",
+      "category": "Views",
+      "definition": null
+    },
+    {
+      "id": "room-size-sentiment",
+      "label": "Room size",
+      "category": "L1 Concepts",
+      "definition": null
+    },
+    {
+      "id": "skydiving-sentiment",
+      "label": "Skydiving",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "refrigerator-negative-sentiment",
+      "label": "Refrigerator (negative sentiment)",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "small-property",
+      "label": "Small property",
+      "category": "Negative",
+      "definition": null
+    },
+    {
+      "id": "positive-sentiment",
+      "label": "Positive sentiment concepts",
+      "category": "General",
+      "definition": null
+    },
+    {
+      "id": "spacious-room",
+      "label": "Spacious room",
+      "category": "Positive",
+      "definition": null
+    }
+  ]
+}

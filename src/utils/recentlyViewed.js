@@ -4,9 +4,49 @@ const LOCAL_KEY = 'recentlyViewedAffinities';
 export function getLocalRecentlyViewed() {
   try {
     const data = localStorage.getItem(LOCAL_KEY);
-    return data ? JSON.parse(data) : [];
+    const parsed = data ? JSON.parse(data) : [];
+    
+    // If local storage is empty, return some default recently viewed items
+    if (parsed.length === 0) {
+      return [
+        {
+          id: 'def_family-friendly',
+          name: 'Family-Friendly',
+          lastViewed: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 min ago
+        },
+        {
+          id: 'def_pet-friendly', 
+          name: 'Pet-Friendly',
+          lastViewed: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // 1 hour ago
+        },
+        {
+          id: 'def_luxury',
+          name: 'Luxury',
+          lastViewed: new Date(Date.now() - 1000 * 60 * 120).toISOString(), // 2 hours ago
+        },
+        {
+          id: 'def_wellness',
+          name: 'Wellness',
+          lastViewed: new Date(Date.now() - 1000 * 60 * 180).toISOString(), // 3 hours ago
+        }
+      ];
+    }
+    
+    return parsed;
   } catch {
-    return [];
+    // If there's an error, return default items
+    return [
+      {
+        id: 'def_family-friendly',
+        name: 'Family-Friendly',
+        lastViewed: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+      },
+      {
+        id: 'def_pet-friendly', 
+        name: 'Pet-Friendly',
+        lastViewed: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+      }
+    ];
   }
 }
 

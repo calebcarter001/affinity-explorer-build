@@ -1,0 +1,1109 @@
+{
+  "urn": "urn:expe:taxo:insights:pool",
+  "label": "pool",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "brand": "expedia",
+        "lodgingType": "ConventionalLodging",
+        "version": "2"
+      },
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:clean-pool",
+                    "source": "review-sentiments",
+                    "label": "Clean pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:pool-available",
+                    "source": "review-sentiments",
+                    "label": "Pool available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:heated-pool-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Heated pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:swim-up-bar-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Swim-up bar"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:pool"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.6,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cf0c4550-0af4-4021-b1f4-7562c63939c2",
+                    "source": "attribute",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b71bba46-9eab-45e7-9199-2445017c5efb",
+                    "source": "attribute",
+                    "label": "Pool:24Hour"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c93d1b8c-83de-4ecc-b994-7dcd3be33589",
+                    "source": "attribute",
+                    "label": "Pool:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d7a86ab7-7bba-4e49-94b7-51b69f4a85e4",
+                    "source": "attribute",
+                    "label": "Pool:Indoor"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7a4414f1-9187-4c8d-8289-fd9e88ff758e",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ed8ff94c-0e37-4a1b-8096-610778c4c35e",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private:BookableUnit"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0dbdfc2a-6a1a-445d-a07e-74b489cceab4",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private:Secured:BookableUnit"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d12b8201-8240-4a54-8a7c-1ba35fe6e2b1",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private:Secured"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2347964b-b7e4-4a81-9b55-496914a1b28f",
+                    "source": "attribute",
+                    "label": "Pool:Outdoor"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#69da6f48-b7d3-494b-b7f8-86c65df99608",
+                    "source": "attribute",
+                    "label": "Pool:Shared"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e249dd70-51a7-4532-86e0-b6a8665f2a7f",
+                    "source": "attribute",
+                    "label": "HeatedPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#53a1f102-ce1f-48b9-a458-ec867506e780",
+                    "source": "attribute",
+                    "label": "IndoorOutdoorPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a0891e6b-c020-4ed3-b3f5-4570ec585ad4",
+                    "source": "attribute",
+                    "label": "InfinityPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#39593b3f-bda6-4f1c-b8c6-a232ffb7cb13",
+                    "source": "attribute",
+                    "label": "NaturalPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#103f3d41-70c5-4d74-9572-aad47a3393bf",
+                    "source": "attribute",
+                    "label": "PlungePool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1f6ce59d-ab77-40e6-a2e2-f4d846ea1d16",
+                    "source": "attribute",
+                    "label": "RooftopPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5b4ec696-0702-4435-a5ff-7b9db64c36e7",
+                    "source": "attribute",
+                    "label": "WaterPark"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a36dd3fa-7d4d-4927-b311-0d06a575be24",
+                    "source": "attribute",
+                    "label": "PoolsideBar"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6b6e4f51-afc6-4e59-9224-0bff98086b9e",
+                    "source": "attribute",
+                    "label": "SwimUpBar"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#66930de3-2d35-44c0-8a18-e6ac0df26c04",
+                    "source": "attribute",
+                    "label": "LazyRiver"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3766faf9-5aca-4737-8601-f80b33997381",
+                    "source": "attribute",
+                    "label": "Waterslide"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a5b0ad3a-7ffe-4f95-a8e1-57a7b071f51b",
+                    "source": "attribute",
+                    "label": "PoolWaterfall"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6b375369-fb0a-44d7-8e9a-20c977f43c63",
+                    "source": "attribute",
+                    "label": "PoolFurnishings"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c39e89f3-4c2c-4c8e-aacc-befd0157f2f9",
+                    "source": "attribute",
+                    "label": "PoolCabanas:Fee"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#72210508-d1bd-4ebd-af4f-a0824725563d",
+                    "source": "attribute",
+                    "label": "PoolCabanas:Free"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4a187d42-8b39-45f9-b451-74ee2e9dfb55",
+                    "source": "attribute",
+                    "label": "PoolSunLoungers"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ecec98da-7071-4a7f-a3ec-341c55aef24b",
+                    "source": "attribute",
+                    "label": "PoolToys"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#32be2e29-29c5-4cbd-937a-057f26fe5af6",
+                    "source": "attribute",
+                    "label": "PoolUmbrellas"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ec173cac-c124-4cb9-b128-b9531526b3c4",
+                    "source": "attribute",
+                    "label": "SplashPad:Permanent"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6c7aacb0-8a4c-4b36-8346-97454118bacf",
+                    "source": "attribute",
+                    "label": "HotTub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:pool"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:pool",
+                    "source": "media-descriptors",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Outdoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Indoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:body-of-water",
+                    "source": "media-descriptors",
+                    "label": "Body of water"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:pool"
+        }
+      ],
+      "formula": {
+        "type": "VariableNode",
+        "name": "WEIGHTED_AVERAGE_SCORE"
+      },
+      "status": "STAGED"
+    },
+    {
+      "context": {
+        "entityType": "property",
+        "brand": "vrbo",
+        "lodgingType": "VacationRental",
+        "version": "1"
+      },
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:clean-pool",
+                    "source": "review-sentiments",
+                    "label": "Clean pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:pool-available",
+                    "source": "review-sentiments",
+                    "label": "Pool available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:heated-pool-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Heated pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:swim-up-bar-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Swim-up bar"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:waterslide-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Water slide"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:pool"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.6,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cf0c4550-0af4-4021-b1f4-7562c63939c2",
+                    "source": "attribute",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b71bba46-9eab-45e7-9199-2445017c5efb",
+                    "source": "attribute",
+                    "label": "Pool:24Hour"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c93d1b8c-83de-4ecc-b994-7dcd3be33589",
+                    "source": "attribute",
+                    "label": "Pool:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d7a86ab7-7bba-4e49-94b7-51b69f4a85e4",
+                    "source": "attribute",
+                    "label": "Pool:Indoor"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2347964b-b7e4-4a81-9b55-496914a1b28f",
+                    "source": "attribute",
+                    "label": "Pool:Outdoor"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#69da6f48-b7d3-494b-b7f8-86c65df99608",
+                    "source": "attribute",
+                    "label": "Pool:Shared"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e249dd70-51a7-4532-86e0-b6a8665f2a7f",
+                    "source": "attribute",
+                    "label": "HeatedPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#53a1f102-ce1f-48b9-a458-ec867506e780",
+                    "source": "attribute",
+                    "label": "IndoorOutdoorPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a0891e6b-c020-4ed3-b3f5-4570ec585ad4",
+                    "source": "attribute",
+                    "label": "InfinityPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#39593b3f-bda6-4f1c-b8c6-a232ffb7cb13",
+                    "source": "attribute",
+                    "label": "NaturalPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#103f3d41-70c5-4d74-9572-aad47a3393bf",
+                    "source": "attribute",
+                    "label": "PlungePool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7a4414f1-9187-4c8d-8289-fd9e88ff758e",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ed8ff94c-0e37-4a1b-8096-610778c4c35e",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private:BookableUnit"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0dbdfc2a-6a1a-445d-a07e-74b489cceab4",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private:Secured:BookableUnit"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d12b8201-8240-4a54-8a7c-1ba35fe6e2b1",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private:Secured"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1f6ce59d-ab77-40e6-a2e2-f4d846ea1d16",
+                    "source": "attribute",
+                    "label": "RooftopPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5b4ec696-0702-4435-a5ff-7b9db64c36e7",
+                    "source": "attribute",
+                    "label": "WaterPark"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3766faf9-5aca-4737-8601-f80b33997381",
+                    "source": "attribute",
+                    "label": "Waterslide"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a5b0ad3a-7ffe-4f95-a8e1-57a7b071f51b",
+                    "source": "attribute",
+                    "label": "PoolWaterfall"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6b375369-fb0a-44d7-8e9a-20c977f43c63",
+                    "source": "attribute",
+                    "label": "PoolFurnishings"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4a187d42-8b39-45f9-b451-74ee2e9dfb55",
+                    "source": "attribute",
+                    "label": "PoolSunLoungers"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ecec98da-7071-4a7f-a3ec-341c55aef24b",
+                    "source": "attribute",
+                    "label": "PoolToys"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#32be2e29-29c5-4cbd-937a-057f26fe5af6",
+                    "source": "attribute",
+                    "label": "PoolUmbrellas"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6c7aacb0-8a4c-4b36-8346-97454118bacf",
+                    "source": "attribute",
+                    "label": "HotTub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:pool"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:pool",
+                    "source": "media-descriptors",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Outdoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Indoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:body-of-water",
+                    "source": "media-descriptors",
+                    "label": "Body of water"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:pool"
+        }
+      ],
+      "formula": {
+        "type": "VariableNode",
+        "name": "WEIGHTED_AVERAGE_SCORE"
+      },
+      "status": "STAGED"
+    }
+  ]
+}

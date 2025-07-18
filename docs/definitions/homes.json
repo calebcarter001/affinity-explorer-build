@@ -1,0 +1,537 @@
+{
+  "urn": "urn:expe:taxo:insights:accommodation-type:houses",
+  "label": "houses",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "brand": "vrbo",
+        "lodgingType": "VacationRental",
+        "version": "1"
+      },
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:living-areas",
+                    "source": "review-sentiments",
+                    "label": "Living areas"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:large-garden",
+                    "source": "review-sentiments",
+                    "label": "Large garden"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spacious-room",
+                    "source": "review-sentiments",
+                    "label": "Spacious room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:clean-room",
+                    "source": "review-sentiments",
+                    "label": "Clean (room)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:comfortable-room",
+                    "source": "review-sentiments",
+                    "label": "Comfortable room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:accommodation-type:houses"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.35,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these home structure concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c0432907-7017-4a82-8ebc-8f6307ef93bb",
+                    "source": "attribute",
+                    "label": "ChaletStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.88,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8f81f058-3e4c-410c-9140-14ebe6bc1fcc",
+                    "source": "attribute",
+                    "label": "CottageStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.92,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#93bedf52-be1b-41f1-9720-5ea54c426841",
+                    "source": "attribute",
+                    "label": "MobileHomeStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.83,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#aef7bfd3-fe31-4779-b700-ea84ddbb12cf",
+                    "source": "attribute",
+                    "label": "VacationHomeStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a7168b9f-a181-4910-b3ec-722db3b9bdb3",
+                    "source": "attribute",
+                    "label": "VillaStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.95,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#44322a7a-8f3f-4885-8e1f-897a36c5bc93",
+                    "source": "attribute",
+                    "label": "CabinStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.90,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8324f6a8-8aae-48e9-b7cf-92368fd029bf",
+                    "source": "attribute",
+                    "label": "CondoPropertyStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.80,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b1c56104-65e6-44e5-acad-be8057979f6a",
+                    "source": "attribute",
+                    "label": "HouseboatStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.85,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4d624fe7-b752-4eab-ab76-c9c539d03f75",
+                    "source": "attribute",
+                    "label": "ApartmentStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.78,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#093bec42-a735-425e-8883-9b81bd9652fb",
+                    "source": "attribute",
+                    "label": "CondominiumResortStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.75,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cdd83949-3d6c-401a-85ac-3693800b9c3f",
+                    "source": "attribute",
+                    "label": "ResidenceStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.72,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#aeed6219-4103-4299-ac0e-f87edd6f2e5c",
+                    "source": "attribute",
+                    "label": "AparthotelStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.70,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#993bd663-6ffc-4061-a6d3-478d6036d503",
+                    "source": "attribute",
+                    "label": "CampsiteStructure"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.30,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these accessibility concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e8194fd1-9c4c-4ede-be3b-78404c347554",
+                    "source": "attribute",
+                    "label": "AccessibleParking"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0a76f8db-30e7-4b9f-9cfc-355e40964195",
+                    "source": "attribute",
+                    "label": "Elevator"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e77d97de-0718-11ea-8d71-362b9e155667",
+                    "source": "attribute",
+                    "label": "Wheelchair:Accessible"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c0c9e44c-c32f-4d6d-bf02-4abd81c349f4",
+                    "source": "attribute",
+                    "label": "ServiceAnimals"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.07,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#499395d9-b3c5-42ff-af04-0731396025eb",
+                    "source": "attribute",
+                    "label": "AccessibleCommonAreas"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these bath amenities concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87f1b062-2b2c-4860-9253-db1753222c2c",
+                    "source": "attribute",
+                    "label": "FullBathroom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#39ba5b6f-0a1e-46f2-930f-d2b88b916b27",
+                    "source": "attribute",
+                    "label": "HalfBathroom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3ba30f6c-b456-4ba7-8668-b6f39deedd2a",
+                    "source": "attribute",
+                    "label": "Bathroom:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9655ff48-43be-403a-ad1d-ac0ec7f07166",
+                    "source": "attribute",
+                    "label": "Bathrobes"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.06,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#62338e09-b43b-4fc5-9ffa-6a462cd752a2",
+                    "source": "attribute",
+                    "label": "Toiletries:Free"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.06,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these heat ameneties concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1ab19cad-4ce6-450e-ad03-23a8aa76d89f",
+                    "source": "attribute",
+                    "label": "Heating"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#881461f9-b5c8-42f7-8b52-2cd38a7b7649",
+                    "source": "attribute",
+                    "label": "AirConditioning"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1f9ceb62-e25f-41bc-bc85-a619b551b743",
+                    "source": "attribute",
+                    "label": "WasherDryer"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#72fdfefa-8554-48e5-910d-79641434f81c",
+                    "source": "attribute",
+                    "label": "Safe:InRoom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#50c248cc-7d1f-41ba-afa6-e8eaf764988a",
+                    "source": "attribute",
+                    "label": "Iron"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0de6f058-9e1e-4339-b981-f5be0c8c0ce7",
+                    "source": "attribute",
+                    "label": "Television"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2049002e-47cf-4b73-916e-75579732ca2d",
+                    "source": "attribute",
+                    "label": "StreamingServices"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cf0c4550-0af4-4021-b1f4-7562c63939c2",
+                    "source": "attribute",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6c7aacb0-8a4c-4b36-8346-97454118bacf",
+                    "source": "attribute",
+                    "label": "HotTub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+         "categoryUrn": "urn:expe:taxo:insights:accommodation-type:houses"
+        }
+      ],
+      "formula": {
+        "type": "VariableNode",
+        "name": "WEIGHTED_AVERAGE_SCORE"
+      },
+      "status": "STAGED"
+    }
+  ]
+}

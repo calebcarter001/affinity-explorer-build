@@ -1,0 +1,637 @@
+{
+  "urn": "urn:expe:taxo:insights:season:snow",
+  "label": "Snow Season",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "lodgingType": "Any",
+        "brand": "Any",
+        "version": "1"
+      },
+      "status": "APPROVED",
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.3,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have to increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#077948bf-3b46-4d26-9392-a3144d61afb4",
+                    "source": "attribute",
+                    "label": "SkiStorage"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1e87d580-2658-417f-9728-ce28f648afee",
+                    "source": "attribute",
+                    "label": "SkiLiftPrivileges"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1e31114d-68a6-49cc-a13e-71df9ef22385",
+                    "source": "attribute",
+                    "label": "Ski:Rental:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#73fd8c88-b6f5-4cb6-a0a7-81c80397bcd2",
+                    "source": "attribute",
+                    "label": "SkiLift:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#65cdb589-f9cc-4712-b552-bfbff2a0eedc",
+                    "source": "attribute",
+                    "label": "SkiArea:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1e3e76ed-e432-4384-b069-449d2af60c1a",
+                    "source": "attribute",
+                    "label": "SkiRun:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#90402b6a-fa9f-4f2a-af5c-dd9159743979",
+                    "source": "attribute",
+                    "label": "Snowmobiling:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#901ae604-d6bb-44c0-8be3-77961a840d99",
+                    "source": "attribute",
+                    "label": "Snowshoeing:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e43a704b-c4b3-47f4-a2d9-36bd4bf195d2",
+                    "source": "attribute",
+                    "label": "SnowTubing:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#61f493c4-53c4-4062-b14e-a305c4c123a7",
+                    "source": "attribute",
+                    "label": "IceSkating:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d31e2460-6be6-4982-baf3-ea5e56d4d049",
+                    "source": "attribute",
+                    "label": "Sledding:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8b18e91f-0cb9-4702-a3fd-445484e375e0",
+                    "source": "attribute",
+                    "label": "SkiInOut"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a511b9e1-14f0-45fa-a2b6-81eb17276204",
+                    "source": "attribute",
+                    "label": "Ski:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#210b4a85-945c-4350-8f51-4b58ec54f25b",
+                    "source": "attribute",
+                    "label": "SkiDownhill:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#24294aaf-b10a-41a0-953d-f0dbb886eeb5",
+                    "source": "attribute",
+                    "label": "SkiCrossCountry:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ff8b3f39-dd04-4839-9863-871942469417",
+                    "source": "attribute",
+                    "label": "SkiPass"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#90e60e82-8054-45cd-854e-a696e0a6096b",
+                    "source": "attribute",
+                    "label": "Snowboarding:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3971cf50-528a-4a6f-89aa-d1e472663b8e",
+                    "source": "attribute",
+                    "label": "Snowboarding:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#18ef2adf-6321-40fb-bcc2-0a9a85d5c051",
+                    "source": "attribute",
+                    "label": "SkiLesson:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#bd2a8906-5988-4552-ade9-d33afb161f74",
+                    "source": "attribute",
+                    "label": "SkiShuttle:Onsite:Free"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#08af1243-8c0e-402c-8fbe-1b322c913a24",
+                    "source": "attribute",
+                    "label": "SkiShuttle:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#82fac03b-12d3-43b6-ac4e-8b0cee1e940a",
+                    "source": "attribute",
+                    "label": "SkiShuttle:Onsite:Fee"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f604add6-7542-4010-b25a-39c1db261e61",
+                    "source": "attribute",
+                    "label": "SkiCrossCountry:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:season:snow"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:ski-in-ski-out-access-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Ski-in/Ski-out access"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:on-site-snowboarding-sentiment",
+                    "source": "review-sentiments",
+                    "label": "On-site snowboarding"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:mountain-location-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Mountain location"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.12,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:mountain-view-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Mountain view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:panoramic-mountain-views-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Panoramic mountain views sentiment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:season:snow"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Snow Season concepts contributing to image score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:fireplace",
+                    "source": "media-descriptors",
+                    "label": "Fireplace"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.95,
+                  "penalty": 0.05,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:winter-sports",
+                    "source": "media-descriptors",
+                    "label": "Winter sports"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.05,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:winter",
+                    "source": "media-descriptors",
+                    "label": "Winter"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:season:snow"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "SUBTRACT",
+                "left": {
+                  "type": "VariableNode",
+                  "name": "WEIGHTED_AVERAGE_SCORE"
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "COVERAGE_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "DIVERSITY_FACTOR"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:geo",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Eligibility criteria for Snow Season properties",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#be6619b4-7f83-4dc4-913e-9e07d8ed8351",
+                    "source": "places",
+                    "label": "Ski"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.8,
+                  "penalty": 0.2,
+                  "metadata": {
+                    "walking_distance_decay_constant": { "value": 0.006, "type": "DoubleValue" },
+                    "walking_distance_factor_constant": { "value": 0.4, "type": "DoubleValue" },
+                    "distance_type": { "value": "WALKING", "type": "StringValue" }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#83a7fc6c-cb3d-4f10-9f54-8dd1e1af2e8b",
+                    "source": "places",
+                    "label": "Ski Lift"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": { "value": 0.5, "type": "DoubleValue" },
+                  "weight": 0.8,
+                  "penalty": 0.2,
+                  "metadata": {
+                    "walking_distance_decay_constant": { "value": 0.006, "type": "DoubleValue" },
+                    "walking_distance_factor_constant": { "value": 0.4, "type": "DoubleValue" },
+                    "distance_type": { "value": "WALKING", "type": "StringValue" }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#c721d4ec-c6b4-4b7a-b6ec-7c8281f51349",
+                    "source": "places",
+                    "label": "Ski Run"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": { "value": 0.5, "type": "DoubleValue" },
+                  "weight": 0.8,
+                  "penalty": 0.2,
+                  "metadata": {
+                    "walking_distance_decay_constant": { "value": 0.006, "type": "DoubleValue" },
+                    "walking_distance_factor_constant": { "value": 0.4, "type": "DoubleValue" },
+                    "distance_type": { "value": "WALKING", "type": "StringValue" }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#ecab4eb3-f15c-4a04-9aea-34e800325442",
+                    "source": "places",
+                    "label": "Ski Shuttle"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": { "value": 0.5, "type": "DoubleValue" },
+                  "weight": 0.8,
+                  "penalty": 0.2,
+                  "metadata": {
+                    "walking_distance_decay_constant": { "value": 0.006, "type": "DoubleValue" },
+                    "walking_distance_factor_constant": { "value": 0.4, "type": "DoubleValue" },
+                    "distance_type": { "value": "WALKING", "type": "StringValue" }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#f4f94b14-4280-48f8-a8dd-62cdeb499cfb",
+                    "source": "places",
+                    "label": "Mountain"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": { "value": 0.5, "type": "DoubleValue" },
+                  "weight": 0.85,
+                  "penalty": 0.0,
+                  "metadata": {
+                    "walking_distance_decay_constant": { "value": 0.006, "type": "DoubleValue" },
+                    "walking_distance_factor_constant": { "value": 1.0, "type": "DoubleValue" },
+                    "distance_type": { "value": "WALKING", "type": "StringValue" }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#b5388a4a-31ff-4d51-9c71-827770bd0814",
+                    "source": "places",
+                    "label": "Apres Ski Bar"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": { "value": 0.5, "type": "DoubleValue" },
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {
+                    "walking_distance_decay_constant": { "value": 0.006, "type": "DoubleValue" },
+                    "walking_distance_factor_constant": { "value": 0.4, "type": "DoubleValue" },
+                    "distance_type": { "value": "WALKING", "type": "StringValue" }
+                  }
+                }
+              ]
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:season:snow"
+        }
+      ],
+      "formula": {
+        "name": "WEIGHTED_AVERAGE_SCORE",
+        "type": "VariableNode"
+      }
+    }
+  ]
+}

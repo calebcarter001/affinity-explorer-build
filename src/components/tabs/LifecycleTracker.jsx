@@ -3,6 +3,7 @@ import { FiCheck, FiClock, FiAlertCircle } from 'react-icons/fi';
 import LifecycleCardGrid from './LifecycleTrackerParts/LifecycleCardGrid';
 import LifecycleDetailTable from './LifecycleTrackerParts/LifecycleDetailTable';
 import { useAppContext } from '../../contexts/AppContext';
+import SearchableDropdown from '../common/SearchableDropdown';
 
 const mockLifecycles = [
   {
@@ -111,16 +112,19 @@ const LifecycleTracker = () => {
       <div className="bg-white p-4 rounded-lg shadow mb-6">
         <div className="flex flex-wrap items-center">
           <label className="mr-2 text-gray-700">Filter by Status:</label>
-          <select 
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500"
-          >
-            <option value="all">All Concepts</option>
-            <option value="complete">Complete</option>
-            <option value="in-progress">In Progress</option>
-            <option value="not-started">Not Started</option>
-          </select>
+          <SearchableDropdown
+            options={[
+              { value: 'all', label: 'All Concepts' },
+              { value: 'complete', label: 'Complete' },
+              { value: 'in-progress', label: 'In Progress' },
+              { value: 'not-started', label: 'Not Started' }
+            ]}
+            value={{ value: filter, label: filter === 'all' ? 'All Concepts' : filter === 'complete' ? 'Complete' : filter === 'in-progress' ? 'In Progress' : 'Not Started' }}
+            onChange={(option) => setFilter(option?.value || 'all')}
+            placeholder="Filter by status..."
+            className="w-48"
+            noOptionsMessage="No status options found"
+          />
         </div>
       </div>
       

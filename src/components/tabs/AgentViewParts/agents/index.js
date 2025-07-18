@@ -4,6 +4,7 @@ import SentimentAgent from './SentimentAgent';
 import CompetitiveAgent from './CompetitiveAgent';
 import BiasDetectionAgent from './BiasDetectionAgent';
 import TrendAgent from './TrendAgent';
+import LocalInsiderAgent from './LocalInsiderAgent';
 
 export {
   VerificationAgent,
@@ -11,5 +12,6 @@ export {
   SentimentAgent,
   CompetitiveAgent,
   BiasDetectionAgent,
-  TrendAgent
+  TrendAgent,
+  LocalInsiderAgent
 }; 

@@ -1,0 +1,1343 @@
+{
+  "urn": "urn:expe:taxo:insights:family-friendly",
+  "label": "family friendly",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "brand": "vrbo",
+        "lodgingType": "Any",
+        "version": "1"
+      },
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.35,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:outdoor-space",
+                    "source": "review-sentiments",
+                    "label": "Outdoor space"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:game-room-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Game room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-parks-nearby",
+                    "source": "review-sentiments",
+                    "label": "Parks nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:comfortable-room",
+                    "source": "review-sentiments",
+                    "label": "Comfortable room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:clean-room",
+                    "source": "review-sentiments",
+                    "label": "Clean (room)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spacious-room",
+                    "source": "review-sentiments",
+                    "label": "Spacious room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:comfortable-beds-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Comfortable beds"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:kids-pool-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Children's pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:restaurant-available",
+                    "source": "review-sentiments",
+                    "label": "Restaurant available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-safety-level-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Safe location"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:family-friendly"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.3,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e8194fd1-9c4c-4ede-be3b-78404c347554",
+                    "source": "attribute",
+                    "label": "AccessibleParking"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0a76f8db-30e7-4b9f-9cfc-355e40964195",
+                    "source": "attribute",
+                    "label": "Elevator"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c0c9e44c-c32f-4d6d-bf02-4abd81c349f4",
+                    "source": "attribute",
+                    "label": "ServiceAnimals"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e77d97de-0718-11ea-8d71-362b9e155667",
+                    "source": "attribute",
+                    "label": "Wheelchair:Accessible"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ad994e90-1543-4ff0-9249-d84e22dd7781",
+                    "source": "attribute",
+                    "label": "BathroomTypes:Accessible"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ff3a0582-9e39-430e-9c99-296babaf3997",
+                    "source": "attribute",
+                    "label": "VisibleDoorbellNotification"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ae441955-172b-4108-ae27-bd2a7a9df240",
+                    "source": "attribute",
+                    "label": "CloseCaptionedTV"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a47b72c8-5de4-4c24-a58b-8dfe15f47d31",
+                    "source": "attribute",
+                    "label": "TelephoneAccessibilityKit"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#41eceac7-b73a-4888-b101-22321fc23596",
+                    "source": "attribute",
+                    "label": "VisualFireAlarm"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#27608c99-027d-479c-aeb2-de73df0bf209",
+                    "source": "attribute",
+                    "label": "Path:Accessible"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#54b39416-54d5-11ea-a2e3-2e728ce88125",
+                    "source": "attribute",
+                    "label": "Entrance:StairFreePath"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e601557d-b04a-433d-b268-81e8f3af0f3b",
+                    "source": "attribute",
+                    "label": "SingleLevelProperty"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a2e92066-761e-4f1e-8070-b077f30ff79b",
+                    "source": "attribute",
+                    "label": "ChildrenClub:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c77cbde2-2b7f-4ece-bba0-aedd11c0b0ae",
+                    "source": "attribute",
+                    "label": "Childcare:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1c1da18f-fb36-45bd-9bb4-83debbff6164",
+                    "source": "attribute",
+                    "label": "Entertainment:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e0b9331b-6098-49fb-a432-df2fe4efdf40",
+                    "source": "attribute",
+                    "label": "FitnessFacilities:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d54371fb-ad8e-4747-81cc-bed32cf7ee7b",
+                    "source": "attribute",
+                    "label": "Food:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e3958f2b-7488-4696-b169-690ba0a0ce98",
+                    "source": "attribute",
+                    "label": "Gratuities:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.06,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b71689dd-2529-4eb0-8c25-f1600c21a231",
+                    "source": "attribute",
+                    "label": "Beverage:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#187c64bf-2ffd-480c-86c4-ac048b846628",
+                    "source": "attribute",
+                    "label": "Crib"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.18,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d08e5209-8075-4b36-9e34-6b58e122bf43",
+                    "source": "attribute",
+                    "label": "ChildrenClub:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b8e250ea-ad6e-44d5-8b23-378e85cf1200",
+                    "source": "attribute",
+                    "label": "Playground:ForChildren:Shared"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7e3e1316-1315-4ec4-8601-953f84042547",
+                    "source": "attribute",
+                    "label": "Highchair:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.18,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#bf943218-fe49-4426-a638-e249dce0fbc0",
+                    "source": "attribute",
+                    "label": "BabyBathtub:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.18,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#88c9b680-fb9a-4707-938c-ee7e35907358",
+                    "source": "attribute",
+                    "label": "ChangingTable:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9e036417-7113-4857-a400-64be858d2985",
+                    "source": "attribute",
+                    "label": "Stroller:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1e8e598d-b842-4618-a1d4-94d36d0298b2",
+                    "source": "attribute",
+                    "label": "BabysittingChildcare:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6fbab6b1-204e-4146-abd8-d902e77a9a9d",
+                    "source": "attribute",
+                    "label": "Books:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.08,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1cba277b-2dfc-4af7-958b-b779fcaff6a6",
+                    "source": "attribute",
+                    "label": "FamilyTheme"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ad56751f-ed41-4413-a5f1-656602a3fecf",
+                    "source": "attribute",
+                    "label": "Suitability:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c93d1b8c-83de-4ecc-b994-7dcd3be33589",
+                    "source": "attribute",
+                    "label": "Pool:ForChildren"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#bc3c31e7-efd5-4404-becc-d8197c00914b",
+                    "source": "attribute",
+                    "label": "Bedroom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f849e66c-b81d-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "SeparateBedroom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0f8e911c-ceab-4136-8fab-32028159b34b",
+                    "source": "attribute",
+                    "label": "SofaBed"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a8d609a1-e007-46c5-b4c0-0c266e64a894",
+                    "source": "attribute",
+                    "label": "RollawayExtraBeds"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8da07f4b-0682-4d6d-bd8c-9e5a5d68fdb5",
+                    "source": "attribute",
+                    "label": "Kitchen"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9445dd10-b709-44c8-81cd-44a451d60831",
+                    "source": "attribute",
+                    "label": "Games"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d8525e3d-b796-4388-8802-297c67534e1f",
+                    "source": "attribute",
+                    "label": "Arcade/game room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.85,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5fd24a02-5136-4b0b-baea-6353d03fa863",
+                    "source": "attribute",
+                    "label": "Laundry facilities"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cb0d50a2-caba-42ac-819e-2cc5dd6e127a",
+                    "source": "attribute",
+                    "label": "Microwave"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0caddcd0-af62-40ae-9008-b121e651f616",
+                    "source": "attribute",
+                    "label": "Refrigerator"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0de6f058-9e1e-4339-b981-f5be0c8c0ce7",
+                    "source": "attribute",
+                    "label": "Television"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9b4b327c-6897-4c6b-96e2-c129174d9166",
+                    "source": "attribute",
+                    "label": "Washing machine"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#21600215-ef5c-4f85-82c8-a86b7fe8952a",
+                    "source": "attribute",
+                    "label": "Dryer"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:family-friendly"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_DISTANCE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:geo",
+          "weight": 0.15,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#db4fe950-464d-42d7-8d02-09f9ed6e0feb",
+                    "source": "places",
+                    "label": "Restaurant"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#840bf0b9-cd17-43da-b49b-949bf2111e2b",
+                    "source": "places",
+                    "label": "Theme Park"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#708aca8a-bcef-4f65-a833-4bf5f0dcf8af",
+                    "source": "places",
+                    "label": "Zoo"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#a0794271-b1d6-483d-9215-bab2b8f9739f",
+                    "source": "places",
+                    "label": "Park"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 1,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#f58a1439-f920-43ea-a83b-e27868e22463",
+                    "source": "places",
+                    "label": "Cafe"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#f885ba81-e129-403f-9d50-ee0d972762e7",
+                    "source": "places",
+                    "label": "Grocery Store"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 1,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#96f7b736-2b4b-4234-9728-d8028edac043",
+                    "source": "places",
+                    "label": "Medical Clinic"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 2,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:family-friendly"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.20,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:child-friendly",
+                    "source": "media-descriptors",
+                    "label": "Child friendly"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:childrens-play-area-indoor",
+                    "source": "media-descriptors",
+                    "label": "Children's play area - indoor"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:childrens-play-area-outdoor",
+                    "source": "media-descriptors",
+                    "label": "Children's play area - outdoor"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:childrens-area",
+                    "source": "media-descriptors",
+                    "label": "Children's area"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:games",
+                    "source": "media-descriptors",
+                    "label": "Games"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:children-friendly",
+                    "source": "media-descriptors",
+                    "label": "Children friendly"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:kitchen",
+                    "source": "media-descriptors",
+                    "label": "Kitchen"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:laundry",
+                    "source": "media-descriptors",
+                    "label": "Laundry"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:pool",
+                    "source": "media-descriptors",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Indoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Outdoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:dining",
+                    "source": "media-descriptors",
+                    "label": "Dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:food-and-drink",
+                    "source": "media-descriptors",
+                    "label": "Food and drink"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-dining",
+                    "source": "media-descriptors",
+                    "label": "Outdoor dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-dining",
+                    "source": "media-descriptors",
+                    "label": "Indoor dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:dining-table",
+                    "source": "media-descriptors",
+                    "label": "Dining table"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:television",
+                    "source": "media-descriptors",
+                    "label": "Television"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:living-area",
+                    "source": "media-descriptors",
+                    "label": "Living area"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:stovetop",
+                    "source": "attribute",
+                    "label": "Stovetop"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:sport-court",
+                    "source": "media-descriptors",
+                    "label": "Sport court"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:refrigerator",
+                    "source": "media-descriptors",
+                    "label": "Refrigerator"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:microwave",
+                    "source": "media-descriptors",
+                    "label": "Microwave"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:terrace-patio",
+                    "source": "media-descriptors",
+                    "label": "Terrace/patio"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:balcony",
+                    "source": "media-descriptors",
+                    "label": "Balcony"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:winter-sports",
+                    "source": "media-descriptors",
+                    "label": "Winter sports"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:couch",
+                    "source": "media-descriptors",
+                    "label": "Couch"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:family-friendly"
+        }
+      ],
+      "formula": {
+        "type": "VariableNode",
+        "name": "WEIGHTED_AVERAGE_SCORE"
+      },
+      "status": "STAGED"
+    }
+  ]
+}

@@ -1,0 +1,450 @@
+{
+  "urn": "urn:expe:taxo:insights:spa",
+  "label": "spa",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "lodgingType": "ConventionalLodging",
+        "brand": "expedia",
+        "version": "1"
+      },
+      "status": "APPROVED",
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.4,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#37c48555-753d-49ef-a4ee-ed80dcf3576e",
+                    "source": "attribute",
+                    "label": "Spa:FullServiceSpa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have at least 1 Massage-related concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#31e64a53-c890-4cdc-91b3-d9ceb1e306cf",
+                    "source": "attribute",
+                    "label": "Massage"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#df6af7d9-426d-4895-abd9-59163bf76e0c",
+                    "source": "attribute",
+                    "label": "MassagesOnBeach"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.75,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have at least 1 Treatment/Sauna concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a28de2ce-5cb5-461c-bb77-97d91828e5cf",
+                    "source": "attribute",
+                    "label": "AromatherapyTreatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f49cec71-2b3e-4277-b4d5-b8e0d2669c8e",
+                    "source": "attribute",
+                    "label": "AyurvedicTreatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#38c17974-7c97-4e6c-9766-624e1f66b63a",
+                    "source": "attribute",
+                    "label": "BodyScrubs"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.65,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0313ba31-aa8a-4b6a-ab25-058e03492990",
+                    "source": "attribute",
+                    "label": "BodyTreatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0b0e1bf3-f47d-4fbf-944e-4843fa752e7c",
+                    "source": "attribute",
+                    "label": "BodyWraps"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.65,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e22ce20a-1b16-4cdb-83b0-e70d4a4dbf2a",
+                    "source": "attribute",
+                    "label": "DetoxificationWrap"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ad95cf21-937c-4c58-8d41-7b7767b7bf45",
+                    "source": "attribute",
+                    "label": "FacialTreatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.75,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e626b09e-9e5f-4eec-909a-6fa1e2e3c832",
+                    "source": "attribute",
+                    "label": "HydrotherapyTreatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7c1d7634-89d8-4836-80eb-efed2fbe5ef4",
+                    "source": "attribute",
+                    "label": "ManicuresAndPedicures"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#293ce586-23c4-475b-afd8-6463fcf011bd",
+                    "source": "attribute",
+                    "label": "Reflexology"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6bdfd4b1-d6db-476a-8786-3a44c190e171",
+                    "source": "attribute",
+                    "label": "ThalassotherapyTreatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ee79b222-b54f-4b58-b27c-1d6e5b20a3bb",
+                    "source": "attribute",
+                    "label": "TreatmentRooms:Massage"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#da4cdd51-ed5f-42f2-ae6e-02ce65ec19d1",
+                    "source": "attribute",
+                    "label": "TreatmentRooms:(Count)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#451c47da-8759-4b05-a169-525f53994656",
+                    "source": "attribute",
+                    "label": "CouplesTreatmentRooms"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.65,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0a42fd86-f8f2-4d73-acef-971f9fcb5947",
+                    "source": "attribute",
+                    "label": "OutdoorTreatmentRooms"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.65,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9d9f9a79-1648-4385-919e-680c75dc1578",
+                    "source": "attribute",
+                    "label": "Spa:Sauna"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#810c5c26-9e6a-4d43-b63b-5007fcec6ab2",
+                    "source": "attribute",
+                    "label": "Spa:SteamRoom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:spa"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.6,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should have at least 1 Spa concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa",
+                    "source": "media-descriptors",
+                    "label": "Spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-treatment",
+                    "source": "media-descriptors",
+                    "label": "Spa treatment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-facility",
+                    "source": "media-descriptors",
+                    "label": "Spa facility"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-reception",
+                    "source": "media-descriptors",
+                    "label": "Spa reception"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-tub",
+                    "source": "media-descriptors",
+                    "label": "Spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-spa-tub",
+                    "source": "media-descriptors",
+                    "label": "Indoor spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-spa-tub",
+                    "source": "media-descriptors",
+                    "label": "Outdoor spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:sauna",
+                    "source": "media-descriptors",
+                    "label": "Sauna"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:spa"
+        }
+      ],
+      "formula": {
+        "name": "WEIGHTED_AVERAGE_SCORE",
+        "type": "VariableNode"
+      }
+    }
+  ]
+}

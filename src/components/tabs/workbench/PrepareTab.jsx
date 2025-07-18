@@ -6,7 +6,7 @@ import EmptyStateStyled from '../../common/EmptyStateStyled';
 import ModernGrid from '../../common/ModernGrid';
 import ImplementationStatus from '../../common/ImplementationStatus';
 import { useAppContext } from '../../../contexts/AppContext';
-import { Listbox, Transition } from '@headlessui/react';
+import SearchableDropdown from '../../common/SearchableDropdown';
 
 const PrepareTab = () => {
   const [loading, setLoading] = useState(true);
@@ -212,99 +212,71 @@ const PrepareTab = () => {
       setSelectedItem(newSelectedItem);
     }, [selectedAffinity, selectedCollection]);
 
-    // Handle selection of either a collection or an affinity
-    const handleSelect = (item) => {
-      if (!item) return;
+    // Transform collections and affinities into flat options array
+    const options = collections.reduce((acc, collection) => {
+      // Add collection as option
+      acc.push({
+        value: `collection_${collection.id}`,
+        label: collection.name,
+        data: collection,
+        type: 'collection'
+      });
+      
+      // Add affinities as indented options
+      if (collection.affinities) {
+        collection.affinities.forEach(affinity => {
+          acc.push({
+            value: `affinity_${affinity.id}`,
+            label: `  → ${affinity.name}`,
+            data: affinity,
+            type: 'affinity',
+            parentCollection: collection
+          });
+        });
+      }
+      
+      return acc;
+    }, []);
 
-      // Update local state first
+    // Find current value for SearchableDropdown
+    const getCurrentValue = () => {
+      if (!selectedItem) return null;
+      
+      const isCollection = selectedItem.affinities !== undefined;
+      const prefix = isCollection ? 'collection_' : 'affinity_';
+      const option = options.find(opt => opt.value === `${prefix}${selectedItem.id}`);
+      
+      return option || null;
+    };
+
+    // Handle selection of either a collection or an affinity
+    const handleSelect = (option) => {
+      if (!option) return;
+
+      const item = option.data;
       setSelectedItem(item);
       
-      // Check if the item is a collection or an affinity
-      const isCollection = item.affinities !== undefined;
-      
-      if (isCollection) {
+      if (option.type === 'collection') {
         // If it's a collection, update the selectedCollection state
         setSelectedCollection(item);
         setSelectedAffinity(null);
       } else {
-        // If it's an affinity, find its parent collection and update both states
-        const parentCollection = collections.find(c => 
-          c.affinities.some(a => a.id === item.id)
-        );
-        if (parentCollection) {
-          setSelectedCollection(parentCollection);
-          setSelectedAffinity(item);
-        }
+        // If it's an affinity, update both states
+        setSelectedCollection(option.parentCollection);
+        setSelectedAffinity(item);
       }
     };
 
     return (
       <div className="w-full max-w-md mx-auto mb-6">
-        <Listbox value={selectedItem} onChange={handleSelect}>
-          {({ open }) => (
-            <div className="relative">
-              <Listbox.Button className="relative w-full cursor-pointer rounded-lg bg-white border border-gray-300 py-3 pl-4 pr-10 text-left shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
-                <span className="block truncate">
-                  {selectedItem ? (
-                    selectedItem.affinities ? 
-                      selectedItem.name : 
-                      `${selectedItem.name} (${collections.find(c => 
-                        c.affinities.some(a => a.id === selectedItem.id)
-                      )?.name || 'Unknown Collection'})`
-                  ) : 'Select a collection or affinity...'}
-                </span>
-                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <FiChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </span>
-              </Listbox.Button>
-              <Transition
-                show={open}
-                as={Fragment}
-                leave="transition ease-in duration-100"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                  {collections.map((collection) => (
-                    <Fragment key={collection.id}>
-                      <Listbox.Option
-                        className={({ active }) =>
-                          `relative cursor-pointer select-none py-2 pl-4 pr-9 ${
-                            active ? 'bg-blue-50 text-blue-900' : 'text-gray-900'
-                          }`
-                        }
-                        value={collection}
-                      >
-                        {({ selected }) => (
-                          <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
-                            {collection.name}
-                          </span>
-                        )}
-                      </Listbox.Option>
-                      {collection.affinities.map((affinity) => (
-                        <Listbox.Option
-                          key={affinity.id}
-                          className={({ active }) =>
-                            `relative cursor-pointer select-none py-2 pl-8 pr-9 ${
-                              active ? 'bg-blue-50 text-blue-900' : 'text-gray-900'
-                            }`
-                          }
-                          value={affinity}
-                        >
-                          {({ selected }) => (
-                            <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
-                              {affinity.name}
-                            </span>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Fragment>
-                  ))}
-                </Listbox.Options>
-              </Transition>
-            </div>
-          )}
-        </Listbox>
+        <SearchableDropdown
+          options={options}
+          value={getCurrentValue()}
+          onChange={handleSelect}
+          placeholder="Select a collection or affinity..."
+          className="w-full"
+          noOptionsMessage="No collections or affinities found"
+        />
       </div>
     );
   };

@@ -126,7 +126,6 @@ function calculateAffinityScores(property) {
   // Family-Friendly score (existing)
   const familyScore = calculateFamilyScore(property);
   scores.push({
-    affinityId: "aff3",
     name: "Family-Friendly",
     score: familyScore
   });
@@ -134,7 +133,6 @@ function calculateAffinityScores(property) {
   // Luxury score (existing)
   const luxuryScore = calculateLuxuryScore(property);
   scores.push({
-    affinityId: "aff4",
     name: "Luxury",
     score: luxuryScore
   });
@@ -158,7 +156,6 @@ function calculateAffinityScores(property) {
   // Pet-Friendly score
   const petFriendlyScore = calculatePetFriendlyScore(property);
   scores.push({
-    affinityId: "aff8",
     name: "Pet-Friendly",
     score: petFriendlyScore
   });
@@ -166,7 +163,6 @@ function calculateAffinityScores(property) {
   // Beach score
   const beachScore = calculateBeachScore(property);
   scores.push({
-    affinityId: "aff9",
     name: "Beach",
     score: beachScore
   });

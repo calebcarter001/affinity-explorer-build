@@ -1,0 +1,2105 @@
+{
+  "urn": "urn:expe:taxo:insights:wellness-and-beauty:wellness",
+  "label": "wellness",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "lodgingType": "ConventionalLodging",
+        "brand": "expedia",
+        "version": "1"
+      },
+      "status": "STAGED",
+      "subScores": [
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.7,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "must have atleast 1 fitness concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f3416c16-c57d-44e9-b332-522f3e0817c1",
+                    "source": "attribute",
+                    "label": "Fitness classes on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#092c4e37-90f5-47df-b823-5836264d8d99",
+                    "source": "attribute",
+                    "label": "Pilates class"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#677eec11-6bd1-435c-b6fb-f51720a03896",
+                    "source": "attribute",
+                    "label": "Beach yoga on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4fa60884-230f-4241-b691-70f5a930d896",
+                    "source": "attribute",
+                    "label": "Yoga classes/instruction on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#38bc7d39-bd76-4928-89e7-de9a9aeb145f",
+                    "source": "attribute",
+                    "label": "Yoga classes/lessons included"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#eea524ab-e671-4449-8fc5-de3b6fd3115a",
+                    "source": "attribute",
+                    "label": "Pilates classes/lessons included"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f9c2b208-68af-4b41-903c-6b28364dee2c",
+                    "source": "attribute",
+                    "label": "Fitness facilities"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d97682a2-9721-4065-9627-1e1a1025480e",
+                    "source": "attribute",
+                    "label": "Health club"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#26feefa5-f7f7-4133-ace8-f95dbd4a72b7",
+                    "source": "attribute",
+                    "label": "Fitness/yoga classes"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#98da1201-0d72-43c4-88ee-035b808726c1",
+                    "source": "attribute",
+                    "label": "Hiking/biking trails nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f9ca2277-659b-4af7-a0ee-93e48e8d6cf7",
+                    "source": "attribute",
+                    "label": "Hiking nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2f84c2df-5f4e-4854-814e-6b1eb4ba7e4d",
+                    "source": "attribute",
+                    "label": "Hiking/biking trails on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#00931d09-5baa-423a-a51f-5007d7810a6c",
+                    "source": "attribute",
+                    "label": "Spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#37c48555-753d-49ef-a4ee-ed80dcf3576e",
+                    "source": "attribute",
+                    "label": "Full-service spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d5d28bde-e0e7-4224-a5e0-a8d15af2b75c",
+                    "source": "attribute",
+                    "label": "Spa services on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#549fe8d7-bd98-407f-9bed-587bb5c80b48",
+                    "source": "attribute",
+                    "label": "Facilities fee includes spa access"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1468a957-60eb-468e-ab62-000b551a571b",
+                    "source": "attribute",
+                    "label": "Spa property"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#aaae9d0c-0bba-11ea-8d71-362b9e155667",
+                    "source": "attribute",
+                    "label": "THEME OVER-RIDE, SPA"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8bdc2e2d-c3ce-4388-bdb2-94213d790d8a",
+                    "source": "attribute",
+                    "label": "Ryokan"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3be2ba5a-c58f-4eea-a542-5358adc07c5d",
+                    "source": "attribute",
+                    "label": "Agritourism property"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#58b98d8e-896a-4fbb-a20d-23b229c6a23e",
+                    "source": "attribute",
+                    "label": "On beach"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#631bbcfb-3927-4289-b56e-78eb4915df69",
+                    "source": "attribute",
+                    "label": "Private beach nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87671f70-baaf-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "Birdwatching:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87671caa-baaf-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "Birdwatching:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7f13820b-7176-4fce-8b9d-fc46cf1ef22c",
+                    "source": "attribute",
+                    "label": "Hot springs nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5db005da-6c73-4827-b3aa-61d78745d045",
+                    "source": "attribute",
+                    "label": "Hot springs on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ba6701d2-91de-42c8-875e-833fe4f34577",
+                    "source": "attribute",
+                    "label": "Hot springs/mineral springs in spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d5867861-b986-4aa1-87b7-12f62ab798c9",
+                    "source": "attribute",
+                    "label": "On lake"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#35a965f5-2df1-409a-b2ec-ada89fcc7725",
+                    "source": "attribute",
+                    "label": "Lake view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2bd404cc-578c-4520-b694-186136981937",
+                    "source": "attribute",
+                    "label": "Partial lake view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#dc299180-5875-4138-b226-a402762f1adc",
+                    "source": "attribute",
+                    "label": "In mountains"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#933ad085-4f94-4ad7-a441-09346fdc7fa0",
+                    "source": "attribute",
+                    "label": "In national park"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ed66a919-4d0b-4e01-8865-2b6a44b36dd1",
+                    "source": "attribute",
+                    "label": "By ocean"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4b689e85-a33d-493d-a174-c3c8c8871699",
+                    "source": "attribute",
+                    "label": "Private island"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8085d765-d939-4c48-a7c5-683ee3209ce8",
+                    "source": "attribute",
+                    "label": "Mountain view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ff31de5a-baaf-11e8-b633-529269fb1459",
+                    "source": "attribute",
+                    "label": "Nature reserve"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.3
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f49cec71-2b3e-4277-b4d5-b8e0d2669c8e",
+                    "source": "attribute",
+                    "label": "Ayurvedic treatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#38bc7d39-bd76-4928-89e7-de9a9aeb145f",
+                    "source": "attribute",
+                    "label": "Yoga classes/lessons included"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f6da5f63-f4f3-4935-86a4-69414beae511",
+                    "source": "attribute",
+                    "label": "Vegan menu options available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.08,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d47738b2-e11a-4010-a272-193c20842f45",
+                    "source": "attribute",
+                    "label": "Vegetarian menu options available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.08,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e413b9c6-b002-4a80-ac28-b67c13a5e7aa",
+                    "source": "attribute",
+                    "label": "Locally-sourced food on site (80% or more)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f25cd4ce-945c-41eb-a3a0-0c28f13b959e",
+                    "source": "attribute",
+                    "label": "Organic food"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6c7aacb0-8a4c-4b36-8346-97454118bacf",
+                    "source": "attribute",
+                    "label": "Hot tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.12,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#37f0de1b-00d7-4e08-85d4-7e45f47cff8a",
+                    "source": "attribute",
+                    "label": "Private spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d261f92a-c2e4-4e7f-b0c0-343cd8501f3c",
+                    "source": "attribute",
+                    "label": "Private spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c9c0aa12-37d1-11ea-978f-2e728ce88125",
+                    "source": "attribute",
+                    "label": "Private hot tub (indoor)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cd822612-37d1-11ea-978f-2e728ce88125",
+                    "source": "attribute",
+                    "label": "Private hot tub (outdoor)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.13,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d1e327e2-37d1-11ea-978f-2e728ce88125",
+                    "source": "attribute",
+                    "label": "Private spa tub (rooftop)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.08,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#884f2e94-13a7-49c5-b360-2af081eb1eed",
+                    "source": "attribute",
+                    "label": "Spa tub in spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#69da6f48-b7d3-494b-b7f8-86c65df99608",
+                    "source": "attribute",
+                    "label": "Shared/communal pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.08,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e249dd70-51a7-4532-86e0-b6a8665f2a7f",
+                    "source": "attribute",
+                    "label": "Heated pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#53a1f102-ce1f-48b9-a458-ec867506e780",
+                    "source": "attribute",
+                    "label": "Indoor/outdoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a0891e6b-c020-4ed3-b3f5-4570ec585ad4",
+                    "source": "attribute",
+                    "label": "Infinity pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#39593b3f-bda6-4f1c-b8c6-a232ffb7cb13",
+                    "source": "attribute",
+                    "label": "Natural pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#31e64a53-c890-4cdc-91b3-d9ceb1e306cf",
+                    "source": "attribute",
+                    "label": "Massages"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#fe37c3d2-63ab-4926-b879-d4974e598280",
+                    "source": "attribute",
+                    "label": "Sauna"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b3f4ddc4-f1fb-48dc-93be-87b57fed9319",
+                    "source": "attribute",
+                    "label": "Steam room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9d9f9a79-1648-4385-919e-680c75dc1578",
+                    "source": "attribute",
+                    "label": "Sauna in spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#810c5c26-9e6a-4d43-b63b-5007fcec6ab2",
+                    "source": "attribute",
+                    "label": "Steam room in spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a28de2ce-5cb5-461c-bb77-97d91828e5cf",
+                    "source": "attribute",
+                    "label": "Aromatherapy treatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#38c17974-7c97-4e6c-9766-624e1f66b63a",
+                    "source": "attribute",
+                    "label": "Body scrubs"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0313ba31-aa8a-4b6a-ab25-058e03492990",
+                    "source": "attribute",
+                    "label": "Body treatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0b0e1bf3-f47d-4fbf-944e-4843fa752e7c",
+                    "source": "attribute",
+                    "label": "Body wraps"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e22ce20a-1b16-4cdb-83b0-e70d4a4dbf2a",
+                    "source": "attribute",
+                    "label": "Detoxification wrap"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ad95cf21-937c-4c58-8d41-7b7767b7bf45",
+                    "source": "attribute",
+                    "label": "Facial treatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e626b09e-9e5f-4eec-909a-6fa1e2e3c832",
+                    "source": "attribute",
+                    "label": "Hydrotherapy treatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#530d94c5-e317-4a13-b296-6c3e5277d8bc",
+                    "source": "attribute",
+                    "label": "Mud bath in spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#293ce586-23c4-475b-afd8-6463fcf011bd",
+                    "source": "attribute",
+                    "label": "Reflexology"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6bdfd4b1-d6db-476a-8786-3a44c190e171",
+                    "source": "attribute",
+                    "label": "Thalassotherapy treatments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "left": {
+              "left": {
+                "name": "WEIGHTED_AVERAGE_SCORE",
+                "type": "VariableNode"
+              },
+              "right": {
+                "name": "WEIGHTED_AVERAGE_PENALTY",
+                "type": "VariableNode"
+              },
+              "operator": "SUBTRACT",
+              "type": "BinaryOperation"
+            },
+            "right": {
+              "name": "WEIGHTED_AVERAGE_NEGATIVE_ATTRIBUTES",
+              "type": "VariableNode"
+            },
+            "operator": "SUBTRACT",
+            "type": "BinaryOperation"
+          },
+          "categoryUrn": "urn:expe:taxo:insights:wellness-and-beauty:wellness",
+          "metadata": null
+        }
+      ],
+      "formula": {
+        "name": "WEIGHTED_AVERAGE_SCORE",
+        "type": "VariableNode"
+      }
+    },
+    {
+      "context": {
+        "entityType": "property",
+        "lodgingType": "VacationRental",
+        "brand": "vrbo",
+        "version": "2"
+      },
+      "status": "APPROVED",
+      "subScores": [
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.45,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have at least 1 natural setting concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3be2ba5a-c58f-4eea-a542-5358adc07c5d",
+                    "source": "attribute",
+                    "label": "Agritourism property"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#21ee58bf-e8e0-4327-9176-d564957cf49c",
+                    "source": "attribute",
+                    "label": "Beach:SiteLocation:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#631bbcfb-3927-4289-b56e-78eb4915df69",
+                    "source": "attribute",
+                    "label": "Private beach nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7f13820b-7176-4fce-8b9d-fc46cf1ef22c",
+                    "source": "attribute",
+                    "label": "Hot springs nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#35a965f5-2df1-409a-b2ec-ada89fcc7725",
+                    "source": "attribute",
+                    "label": "Lake view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cfe68d7b-9d3b-43b6-ac28-41ff46a52a4e",
+                    "source": "attribute",
+                    "label": "Nature Location Highlights"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#dc299180-5875-4138-b226-a402762f1adc",
+                    "source": "attribute",
+                    "label": "In mountains"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#8085d765-d939-4c48-a7c5-683ee3209ce8",
+                    "source": "attribute",
+                    "label": "Mountain view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ff31de5a-baaf-11e8-b633-529269fb1459",
+                    "source": "attribute",
+                    "label": "Nature reserve"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#58b98d8e-896a-4fbb-a20d-23b229c6a23e",
+                    "source": "attribute",
+                    "label": "On beach"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2347964b-b7e4-4a81-9b55-496914a1b28f",
+                    "source": "attribute",
+                    "label": "Outdoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d5867861-b986-4aa1-87b7-12f62ab798c9",
+                    "source": "attribute",
+                    "label": "On lake"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5db005da-6c73-4827-b3aa-61d78745d045",
+                    "source": "attribute",
+                    "label": "Hot springs on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f9ca2277-659b-4af7-a0ee-93e48e8d6cf7",
+                    "source": "attribute",
+                    "label": "Hiking nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2f84c2df-5f4e-4854-814e-6b1eb4ba7e4d",
+                    "source": "attribute",
+                    "label": "HikingAndOrBiking:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#98da1201-0d72-43c4-88ee-035b808726c1",
+                    "source": "attribute",
+                    "label": "Hiking/biking trails nearby"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cc9f467d-8280-40ee-8557-7c3055c906e3",
+                    "source": "attribute",
+                    "label": "Pilates classes on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#677eec11-6bd1-435c-b6fb-f51720a03896",
+                    "source": "attribute",
+                    "label": "Beach yoga on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4fa60884-230f-4241-b691-70f5a930d896",
+                    "source": "attribute",
+                    "label": "Yoga classes/instruction on site"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87671f70-baaf-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "Birdwatching:NearbyLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87671caa-baaf-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "Birdwatching:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#57a464ad-c0a7-412a-a56e-6bff5436056f",
+                    "source": "attribute",
+                    "label": "Fitness room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#3983b514-f1d3-11e9-81b4-2a2ae2dbcce4",
+                    "source": "attribute",
+                    "label": "Other workout equipment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7f1ece34-0bfd-476b-86a3-82f5c2d30a20",
+                    "source": "attribute",
+                    "label": "Walkway to water"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#867f8949-d538-4ff9-b9e6-bd681d2997bc",
+                    "source": "attribute",
+                    "label": "Picnic area"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#12266cdb-381f-415f-8c14-2e83f52dfe59",
+                    "source": "attribute",
+                    "label": "Barbecue grill(s)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.08,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ff31e0da-baaf-11e8-b633-529269fb1459",
+                    "source": "attribute",
+                    "label": "Vegetable garden"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.07,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#fe37c3d2-63ab-4926-b879-d4974e598280",
+                    "source": "attribute",
+                    "label": "Sauna"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b3f4ddc4-f1fb-48dc-93be-87b57fed9319",
+                    "source": "attribute",
+                    "label": "Steam room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e23386c2-d673-4faa-830a-a555ec343a88",
+                    "source": "attribute",
+                    "label": "Patio"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a15ba222-d799-4425-973d-a7089777a9af",
+                    "source": "attribute",
+                    "label": "Yard"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5ab930ad-53af-4beb-8df9-506ca671f0a8",
+                    "source": "attribute",
+                    "label": "Deck or patio"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#fd71ebeb-dc2d-4e5b-8339-9874def3ceb8",
+                    "source": "attribute",
+                    "label": "Deck"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a77f9fa2-acb7-493a-9307-13789f8585d5",
+                    "source": "attribute",
+                    "label": "Firepit"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#876729ac-baaf-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "Outdoor fireplace"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#4d78b243-dbd1-4116-be63-77a9f88d24c0",
+                    "source": "attribute",
+                    "label": "Outdoor entertainment area"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#16be4adc-fd9c-408e-ad91-6900e8e52804",
+                    "source": "attribute",
+                    "label": "Porch"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c497251b-a87c-4a39-a4d0-86297ccabb16",
+                    "source": "attribute",
+                    "label": "Terrace"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#afe194e1-f4e7-4639-b2e4-22237b1ddb9b",
+                    "source": "attribute",
+                    "label": "Firewood:Free"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "left": {
+              "left": {
+                "name": "WEIGHTED_AVERAGE_SCORE",
+                "type": "VariableNode"
+              },
+              "right": {
+                "name": "WEIGHTED_AVERAGE_PENALTY",
+                "type": "VariableNode"
+              },
+              "operator": "SUBTRACT",
+              "type": "BinaryOperation"
+            },
+            "right": {
+              "name": "WEIGHTED_AVERAGE_NEGATIVE_ATTRIBUTES",
+              "type": "VariableNode"
+            },
+            "operator": "SUBTRACT",
+            "type": "BinaryOperation"
+          },
+          "categoryUrn": "urn:expe:taxo:insights:wellness-and-beauty:wellness"
+        },
+          {
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.3,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beach-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beachfront-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:breakfast-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:tasty-breakfast",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:fitness-facilities-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:on-site-hiking-and-biking-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:hot-tub-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:mountain-location-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:lap-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:heated-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:infinity-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:outdoor-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:outdoor-space",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-scenery",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-beach-nearby",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:private-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:friendly-staff",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spa-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spa-services-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spa-available",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:restaurant-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:relaxing-vibe-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:on-site-cooking-lessons-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:mineral-hot-springs-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:fine-dining-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:outdoor-tennis-court-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:sunset-views-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:sunrise-views-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:ocean-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:lake-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:mountain-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:desert-sunset-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beach-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "name": "WEIGHTED_AVERAGE_SCORE",
+            "type": "VariableNode"
+          },
+          "categoryUrn": "urn:expe:taxo:insights:wellness-and-beauty:wellness"
+        },
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.15,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should have 1 photo featuring Natural Setting",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:beach",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:fitness-facility",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-space",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:terrace-patio",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:pool",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-pool",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-pool",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:sauna",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-treatment",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-facility",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-tub",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-spa-tub",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-spa-tub",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:wellness-and-beauty:wellness",
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          }
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_DISTANCE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:geo",
+          "weight": 0.2,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#edae2421-bbc2-47b4-bf81-8b4f7d90b144",
+                    "source": "places",
+                    "label": "Forest"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 1,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#f4f94b14-4280-48f8-a8dd-62cdeb499cfb",
+                    "source": "places",
+                    "label": "Mountain"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 2,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.08,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#bb9075c0-599c-4f80-b3ba-60d1bf615476",
+                    "source": "places",
+                    "label": "Waterfall"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 1,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.08,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#efc93b7a-a76d-4d75-bce7-109b5c232124",
+                    "source": "places",
+                    "label": "Spa"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#fa46a5d0-30bc-494a-a845-81575157f721",
+                    "source": "places",
+                    "label": "Onsen"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.18,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#fa95c941-3175-43dd-952c-edc52d5e5a85",
+                    "source": "places",
+                    "label": "Vegan and Vegetarian Restaurant"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.12,
+                  "penalty": 0.0,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#c42ae54f-dc7d-4987-a2db-213779cf3f0e",
+                    "source": "places",
+                    "label": "Organic Grocery"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.5,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.006,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:wellness-and-beauty:wellness"
+        }
+      ],
+      "formula": {
+        "name": "WEIGHTED_AVERAGE_SCORE",
+        "type": "VariableNode"
+      }
+    }
+  ]
+}

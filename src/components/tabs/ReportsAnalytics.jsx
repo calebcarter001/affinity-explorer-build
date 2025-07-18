@@ -3,6 +3,7 @@ import { FiDownload, FiFilter, FiCalendar, FiBarChart2 } from 'react-icons/fi';
 import { getDashboardStats, getAffinities, getAffinityPerformance } from '../../services/apiService';
 import SkeletonLoader from '../common/SkeletonLoader';
 import EmptyStateStyled from '../common/EmptyStateStyled';
+import SearchableDropdown from '../common/SearchableDropdown';
 
 const ReportsAnalytics = () => {
   const [loading, setLoading] = useState(false);
@@ -122,49 +123,57 @@ const ReportsAnalytics = () => {
         
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-1">Report Type:</label>
-          <select 
-            className="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            value={reportType}
-            onChange={(e) => setReportType(e.target.value)}
-          >
-            <option value="affinity-performance">Affinity Performance Report</option>
-            <option value="coverage-analysis">Coverage Analysis</option>
-            <option value="implementation-impact">Implementation Impact Report</option>
-            <option value="concept-adoption">Concept Adoption Trends</option>
-          </select>
+          <SearchableDropdown
+            options={[
+              { value: 'affinity-performance', label: 'Affinity Performance Report' },
+              { value: 'coverage-analysis', label: 'Coverage Analysis' },
+              { value: 'implementation-impact', label: 'Implementation Impact Report' },
+              { value: 'concept-adoption', label: 'Concept Adoption Trends' }
+            ]}
+            value={{ value: reportType, label: reportType === 'affinity-performance' ? 'Affinity Performance Report' : reportType === 'coverage-analysis' ? 'Coverage Analysis' : reportType === 'implementation-impact' ? 'Implementation Impact Report' : 'Concept Adoption Trends' }}
+            onChange={(option) => setReportType(option?.value || 'affinity-performance')}
+            placeholder="Select report type..."
+            className="w-48"
+            noOptionsMessage="No report types found"
+          />
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Date Range:</label>
             <div className="relative">
-              <FiCalendar className="absolute left-3 top-2.5 text-gray-400" />
-              <select 
-                className="border border-gray-300 rounded-lg pl-10 pr-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-              >
-                <option value="last-30-days">Last 30 days</option>
-                <option value="last-quarter">Last quarter</option>
-                <option value="last-6-months">Last 6 months</option>
-                <option value="year-to-date">Year to date</option>
-                <option value="custom-range">Custom range</option>
-              </select>
+              <SearchableDropdown
+                options={[
+                  { value: 'last-30-days', label: 'Last 30 days' },
+                  { value: 'last-quarter', label: 'Last quarter' },
+                  { value: 'last-6-months', label: 'Last 6 months' },
+                  { value: 'year-to-date', label: 'Year to date' },
+                  { value: 'custom-range', label: 'Custom range' }
+                ]}
+                value={{ value: dateRange, label: dateRange === 'last-30-days' ? 'Last 30 days' : dateRange === 'last-quarter' ? 'Last quarter' : dateRange === 'last-6-months' ? 'Last 6 months' : dateRange === 'year-to-date' ? 'Year to date' : 'Custom range' }}
+                onChange={(option) => setDateRange(option?.value || 'last-30-days')}
+                placeholder="Select date range..."
+                className="w-48"
+                noOptionsMessage="No date ranges found"
+              />
             </div>
           </div>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Include Affinities:</label>
-            <select 
-              className="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-              value={affinityFilter}
-              onChange={(e) => setAffinityFilter(e.target.value)}
-            >
-              <option value="all">All affinities</option>
-              <option value="validated">Validated only</option>
-              <option value="recently-updated">Recently updated</option>
-              <option value="custom">Custom selection</option>
-            </select>
+            <SearchableDropdown
+              options={[
+                { value: 'all', label: 'All affinities' },
+                { value: 'validated', label: 'Validated only' },
+                { value: 'recently-updated', label: 'Recently updated' },
+                { value: 'custom', label: 'Custom selection' }
+              ]}
+              value={{ value: affinityFilter, label: affinityFilter === 'all' ? 'All affinities' : affinityFilter === 'validated' ? 'Validated only' : affinityFilter === 'recently-updated' ? 'Recently updated' : 'Custom selection' }}
+              onChange={(option) => setAffinityFilter(option?.value || 'all')}
+              placeholder="Select affinity filter..."
+              className="w-48"
+              noOptionsMessage="No affinity filters found"
+            />
           </div>
         </div>
         

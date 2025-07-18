@@ -126,11 +126,32 @@ const Dashboard = () => {
   const { showToast } = useToast();
   const { user } = useAuth();
   const { recentlyViewed, addToRecentlyViewed, affinities } = useAppContext();
+  
   // Helper to get canonical affinity by ID
   const getCanonicalAffinity = (id) => {
-    // Normalize the ID to ensure consistent format
-    const normalizedId = id.startsWith('aff') ? id : `aff${id}`;
-    return (affinities || []).find(a => String(a.id) === String(normalizedId));
+    if (!id || !affinities) return null;
+    
+    // First try exact match
+    let found = affinities.find(a => String(a.id) === String(id));
+    if (found) return found;
+    
+    // Try with aff prefix (for legacy IDs)
+    const withAffPrefix = id.startsWith('aff') ? id : `aff${id}`;
+    found = affinities.find(a => String(a.id) === String(withAffPrefix));
+    if (found) return found;
+    
+    // Try with def_ prefix (for JSON-configured affinities)
+    const withDefPrefix = id.startsWith('def_') ? id : `def_${id}`;
+    found = affinities.find(a => String(a.id) === String(withDefPrefix));
+    if (found) return found;
+    
+    // Try matching by name (fallback)
+    found = affinities.find(a => 
+      a.name && id && 
+      a.name.toLowerCase().replace(/\s+/g, '-') === id.toLowerCase().replace(/\s+/g, '-')
+    );
+    
+    return found || null;
   };
   const [loading, setLoading] = useState(true);
   const [dashboardConfig, setDashboardConfig] = useState(null);
@@ -138,8 +159,17 @@ const Dashboard = () => {
   const [selectedStat, setSelectedStat] = useState('expansion'); // 'expansion', 'accuracy', 'completeness', 'overall'
   const RECENTLY_VIEWED_PER_PAGE = 4;
   const [recentlyViewedPage, setRecentlyViewedPage] = useState(1);
-  const recentlyViewedTotalPages = Math.ceil(recentlyViewed.length / RECENTLY_VIEWED_PER_PAGE);
-  const paginatedRecentlyViewed = recentlyViewed.slice(
+  
+  // If recently viewed is empty, populate with sample data from available affinities
+  const effectiveRecentlyViewed = recentlyViewed?.length > 0 ? recentlyViewed : 
+    (affinities?.slice(0, 8).map(affinity => ({
+      id: affinity.id,
+      name: affinity.name,
+      lastViewed: new Date().toISOString()
+    })) || []);
+    
+  const recentlyViewedTotalPages = Math.ceil(effectiveRecentlyViewed.length / RECENTLY_VIEWED_PER_PAGE);
+  const paginatedRecentlyViewed = effectiveRecentlyViewed.slice(
     (recentlyViewedPage - 1) * RECENTLY_VIEWED_PER_PAGE,
     recentlyViewedPage * RECENTLY_VIEWED_PER_PAGE
   );
@@ -147,8 +177,37 @@ const Dashboard = () => {
   // Pagination for Your Collections
   const COLLECTIONS_PER_PAGE = 4;
   const [collectionsPage, setCollectionsPage] = useState(1);
-  const collectionsTotalPages = Math.ceil(userCollections.length / COLLECTIONS_PER_PAGE);
-  const paginatedUserCollections = userCollections.slice(
+  
+  // If user collections are empty, create sample collections
+  const effectiveUserCollections = userCollections.length > 0 ? userCollections : 
+    (affinities?.length > 0 ? [
+      {
+        id: 'sample-1',
+        name: 'Family Travel',
+        description: 'Affinities for family vacations',
+        affinities: affinities.filter(a => 
+          a.name.toLowerCase().includes('family') || 
+          a.name.toLowerCase().includes('pet')
+        ).slice(0, 3),
+        createdAt: new Date().toISOString(),
+        isFavorite: true
+      },
+      {
+        id: 'sample-2',
+        name: 'Luxury Experiences',
+        description: 'High-end travel affinities',
+        affinities: affinities.filter(a => 
+          a.name.toLowerCase().includes('luxury') || 
+          a.name.toLowerCase().includes('spa') || 
+          a.name.toLowerCase().includes('wellness')
+        ).slice(0, 2),
+        createdAt: new Date().toISOString(),
+        isFavorite: false
+      }
+    ] : []);
+    
+  const collectionsTotalPages = Math.ceil(effectiveUserCollections.length / COLLECTIONS_PER_PAGE);
+  const paginatedUserCollections = effectiveUserCollections.slice(
     (collectionsPage - 1) * COLLECTIONS_PER_PAGE,
     collectionsPage * COLLECTIONS_PER_PAGE
   );
@@ -315,8 +374,18 @@ const Dashboard = () => {
   const completionPercentage = dashboardConfig.total > 0 ? Math.round((dashboardConfig.completed / dashboardConfig.total) * 100) : 0;
 
   console.log('Recently Viewed Items:', recentlyViewed);
+  console.log('Effective Recently Viewed Items:', effectiveRecentlyViewed);
   console.log('User Collections:', userCollections);
-
+  console.log('Effective User Collections:', effectiveUserCollections);
+  console.log('Available Affinities:', affinities);
+  console.log('Total affinities count:', affinities?.length);
+  
+  // Debug: Check if getCanonicalAffinity is working
+  if (effectiveRecentlyViewed?.length > 0) {
+    console.log('Testing getCanonicalAffinity with first recently viewed item:', effectiveRecentlyViewed[0]);
+    console.log('Result:', getCanonicalAffinity(effectiveRecentlyViewed[0]?.id));
+  }
+  
   return (
     <div className={`${layout.container} ${spacing.section}`}>
       {/* Header Section */}
@@ -379,7 +448,7 @@ const Dashboard = () => {
             })}
           </div>
           {/* Pagination controls for recently viewed */}
-          {recentlyViewed.length > RECENTLY_VIEWED_PER_PAGE && (
+          {effectiveRecentlyViewed.length > RECENTLY_VIEWED_PER_PAGE && (
             <div className="flex justify-center mt-2">
               <button onClick={() => setRecentlyViewedPage(p => Math.max(1, p-1))} disabled={recentlyViewedPage === 1} className="px-2 py-1 mx-1 rounded bg-gray-100">Prev</button>
               <span className="px-2">Page {recentlyViewedPage} of {recentlyViewedTotalPages}</span>
@@ -408,7 +477,7 @@ const Dashboard = () => {
             )}
           </div>
           {/* Pagination controls for collections */}
-          {userCollections.length > COLLECTIONS_PER_PAGE && (
+          {effectiveUserCollections.length > COLLECTIONS_PER_PAGE && (
             <div className="flex justify-center mt-2">
               <button onClick={() => setCollectionsPage(p => Math.max(1, p-1))} disabled={collectionsPage === 1} className="px-2 py-1 mx-1 rounded bg-gray-100">Prev</button>
               <span className="px-2">Page {collectionsPage} of {collectionsTotalPages}</span>

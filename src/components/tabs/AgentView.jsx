@@ -10,7 +10,8 @@ import {
   SentimentAgent,
   CompetitiveAgent,
   BiasDetectionAgent,
-  TrendAgent
+  TrendAgent,
+  LocalInsiderAgent
 } from './AgentViewParts/agents';
 
 const AgentView = () => {
@@ -160,6 +161,8 @@ const AgentView = () => {
         return <BiasDetectionAgent property={selectedProperty} />;
       case 'trend':
         return <TrendAgent property={selectedProperty} />;
+      case 'localinsider':
+        return <LocalInsiderAgent property={selectedProperty} />;
       default:
         return <VerificationAgent property={selectedProperty} />;
     }
@@ -222,7 +225,8 @@ const AgentView = () => {
                     { id: 'sentiment', label: 'Sentiment Agent' },
                     { id: 'competitive', label: 'Competitive Agent' },
                     { id: 'bias', label: 'Bias Detection Agent' },
-                    { id: 'trend', label: 'Trend Agent' }
+                    { id: 'trend', label: 'Trend Agent' },
+                    { id: 'localinsider', label: 'Local Insider Agent' }
                   ].map(tab => (
                     <button
                       key={tab.id}

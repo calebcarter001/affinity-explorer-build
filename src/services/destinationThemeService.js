@@ -1,7 +1,7 @@
 // Data Loader Service
 // Handles loading and caching of destination theme and evidence data
 
-import { DESTINATION_CONFIG } from '../config/appConfig.js';
+import { DESTINATION_CONFIG } from '../config/appConfig';
 
 class DataLoader {
   constructor() {

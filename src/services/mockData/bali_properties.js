@@ -27,12 +27,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6277333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7882933333333334
       },
@@ -47,12 +45,10 @@ export const baliProperties = [
         "score": 0.98
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.5800000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.9999999999999999
       }
@@ -86,12 +82,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7170666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6960333333333334
       },
@@ -106,12 +100,10 @@ export const baliProperties = [
         "score": 0.4
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.54
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -145,12 +137,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.556
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6645666666666666
       },
@@ -165,12 +155,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.9199999999999999
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -203,12 +191,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5413333333333333
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6670866666666667
       },
@@ -223,12 +209,10 @@ export const baliProperties = [
         "score": 0.4
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.33999999999999997
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -263,12 +247,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7816
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.47792666666666667
       },
@@ -283,12 +265,10 @@ export const baliProperties = [
         "score": 0.06
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.62
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0
       }
@@ -324,12 +304,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6914666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.9415466666666668
       },
@@ -344,12 +322,10 @@ export const baliProperties = [
         "score": 0.4
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.33999999999999997
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -384,12 +360,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.636
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.67874
       },
@@ -404,12 +378,10 @@ export const baliProperties = [
         "score": 0.6599999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -442,12 +414,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6744
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5281600000000001
       },
@@ -462,12 +432,10 @@ export const baliProperties = [
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -501,12 +469,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5808
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.8375533333333334
       },
@@ -521,12 +487,10 @@ export const baliProperties = [
         "score": 0.4
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.33999999999999997
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -559,12 +523,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6072000000000001
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6468466666666668
       },
@@ -579,12 +541,10 @@ export const baliProperties = [
         "score": 0.1
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.24000000000000002
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0
       }
@@ -618,12 +578,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.648
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.49738666666666664
       },
@@ -638,12 +596,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.12
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -676,12 +632,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7602666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.53188
       },
@@ -696,12 +650,10 @@ export const baliProperties = [
         "score": 0.06
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.72
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -736,12 +688,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5952000000000001
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6641333333333334
       },
@@ -756,12 +706,10 @@ export const baliProperties = [
         "score": 0.6599999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.32
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.6
       }
@@ -794,12 +742,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5552000000000001
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5751400000000001
       },
@@ -814,12 +760,10 @@ export const baliProperties = [
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.8800000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.1
       }
@@ -852,12 +796,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.8829333333333333
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6370666666666667
       },
@@ -872,12 +814,10 @@ export const baliProperties = [
         "score": 0.06
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.72
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -910,12 +850,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7536
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.8003266666666667
       },
@@ -930,12 +868,10 @@ export const baliProperties = [
         "score": 0.1
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.33999999999999997
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -968,12 +904,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6584
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5669466666666667
       },
@@ -988,12 +922,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -1026,12 +958,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6986666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6763866666666667
       },
@@ -1046,12 +976,10 @@ export const baliProperties = [
         "score": 0.7
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.04000000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -1083,12 +1011,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5904
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5289133333333333
       },
@@ -1103,12 +1029,10 @@ export const baliProperties = [
         "score": 0.96
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.72
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 1
       }
@@ -1141,12 +1065,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.42533333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6025333333333335
       },
@@ -1161,12 +1083,10 @@ export const baliProperties = [
         "score": 0.6799999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.6799999999999999
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -1199,12 +1119,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6671999999999999
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7328866666666667
       },
@@ -1219,12 +1137,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.5
       }
@@ -1257,12 +1173,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.8717333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7250599999999999
       },
@@ -1277,12 +1191,10 @@ export const baliProperties = [
         "score": 0.06
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -1315,12 +1227,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6176
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.62716
       },
@@ -1335,12 +1245,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.9199999999999999
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -1373,12 +1281,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5050666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.8337333333333334
       },
@@ -1393,12 +1299,10 @@ export const baliProperties = [
         "score": 0.7
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.33999999999999997
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -1431,12 +1335,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7178666666666665
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6441666666666667
       },
@@ -1451,12 +1353,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.72
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -1489,12 +1389,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5453333333333333
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6249933333333334
       },
@@ -1509,12 +1407,10 @@ export const baliProperties = [
         "score": 0.38
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.28
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -1547,12 +1443,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5304
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6151200000000001
       },
@@ -1567,12 +1461,10 @@ export const baliProperties = [
         "score": 0.98
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.6799999999999999
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 1
       }
@@ -1605,12 +1497,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.8410666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6420133333333333
       },
@@ -1625,12 +1515,10 @@ export const baliProperties = [
         "score": 0.7
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.24000000000000002
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.6
       }
@@ -1663,12 +1551,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.4389333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6073333333333334
       },
@@ -1683,12 +1569,10 @@ export const baliProperties = [
         "score": 0.98
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.5800000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -1721,12 +1605,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7847999999999999
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7528333333333334
       },
@@ -1741,12 +1623,10 @@ export const baliProperties = [
         "score": 0.38
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -1779,12 +1659,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7349333333333333
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5903466666666667
       },
@@ -1799,12 +1677,10 @@ export const baliProperties = [
         "score": 0.6799999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -1837,12 +1713,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7256
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.8193133333333333
       },
@@ -1857,12 +1731,10 @@ export const baliProperties = [
         "score": 0.98
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.5800000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -1895,12 +1767,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7223999999999999
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7756733333333334
       },
@@ -1915,12 +1785,10 @@ export const baliProperties = [
         "score": 0.1
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.33999999999999997
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -1953,12 +1821,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6407999999999999
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5757133333333333
       },
@@ -1973,12 +1839,10 @@ export const baliProperties = [
         "score": 0.36
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.62
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -2011,12 +1875,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7074666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5915933333333333
       },
@@ -2031,12 +1893,10 @@ export const baliProperties = [
         "score": 0.7
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.54
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.6
       }
@@ -2069,12 +1929,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7285333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5953
       },
@@ -2089,12 +1947,10 @@ export const baliProperties = [
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -2127,12 +1983,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7658666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6353533333333334
       },
@@ -2147,12 +2001,10 @@ export const baliProperties = [
         "score": 0.98
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 1
       }
@@ -2185,12 +2037,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.8650666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6333866666666667
       },
@@ -2205,12 +2055,10 @@ export const baliProperties = [
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -2243,12 +2091,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7114666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5202133333333334
       },
@@ -2263,12 +2109,10 @@ export const baliProperties = [
         "score": 0.06
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.4
       }
@@ -2301,12 +2145,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.6671999999999999
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5979533333333334
       },
@@ -2321,12 +2163,10 @@ export const baliProperties = [
         "score": 0.98
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.6799999999999999
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 1
       }
@@ -2359,12 +2199,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7722666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6353
       },
@@ -2379,12 +2217,10 @@ export const baliProperties = [
         "score": 0.9999999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.24000000000000002
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -2417,12 +2253,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5253333333333333
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.3998333333333334
       },
@@ -2437,12 +2271,10 @@ export const baliProperties = [
         "score": 0.6599999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -2475,12 +2307,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5552000000000001
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5751400000000001
       },
@@ -2495,12 +2325,10 @@ export const baliProperties = [
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.8800000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.1
       }
@@ -2533,12 +2361,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.8122666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7017133333333334
       },
@@ -2553,12 +2379,10 @@ export const baliProperties = [
         "score": 0.7
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.8400000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.6
       }
@@ -2591,12 +2415,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7266666666666667
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7123266666666667
       },
@@ -2611,12 +2433,10 @@ export const baliProperties = [
         "score": 0.9999999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.04000000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 1
       }
@@ -2649,12 +2469,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.7314666666666666
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.59106
       },
@@ -2669,12 +2487,10 @@ export const baliProperties = [
         "score": 0.96
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.9199999999999999
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -2707,12 +2523,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.9269333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6977533333333333
       },
@@ -2727,12 +2541,10 @@ export const baliProperties = [
         "score": 0.08000000000000002
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -2765,12 +2577,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.5629333333333334
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.6482133333333334
       },
@@ -2785,12 +2595,10 @@ export const baliProperties = [
         "score": 0.6799999999999999
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.38
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.8999999999999999
       }
@@ -2823,12 +2631,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.656
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.7917599999999999
       },
@@ -2843,12 +2649,10 @@ export const baliProperties = [
         "score": 0.4
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.8400000000000001
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 0.3
       }
@@ -2881,12 +2685,10 @@ export const baliProperties = [
     },
     "affinityScores": [
       {
-        "affinityId": "aff3",
         "name": "Family-Friendly",
         "score": 0.624
       },
       {
-        "affinityId": "aff4",
         "name": "Luxury",
         "score": 0.5079400000000001
       },
@@ -2901,12 +2703,10 @@ export const baliProperties = [
         "score": 0.96
       },
       {
-        "affinityId": "aff8",
         "name": "Pet-Friendly",
         "score": 0.42
       },
       {
-        "affinityId": "aff9",
         "name": "Beach",
         "score": 1
       }

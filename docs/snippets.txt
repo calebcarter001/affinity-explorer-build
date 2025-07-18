@@ -1,0 +1,21 @@
+I want the exporter to allow users to:
+1. Select from a list of Affinities that would apply to an export configuration
+2. Select the sentiment concepts that would appply to an export configuration
+3. Select the Destination Insights that would apply to an export configuration:
+	1. Allow the user to select the Themes that would apply to a configuration 
+		1. Allow the user to select the nano themes that should apply to a configuration 
+		2. Allow the user to select the sub-themes that would apply to a configuration
+		3. Allow the user to select if Any of these should be selected:
+			1. Time Needed
+			2. Intensity
+			3. Emotions
+			4. Price
+	2. Allow the user to select the list of destination nuances that should apply
+	3. Allow the user to select the list of conventional lodging nuances that should apply
+	4. Allow the user to select the list of vacation rental nuances that should apply
+	5. Allow the user to select the list of similar destinations that should apply
+	6. Allow the user to select the list of tags that should apply 
+
+4. Select the Last Mile insights that should apply to an export configuration
+	1. Allow the user to select the transportation attributes that should apply
+	2. Allow the user to select the accessibility attributes that should apply 

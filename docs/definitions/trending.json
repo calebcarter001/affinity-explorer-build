@@ -1,0 +1,39 @@
+{
+  "urn": "urn:expe:taxo:insights:trending",
+  "label": "trending",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "lodgingType": "Any",
+        "brand": "expedia",
+        "version": "1"
+      },
+      "status": "STAGED",
+      "subScores": [
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:booking-ratio",
+          "weight": 0.3,
+          "categoryUrn": "urn:expe:taxo:insights:trending",
+          "metadata": null
+        },
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:visit-ratio",
+          "weight": 0.3,
+          "categoryUrn": "urn:expe:taxo:insights:trending",
+          "metadata": null
+        },
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:booking-growth",
+          "weight": 0.4,
+          "categoryUrn": "urn:expe:taxo:insights:trending",
+          "metadata": null
+        }
+      ],
+      "formula": {
+        "name": "WEIGHTED_AVERAGE_SCORE",
+        "type": "VariableNode"
+      }
+    }
+  ]
+}

@@ -1,0 +1,715 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { mockCrpData } from './mock-crp-data';
+import { 
+  FiSettings, 
+  FiCopy, 
+  FiEdit, 
+  FiMessageSquare, 
+  FiZap, 
+  FiSave, 
+  FiShare2, 
+  FiSend,
+  FiCheck,
+  FiAlertCircle,
+  FiEye,
+  FiBarChart3,
+  FiTarget,
+  FiGlobe,
+  FiUser,
+  FiMessageCircle,
+  FiCheckCircle,
+  FiX
+} from 'react-icons/fi';
+import SearchableDropdown from '../common/SearchableDropdown';
+import { useAppContext } from '../../contexts/AppContext';
+import VariantA from './VariantA';
+import VariantB from './VariantB';
+import VariantC from './VariantC';
+
+// Custom styles for clean slider appearance
+const sliderStyles = `
+  .slider-thumb::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #3b82f6;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .slider-thumb::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .slider-thumb::-moz-range-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #3b82f6;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .slider-thumb::-moz-range-track {
+    background: transparent;
+    border: none;
+  }
+  
+  .slider-thumb:focus {
+    outline: none;
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = sliderStyles;
+  document.head.appendChild(styleSheet);
+}
+
+const ConceptRelationshipPanel = () => {
+  const { affinities } = useAppContext();
+  const { primary_concept, related_concepts } = mockCrpData;
+  
+  // State management
+  const [weights, setWeights] = useState({
+    primary: 50,
+    secondary: 30,
+    tertiary: 20
+  });
+  const [activeVariant, setActiveVariant] = useState('A');
+  
+  // Configuration state for dropdowns
+  const [configuration, setConfiguration] = useState({
+    surfaceType: 'Search Results Page',
+    language: 'English (US)',
+    toneStyle: 'Family Friendly',
+    primaryConcept: 'family-friendly'
+  });
+  
+  // New state for enhanced features
+  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState(false);
+  const [selectedText, setSelectedText] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [readabilityScore, setReadabilityScore] = useState(9.2);
+  const [accessibilityChecks, setAccessibilityChecks] = useState({
+    altText: true,
+    adjectiveBalance: false,
+    inclusiveLanguage: true,
+    readingLevel: false
+  });
+  const snippetRef = useRef(null);
+  
+  // Dropdown options
+  const surfaceTypeOptions = [
+    { value: 'Search Results Page', label: 'Search Results Page' },
+    { value: 'Property Detail Page', label: 'Property Detail Page' },
+    { value: 'Email Campaign', label: 'Email Campaign' },
+    { value: 'Social Media', label: 'Social Media' }
+  ];
+  
+  const languageOptions = [
+    { value: 'English (US)', label: 'English (US)' },
+    { value: 'English (UK)', label: 'English (UK)' },
+    { value: 'Spanish', label: 'Spanish' },
+    { value: 'French', label: 'French' }
+  ];
+  
+  const toneStyleOptions = [
+    { value: 'Luxury', label: 'Luxury' },
+    { value: 'Family', label: 'Family' },
+    { value: 'Value', label: 'Value' },
+    { value: 'Business', label: 'Business' }
+  ];
+  
+  // Evidence types for heat dots
+  const evidenceTypes = {
+    queryLogs: { color: '#3b82f6', count: 847 },
+    ctr: { color: '#10b981', count: 234 },
+    competitor: { color: '#f59e0b', count: 156 },
+    nlp: { color: '#8b5cf6', count: 423 }
+  };
+  
+  // Convert affinities to dropdown options
+  const affinityOptions = affinities?.map(affinity => ({
+    value: affinity.id,
+    label: affinity.name
+  })) || [];
+  
+  // Utility functions
+  const getColorByType = (type) => {
+    switch (type) {
+      case 'primary': return '#3b82f6';
+      case 'secondary': return '#10b981';
+      case 'tertiary': return '#f59e0b';
+      default: return '#6b7280';
+    }
+  };
+  
+  const getCTRLift = (percentage) => {
+    if (percentage >= 80) return '+12%';
+    if (percentage >= 60) return '+8%';
+    if (percentage >= 40) return '+5%';
+    return '+2%';
+  };
+  
+  const calculateReadability = (text) => {
+    // Simple readability calculation (mock)
+    const words = text.split(' ').length;
+    const sentences = text.split(/[.!?]+/).length;
+    const avgWordsPerSentence = words / sentences;
+    return Math.min(12, Math.max(6, avgWordsPerSentence * 0.8));
+  };
+  
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+  
+  // Debug: Log affinities data
+  console.log('CRP - Affinities loaded:', affinities?.length || 0, 'affinities');
+  console.log('CRP - Affinity options:', affinityOptions.length, 'options');
+  if (affinities?.length > 0) {
+    console.log('CRP - First few affinities:', affinities.slice(0, 5));
+  }
+  
+  // Sample generated content with tone adaptation
+  const getGeneratedSnippet = (tone) => {
+    const snippets = {
+      'Luxury': "Experience the ultimate in luxury relaxation at our rooftop infinity pool with panoramic city views. Unwind at our world-class spa featuring rejuvenating treatments, then enjoy cocktails at our exclusive swim-up bar while soaking in the sun terrace ambiance.",
+      'Family': "Create unforgettable family memories at our kid-friendly pool area with shallow sections and water features. Parents can relax while children play safely in our supervised splash zone, complete with poolside snacks and family-friendly activities.",
+      'Value': "Enjoy our well-maintained pool facilities without breaking the bank. Take advantage of complimentary poolside amenities, free towel service, and budget-friendly refreshments available throughout your stay.",
+      'Business': "Maximize your productivity with our business-friendly pool environment. Network with fellow professionals in our quiet poolside work areas, complete with WiFi access and meeting spaces for informal discussions."
+    };
+    return snippets[tone] || snippets['Family'];
+  };
+  
+  const qualityScore = 92;
+  
+  // Readability calculation is handled by the utility function above
+  
+  // Handle weight changes
+  const handleWeightChange = (type, value) => {
+    const newWeights = { ...weights, [type]: parseInt(value) };
+    
+    // Ensure weights add up to 100%
+    const total = Object.values(newWeights).reduce((sum, w) => sum + w, 0);
+    if (total <= 100) {
+      setWeights(newWeights);
+    }
+  };
+  
+  // Handle tone change with snippet update
+  const handleToneChange = (newTone) => {
+    setConfiguration(prev => ({ ...prev, toneStyle: newTone }));
+    const newSnippet = getGeneratedSnippet(newTone);
+    const newReadability = calculateReadability(newSnippet);
+    setReadabilityScore(newReadability);
+    
+    // Update accessibility checks
+    setAccessibilityChecks(prev => ({
+      ...prev,
+      readingLevel: newReadability <= 10
+    }));
+    
+    showToast('Tone updated successfully', 'success');
+  };
+  
+  // Toast notification is handled by the utility function above
+  
+  // Handle text selection for comments
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    if (selection.toString().length > 0) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setSelectedText({
+        text: selection.toString(),
+        x: rect.left,
+        y: rect.top
+      });
+    }
+  };
+  
+  // Add comment
+  const addComment = (text, comment) => {
+    const newComment = {
+      id: Date.now(),
+      text,
+      comment,
+      timestamp: new Date().toISOString()
+    };
+    setComments(prev => [...prev, newComment]);
+    setSelectedText(null);
+    showToast('Comment added successfully', 'success');
+  };
+  
+  // Auto-save functionality
+  useEffect(() => {
+    const autoSave = setTimeout(() => {
+      showToast('Auto-saved', 'info');
+    }, 5000);
+    
+    return () => clearTimeout(autoSave);
+  }, [weights, configuration, activeVariant]);
+  
+  // Update readability on mount
+  useEffect(() => {
+    const snippet = getGeneratedSnippet(configuration.toneStyle);
+    const score = calculateReadability(snippet);
+    setReadabilityScore(score);
+  }, [configuration.toneStyle]);
+
+  // Contextual Surface Banner Component
+  const ContextualBanner = () => {
+    const isNonDefault = configuration.surfaceType !== 'Search Results Page' || 
+                        configuration.language !== 'English (US)' || 
+                        configuration.toneStyle !== 'Family';
+    
+    return (
+      <div className={`w-full px-6 py-3 border-b transition-colors ${
+        isNonDefault ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'
+      }`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <FiTarget className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">Surface:</span>
+              <span className="text-sm text-gray-900">{configuration.surfaceType}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FiGlobe className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">Language:</span>
+              <span className="text-sm text-gray-900">{configuration.language}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FiUser className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">Tone:</span>
+              <span className="text-sm text-gray-900">{configuration.toneStyle}</span>
+            </div>
+          </div>
+          {isNonDefault && (
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-xs text-blue-600 font-medium">Custom Configuration</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+  
+  // Weight Dial Overlay Component
+  const WeightDialOverlay = ({ weights }) => {
+    const radius = 40;
+    const strokeWidth = 8;
+    const normalizedRadius = radius - strokeWidth * 2;
+    const circumference = normalizedRadius * 2 * Math.PI;
+    
+    const createArc = (percentage, offset, color) => {
+      const strokeDasharray = `${percentage / 100 * circumference} ${circumference}`;
+      const strokeDashoffset = -offset / 100 * circumference;
+      
+      return (
+        <circle
+          stroke={color}
+          fill="transparent"
+          strokeWidth={strokeWidth}
+          strokeDasharray={strokeDasharray}
+          strokeDashoffset={strokeDashoffset}
+          r={normalizedRadius}
+          cx={radius}
+          cy={radius}
+          className="transition-all duration-300"
+        />
+      );
+    };
+    
+    return (
+      <div className="flex items-center justify-center mb-6">
+        <div className="relative">
+          <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
+            <circle
+              stroke="#e5e7eb"
+              fill="transparent"
+              strokeWidth={strokeWidth}
+              r={normalizedRadius}
+              cx={radius}
+              cy={radius}
+            />
+            {createArc(weights.primary, 0, '#3b82f6')}
+            {createArc(weights.secondary, weights.primary, '#10b981')}
+            {createArc(weights.tertiary, weights.primary + weights.secondary, '#f59e0b')}
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-xs font-medium text-gray-600">Total</div>
+              <div className="text-sm font-bold text-gray-900">100%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  // Evidence Heat Dots Component
+  const EvidenceHeatDots = ({ concept }) => {
+    const getEvidenceForConcept = (conceptName) => {
+      // Mock evidence data based on concept
+      const baseEvidence = {
+        queryLogs: Math.floor(Math.random() * 1000) + 100,
+        ctr: Math.floor(Math.random() * 500) + 50,
+        competitor: Math.floor(Math.random() * 300) + 30,
+        nlp: Math.floor(Math.random() * 600) + 100
+      };
+      return baseEvidence;
+    };
+    
+    const evidence = getEvidenceForConcept(concept.name);
+    
+    return (
+      <div className="flex items-center space-x-1 mt-2">
+        {Object.entries(evidenceTypes).map(([type, config]) => {
+          const count = evidence[type];
+          const intensity = Math.min(count / 500, 1); // Normalize to 0-1
+          
+          return (
+            <div
+              key={type}
+              className="group relative"
+            >
+              <div
+                className="w-2 h-2 rounded-full cursor-help"
+                style={{
+                  backgroundColor: config.color,
+                  opacity: 0.3 + (intensity * 0.7)
+                }}
+              />
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                {type}: {count}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  
+  // Live Readability Meter Component
+  const LiveReadabilityMeter = ({ score }) => {
+    const getScoreColor = (score) => {
+      if (score <= 8) return '#10b981'; // green
+      if (score <= 10) return '#f59e0b'; // orange
+      return '#ef4444'; // red
+    };
+    
+    const getGradeLevel = (score) => {
+      if (score <= 6) return 'Elementary';
+      if (score <= 8) return 'Middle School';
+      if (score <= 10) return 'High School';
+      if (score <= 12) return 'College';
+      return 'Graduate';
+    };
+    
+    return (
+      <div className="bg-white rounded-lg p-4 border border-gray-200">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-medium text-gray-900">Live Readability</h3>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500">Grade {score.toFixed(1)}</span>
+            <div 
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: getScoreColor(score) }}
+            />
+          </div>
+        </div>
+        <div className="mb-2">
+          <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <span>Easy</span>
+            <span>Difficult</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="h-2 rounded-full transition-all duration-300"
+              style={{
+                width: `${(score / 12) * 100}%`,
+                backgroundColor: getScoreColor(score)
+              }}
+            />
+          </div>
+        </div>
+        <div className="text-xs text-gray-600">
+          Target: {getGradeLevel(score)} Level
+        </div>
+      </div>
+    );
+  };
+  
+  // Accessibility Checklist Widget
+  const AccessibilityChecklist = ({ checks }) => {
+    const checkItems = [
+      { key: 'altText', label: 'Alt text present', icon: FiEye },
+      { key: 'adjectiveBalance', label: 'Adjective balance', icon: FiBarChart3 },
+      { key: 'inclusiveLanguage', label: 'Inclusive language', icon: FiUser },
+      { key: 'readingLevel', label: 'Reading level appropriate', icon: FiCheck }
+    ];
+    
+    const allPassed = Object.values(checks).every(check => check);
+    
+    return (
+      <div className={`bg-white rounded-lg p-4 border transition-colors ${
+        allPassed ? 'border-green-200 bg-green-50' : 'border-gray-200'
+      }`}>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-medium text-gray-900">Accessibility</h3>
+          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+            allPassed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+          }`}>
+            {allPassed ? 'WCAG Compliant' : 'Needs Review'}
+          </div>
+        </div>
+        <div className="space-y-2">
+          {checkItems.map(({ key, label, icon: Icon }) => (
+            <div key={key} className="flex items-center space-x-2">
+              <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                checks[key] ? 'bg-green-100' : 'bg-red-100'
+              }`}>
+                {checks[key] ? (
+                  <FiCheck className="w-2 h-2 text-green-600" />
+                ) : (
+                  <FiX className="w-2 h-2 text-red-600" />
+                )}
+              </div>
+              <Icon className="w-3 h-3 text-gray-400" />
+              <span className="text-xs text-gray-600">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+  
+  // Comment Pin Component
+  const CommentPin = ({ comment, onResolve }) => (
+    <div className="absolute bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold cursor-pointer hover:bg-blue-600 transition-colors"
+         style={{ left: comment.x, top: comment.y }}
+         title={comment.comment}>
+      {comment.id % 10}
+    </div>
+  );
+  
+  // Toast Notification Component
+  const ToastNotification = ({ toast, onClose }) => {
+    if (!toast) return null;
+    
+    const getToastColor = (type) => {
+      switch (type) {
+        case 'success': return 'bg-green-500';
+        case 'error': return 'bg-red-500';
+        case 'warning': return 'bg-yellow-500';
+        default: return 'bg-blue-500';
+      }
+    };
+    
+    return (
+      <div className={`fixed bottom-4 left-4 ${getToastColor(toast.type)} text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 z-50`}>
+        <span className="text-sm">{toast.message}</span>
+        <button onClick={onClose} className="text-white hover:text-gray-200">
+          <FiX className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  };
+
+  // Main component return statement
+  return (
+    <div className="max-w-7xl mx-auto bg-white">
+      {/* Contextual Surface Banner */}
+      <ContextualBanner />
+      
+      <div className="p-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Concept Relationship Panel</h1>
+          <p className="text-gray-600">Configure content strategy and explore concept relationships with advanced analytics</p>
+        </div>
+
+        {/* Configuration Setup */}
+        <div className="px-6 py-6 bg-gray-50 border-b border-gray-200">
+          <div className="flex items-center mb-4">
+            <FiSettings className="mr-2 text-blue-600" size={20} />
+            <h2 className="text-lg font-semibold text-gray-900">Configuration Setup</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative">
+              <div className="absolute -top-2 -left-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">1</div>
+              <SearchableDropdown
+                options={surfaceTypeOptions}
+                value={configuration.surfaceType}
+                onChange={(value) => setConfiguration(prev => ({ ...prev, surfaceType: value }))}
+                placeholder="Select surface type"
+                label="Surface Type"
+              />
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-2 -left-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">2</div>
+              <SearchableDropdown
+                options={languageOptions}
+                value={configuration.language}
+                onChange={(value) => setConfiguration(prev => ({ ...prev, language: value }))}
+                placeholder="Select language"
+                label="Language"
+              />
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-2 -left-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">3</div>
+              <SearchableDropdown
+                options={toneStyleOptions}
+                value={configuration.toneStyle}
+                onChange={(value) => handleToneChange(value)}
+                placeholder="Select tone & style"
+                label="Tone & Style"
+              />
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-2 -left-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">4</div>
+              <SearchableDropdown
+                options={affinityOptions}
+                value={configuration.primaryConcept}
+                onChange={(value) => setConfiguration(prev => ({ ...prev, primaryConcept: value }))}
+                placeholder="Select primary concept"
+                label="Primary Concept"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+      <div className="flex">
+        {/* Left Column - Primary Concept & Weight Allocation */}
+        <div className="w-1/3 p-6 border-r border-gray-200">
+          {/* Primary Concept */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Primary Concept</h3>
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                    <span className="text-xs text-blue-600 font-medium">{getCTRLift(primary_concept.relevance_percentage)}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{primary_concept.name}</h4>
+                    <p className="text-sm text-gray-600">Primary amenity concept</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <span className="text-red-400">•</span>
+                  <span className="text-yellow-400">•</span>
+                  <span className="text-green-400">•</span>
+                  <span className="text-blue-400">•</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center mt-3">
+                <span className="text-sm text-gray-600">Dominance Weight: {weights.primary}%</span>
+                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Weight Allocation with Dial Overlay */}
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Weight Allocation</h2>
+            <div className="bg-gray-50 rounded-lg p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                  <WeightSlider 
+                    label="Primary Concept" 
+                    value={weights.primary} 
+                    color="#3b82f6" 
+                    onChange={(value) => handleWeightChange('primary', value)}
+                  />
+                  <WeightSlider 
+                    label="Secondary Concepts" 
+                    value={weights.secondary} 
+                    color="#10b981" 
+                    onChange={(value) => handleWeightChange('secondary', value)}
+                  />
+                  <WeightSlider 
+                    label="Tertiary Concepts" 
+                    value={weights.tertiary} 
+                    color="#f59e0b" 
+                    onChange={(value) => handleWeightChange('tertiary', value)}
+                  />
+                </div>
+                <div className="flex items-center justify-center">
+                  <WeightDialOverlay weights={weights} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle Column - Related Concepts */}
+        <div className="w-1/3 p-6 border-r border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Concepts</h3>
+          <div className="space-y-3">
+            {related_concepts.map((concept) => (
+              <RelatedConceptCard key={concept.id} concept={concept} />
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column - Content Variants */}
+        <div className="w-1/3 p-6">
+          {/* Content Variants */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Content Variants</h3>
+              <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                + Add Variant
+              </button>
+            </div>
+            
+            <div className="flex space-x-2 mb-4">
+              {['A', 'B', 'C'].map((variant) => (
+                <button
+                  key={variant}
+                  onClick={() => setActiveVariant(variant)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    activeVariant === variant 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Variant {variant}
+                </button>
+              ))}
+            </div>
+
+            {/* Variant Content */}
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              {activeVariant === 'A' && <VariantA />}
+              {activeVariant === 'B' && <VariantB />}
+              {activeVariant === 'C' && <VariantC />}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ConceptRelationshipPanel;

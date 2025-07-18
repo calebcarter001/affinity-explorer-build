@@ -1,0 +1,1378 @@
+{
+  "urn": "urn:expe:taxo:insights:luxury",
+  "label": "luxury",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "brand": "vrbo",
+        "lodgingType": "Any",
+        "version": "1"
+      },
+      "subScores": [
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spacious-room",
+                    "source": "review-sentiments",
+                    "label": "Spacious room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:comfortable-beds-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Comfortable beds"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:clean-room",
+                    "source": "review-sentiments",
+                    "label": "Clean (room)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "MUST_HAVE",
+              "description": "Must have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:good-room-service",
+                    "source": "review-sentiments",
+                    "label": "Good room service"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:friendly-staff",
+                    "source": "review-sentiments",
+                    "label": "Friendly staff"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:spa-available",
+                    "source": "review-sentiments",
+                    "label": "Spa available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:pool-available",
+                    "source": "review-sentiments",
+                    "label": "Pool available"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:game-room-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Game room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:movie-room-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Movie room"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:pool-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:michelin-star-restaurant-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Michelin star restaurant"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:panoramic-ocean-views-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Panoramic ocean views sentiment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:panoramic-mountain-views-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Panoramic mountain views sentiment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:panoramic-lake-views-sentiment",
+                    "source": "review-sentiments",
+                    "label": "Panoramic lake views sentiment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:luxury"
+        },
+        {
+          "formula": {
+            "type": "VariableNode",
+            "name": "WEIGHTED_AVERAGE_SCORE"
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.6,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these luxury theme concepts or awards",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#10b96a2d-83ee-40ba-b015-c556d1d8f2ce",
+                    "source": "attribute",
+                    "label": "LuxuryTheme"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#aaae5838-0bba-11ea-8d71-362b9e155667",
+                    "source": "attribute",
+                    "label": "LuxuryTheme:AuthorizedManualAddition"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6cccaf3e-10e4-4ae9-9d6e-aba3787524d9",
+                    "source": "attribute",
+                    "label": "SmallLuxuryHotelsOfTheWorld"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0dc27003-0717-4796-88b9-9574e5cc3c21",
+                    "source": "attribute",
+                    "label": "HistoricHotelsOfEurope"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7fb1cdd5-ac1a-4f6d-8744-9a9d1022f532",
+                    "source": "attribute",
+                    "label": "RelaisAndChateaux"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ae2c5811-e56d-4b5f-99e6-f90133997260",
+                    "source": "attribute",
+                    "label": "TravelAndLeisure500:(EndYear)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#389dc790-bf19-4868-813f-4d338a986a89",
+                    "source": "attribute",
+                    "label": "TravelAndLeisure500"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#da15bd98-d3ff-4626-9743-f393f5e258c1",
+                    "source": "attribute",
+                    "label": "HeritageHotelsOfIndia"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e3ccb7b3-4af7-496a-a390-37edba66e44a",
+                    "source": "attribute",
+                    "label": "PreferredHotelsAndResorts"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f7569231-5a33-4663-b8b8-1ec67b8c1c3a",
+                    "source": "attribute",
+                    "label": "HistoricHotelsOfTheWorld"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f7569231-5a33-4663-b8b8-1ec67b8c1c3a",
+                    "source": "attribute",
+                    "label": "LeadingHotelsOfTheWorld"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7d4fbd53-9147-4383-865e-0757154fef58",
+                    "source": "attribute",
+                    "label": "HistoricHotelsOfAmerica"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5bc13315-38ec-4909-9447-80c3ee142a94",
+                    "source": "attribute",
+                    "label": "CondeNastGoldList"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#024eae9f-b7e1-4d99-b4c9-776593c57e3a",
+                    "source": "attribute",
+                    "label": "CondeNastGoldList:(EndYear)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c6ea25d7-a81d-4d98-aa79-adbb3bae34ba",
+                    "source": "attribute",
+                    "label": "HellenicChamberBoutiqueHotel"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#45597aab-9744-4a78-9782-9250a1472f4f",
+                    "source": "attribute",
+                    "label": "CondeNastHotList:(EndYear)"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d2a22c4c-2644-49b7-a04b-1a8542b18adc",
+                    "source": "attribute",
+                    "label": "CondeNastHotList"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#42770b3b-5a82-4852-bf06-d6ce97c87a4f",
+                    "source": "attribute",
+                    "label": "AllInclusivePlan"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#342bba93-1aee-481c-b909-e67863fa756e",
+                    "source": "attribute",
+                    "label": "Spa:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c595cae8-d5e4-4b41-b14f-22db37556ab2",
+                    "source": "attribute",
+                    "label": "Golf:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e0b9331b-6098-49fb-a432-df2fe4efdf40",
+                    "source": "attribute",
+                    "label": "FitnessFacilities:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#df85de73-d521-49ef-810d-85994443fe10",
+                    "source": "attribute",
+                    "label": "WaterSports:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#60eae8a6-81c4-473c-8878-ba0e5ee8c3bf",
+                    "source": "attribute",
+                    "label": "PremiumFood:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e1df736e-ab00-410b-888f-034caa756792",
+                    "source": "attribute",
+                    "label": "RoomService:24Hour:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7535c641-fa9b-425f-bebd-2efe89cc262a",
+                    "source": "attribute",
+                    "label": "PremiumAlcohol:AllInclusive"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f9c2b208-68af-4b41-903c-6b28364dee2c",
+                    "source": "attribute",
+                    "label": "FitnessFacilities"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87f1b062-2b2c-4860-9253-db1753222c2c",
+                    "source": "attribute",
+                    "label": "FullBathroom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ad462ba6-a312-4cbb-8695-cec0b8631c41",
+                    "source": "attribute",
+                    "label": "JettedBathtub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#fe37c3d2-63ab-4926-b879-d4974e598280",
+                    "source": "attribute",
+                    "label": "Sauna"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ed6fe280-cb1a-4344-ad96-5f4937645330",
+                    "source": "attribute",
+                    "label": "DesignerToiletries"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9655ff48-43be-403a-ad1d-ac0ec7f07166",
+                    "source": "attribute",
+                    "label": "Bathrobes"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1161aede-fb56-4f11-bc1e-0e6d231cf440",
+                    "source": "attribute",
+                    "label": "PremiumBedding"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b17cefae-7ed2-44e6-87d5-8726f8ca7ba2",
+                    "source": "attribute",
+                    "label": "PillowMenu"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#931bfb4b-43cf-4e22-b732-70ad6c35638f",
+                    "source": "attribute",
+                    "label": "FretteItalianSheets"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f00beff4-1257-4301-a0eb-b78da7507f3d",
+                    "source": "attribute",
+                    "label": "EgyptianCottonSheets"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#1ab19cad-4ce6-450e-ad03-23a8aa76d89f",
+                    "source": "attribute",
+                    "label": "Heating"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#881461f9-b5c8-42f7-8b52-2cd38a7b7649",
+                    "source": "attribute",
+                    "label": "AirConditioning"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#c913dd8e-af88-42bc-b23f-7cbbdbc910ca",
+                    "source": "attribute",
+                    "label": "BusinessCenter"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#6039925d-7a3b-4ff3-9cac-76175e7a6d5f",
+                    "source": "attribute",
+                    "label": "ConferenceSpace"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a5bbc28b-27fe-48d4-a582-f9f1ca1fbd38",
+                    "source": "attribute",
+                    "label": "ClubLevelRoom:ExecutiveRoom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cd5de750-3de8-4068-812c-91c2864d96c0",
+                    "source": "attribute",
+                    "label": "Restaurant"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#59bc9512-5399-4bb3-9553-25a192f0dc3a",
+                    "source": "attribute",
+                    "label": "BarAndOrLounge"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#0000a3f9-0b23-461e-8415-53c0ae289852",
+                    "source": "attribute",
+                    "label": "Casino"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#d8525e3d-b796-4388-8802-297c67534e1f",
+                    "source": "attribute",
+                    "label": "ArcadeGameRoom"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a9fd487f-6909-4a93-928e-10d4d0b40795",
+                    "source": "attribute",
+                    "label": "AdventureTheme"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cb6dca79-dab5-4977-b0c5-2d9b369ce3be",
+                    "source": "attribute",
+                    "label": "Nightclub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#87670bc0-baaf-11e8-96f8-529269fb1459",
+                    "source": "attribute",
+                    "label": "ConcertsOrLiveShows"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#01897bd6-c096-4868-836f-1bbc194f8046",
+                    "source": "attribute",
+                    "label": "Concierge"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#f5bf768b-bf4a-4303-8135-de9ce7df036e",
+                    "source": "attribute",
+                    "label": "PrivateChef"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#718b9a0c-79d1-4b1a-8147-eddbb1b904b3",
+                    "source": "attribute",
+                    "label": "ValetParking"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.0,
+                  "penalty": 0.1,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "Not required but increases affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#a0891e6b-c020-4ed3-b3f5-4570ec585ad4",
+                    "source": "attribute",
+                    "label": "InfinityPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e249dd70-51a7-4532-86e0-b6a8665f2a7f",
+                    "source": "attribute",
+                    "label": "HeatedPool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#7a4414f1-9187-4c8d-8289-fd9e88ff758e",
+                    "source": "attribute",
+                    "label": "Pool:InRoom:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#cf0c4550-0af4-4021-b1f4-7562c63939c2",
+                    "source": "attribute",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.5,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#5b4ec696-0702-4435-a5ff-7b9db64c36e7",
+                    "source": "attribute",
+                    "label": "WaterPark"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {},
+          "categoryUrn": "urn:expe:taxo:insights:luxury"
+        },
+        {
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.15,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Should have one of these concepts",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:coffee-and-or-coffee-maker",
+                    "source": "media-descriptors",
+                    "label": "Coffee and/or coffee maker"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:food-and-drink",
+                    "source": "media-descriptors",
+                    "label": "Food and drink"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-dining",
+                    "source": "media-descriptors",
+                    "label": "Indoor dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:dining",
+                    "source": "media-descriptors",
+                    "label": "Dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:bar",
+                    "source": "media-descriptors",
+                    "label": "Bar"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-dining",
+                    "source": "media-descriptors",
+                    "label": "Outdoor dining"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:fitness-facility",
+                    "source": "media-descriptors",
+                    "label": "Fitness facility"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-facility",
+                    "source": "media-descriptors",
+                    "label": "Spa facility"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Indoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:pool",
+                    "source": "media-descriptors",
+                    "label": "Pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-pool",
+                    "source": "media-descriptors",
+                    "label": "Outdoor pool"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:indoor-spa-tub",
+                    "source": "media-descriptors",
+                    "label": "Indoor spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:marina",
+                    "source": "media-descriptors",
+                    "label": "Marina"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:laundry",
+                    "source": "media-descriptors",
+                    "label": "Laundry"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:gift-shop",
+                    "source": "media-descriptors",
+                    "label": "Gift shop"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:fireplace",
+                    "source": "media-descriptors",
+                    "label": "Fireplace"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:banquet-hall",
+                    "source": "media-descriptors",
+                    "label": "Banquet hall"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa",
+                    "source": "media-descriptors",
+                    "label": "Spa"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-treatment",
+                    "source": "media-descriptors",
+                    "label": "Spa treatment"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-reception",
+                    "source": "media-descriptors",
+                    "label": "Spa reception"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-spa-tub",
+                    "source": "media-descriptors",
+                    "label": "Outdoor spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.4,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:spa-tub",
+                    "source": "media-descriptors",
+                    "label": "Spa tub"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:sauna",
+                    "source": "media-descriptors",
+                    "label": "Sauna"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:breakfast",
+                    "source": "media-descriptors",
+                    "label": "Breakfast"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:golf-course",
+                    "source": "media-descriptors",
+                    "label": "Golf course"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:golfing",
+                    "source": "media-descriptors",
+                    "label": "Golfing"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:beach-ocean-view",
+                    "source": "media-descriptors",
+                    "label": "Beach ocean view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:casino",
+                    "source": "media-descriptors",
+                    "label": "Casino"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:shows-and-performances",
+                    "source": "media-descriptors",
+                    "label": "Shows and performances"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.0,
+                  "metadata": {}
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:business-center",
+                    "source": "media-descriptors",
+                    "label": "Business center"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.0,
+                  "metadata": {}
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:luxury"
+        }
+      ],
+      "formula": {
+        "type": "VariableNode",
+        "name": "WEIGHTED_AVERAGE_SCORE"
+      },
+      "status": "STAGED"
+    }
+  ]
+}

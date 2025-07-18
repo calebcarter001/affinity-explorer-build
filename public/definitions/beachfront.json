@@ -1,0 +1,502 @@
+{
+  "urn": "urn:expe:taxo:insights:beach:beach-front",
+  "label": "beach front",
+  "definitions": [
+    {
+      "context": {
+        "entityType": "property",
+        "lodgingType": "Any",
+        "brand": "expedia",
+        "version": "1"
+      },
+      "status": "APPROVED",
+      "subScores": [
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:attribute",
+          "weight": 0.20,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "must have at least 1 Beach access concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b2870f14-ced6-4619-94b2-1bdcb6363d35",
+                    "source": "attribute",
+                    "label": "Beach:NearbyLocation:DirectAccess"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#9fdb2f43-cdaf-4484-9b58-5473164a04b4",
+                    "source": "attribute",
+                    "label": "Beach:NearbyLocation:DirectAccess:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#58b98d8e-896a-4fbb-a20d-23b229c6a23e",
+                    "source": "attribute",
+                    "label": "Beach:SiteLocation"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#21ee58bf-e8e0-4327-9176-d564957cf49c",
+                    "source": "attribute",
+                    "label": "Beach:SiteLocation:Private"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            },
+            {
+              "type": "OPTIONAL",
+              "description": "having 1 Beach view/amenity concept should improve affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#47d15536-3292-4b65-b96e-812ad827e7e6",
+                    "source": "attribute",
+                    "label": "Free beach cabanas"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#aec7f17a-b363-472c-82a7-ab5ace6ee8e8",
+                    "source": "attribute",
+                    "label": "BeachSunLoungers"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#b1382733-6d88-4c2c-b3ca-bbb80a1b37a5",
+                    "source": "attribute",
+                    "label": "Beach towels"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#83da41e6-8474-4704-9a82-93efbaf15601",
+                    "source": "attribute",
+                    "label": "Beach umbrellas"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2cdc39fe-077a-4f7c-a905-1a20e4d700ef",
+                    "source": "attribute",
+                    "label": "Beach view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#ffef1fca-be3d-4a29-851d-c24ff75eaf5a",
+                    "source": "attribute",
+                    "label": "Ocean view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#e388762b-f47d-4b77-b1d1-8e24d20c5d86",
+                    "source": "attribute",
+                    "label": "Sea view"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:acs:#2a15c6b4-8f83-4f47-98e1-706c86e57847",
+                    "source": "attribute",
+                    "label": "BeachVolleyball:Onsite"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "left": {
+              "left": {
+                "name": "WEIGHTED_AVERAGE_SCORE",
+                "type": "VariableNode"
+              },
+              "right": {
+                "name": "WEIGHTED_AVERAGE_PENALTY",
+                "type": "VariableNode"
+              },
+              "operator": "SUBTRACT",
+              "type": "BinaryOperation"
+            },
+            "right": {
+              "name": "WEIGHTED_AVERAGE_NEGATIVE_ATTRIBUTES",
+              "type": "VariableNode"
+            },
+            "operator": "SUBTRACT",
+            "type": "BinaryOperation"
+          },
+          "categoryUrn": "urn:expe:taxo:insights:beach:beach-front",
+          "metadata": null
+        },
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:review-sentiments",
+          "weight": 0.20,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Not required, but having positive sentiment should increase overall affinty score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beach-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.9,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:ocean-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.7,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beachy-vibe-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.25,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beachfront-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:location-beach-nearby",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.3,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beach-view-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:beach-equipment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:heated-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:infinity-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.15,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:outdoor-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.1,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:review-sentiments:private-pool-sentiment",
+                    "source": "review-sentiments"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.05,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "name": "WEIGHTED_AVERAGE_SCORE",
+            "type": "VariableNode"
+          },
+          "categoryUrn": "urn:expe:taxo:insights:beach:beach-front",
+          "metadata": null
+        },
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:geo",
+          "weight": 0.35,
+          "rules": [
+            {
+              "type": "MUST_HAVE",
+              "description": "must have atleast 1 water body concept",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expediagroup:taxonomies:places:#e7e082ed-8301-4fba-b19c-02c48208951e",
+                    "source": "places",
+                    "label": "beach"
+                  },
+                  "operator": "LESS_THAN",
+                  "rhs": {
+                    "value": 0.2,
+                    "type": "DoubleValue"
+                  },
+                  "weight": 1,
+                  "penalty": 0.1,
+                  "metadata": {
+                    "walking_distance_decay_constant": {
+                      "value": 0.005,
+                      "type": "DoubleValue"
+                    },
+                    "walking_distance_factor_constant": {
+                      "value": 0.4,
+                      "type": "DoubleValue"
+                    },
+                    "distance_type": {
+                      "value": "WALKING",
+                      "type": "StringValue"
+                    }
+                  }
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "name": "WEIGHTED_AVERAGE_DISTANCE_SCORE",
+            "type": "VariableNode"
+          },
+          "categoryUrn": "urn:expe:taxo:insights:beach:beach-front",
+          "metadata": null
+        },
+        {
+          "urn": "urn:expe:taxo:insights:affinity-score:images",
+          "weight": 0.25,
+          "rules": [
+            {
+              "type": "OPTIONAL",
+              "description": "Having 1 photo featuring a beach should improve affinity score",
+              "logicalOperator": "OR",
+              "conditions": [
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:beach",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 1.0,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:beach-ocean-view",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:body-of-water",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:marina",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.8,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:summer",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.6,
+                  "penalty": 0.1
+                },
+                {
+                  "lhs": {
+                    "urn": "urn:expe:taxo:media-descriptors:outdoor-activity",
+                    "source": "media-descriptors"
+                  },
+                  "operator": "EXISTS",
+                  "rhs": null,
+                  "weight": 0.2,
+                  "penalty": 0.1
+                }
+              ],
+              "rules": []
+            }
+          ],
+          "formula": {
+            "type": "BinaryOperation",
+            "operator": "MULTIPLY",
+            "left": {
+              "type": "BinaryOperation",
+              "operator": "MULTIPLY",
+              "left": {
+                "type": "BinaryOperation",
+                "operator": "MULTIPLY",
+                "left": {
+                  "type": "BinaryOperation",
+                  "operator": "SUBTRACT",
+                  "left": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_SCORE"
+                  },
+                  "right": {
+                    "type": "VariableNode",
+                    "name": "WEIGHTED_AVERAGE_NEGATIVE_SCORE"
+                  }
+                },
+                "right": {
+                  "type": "VariableNode",
+                  "name": "COVERAGE_FACTOR"
+                }
+              },
+              "right": {
+                "type": "VariableNode",
+                "name": "DIVERSITY_FACTOR"
+              }
+            },
+            "right": {
+              "type": "VariableNode",
+              "name": "PENALTY"
+            }
+          },
+          "categoryUrn": "urn:expe:taxo:insights:beach:beach-front",
+          "metadata": {
+            "positive_adjustment_to_reward_limited_reinforcement": {
+              "value": 0.1,
+              "type": "DoubleValue"
+            }
+          }
+        }
+      ],
+      "formula": {
+        "name": "WEIGHTED_AVERAGE_SCORE",
+        "type": "VariableNode"
+      }
+    }
+  ]
+}

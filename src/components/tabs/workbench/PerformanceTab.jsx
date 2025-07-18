@@ -12,6 +12,7 @@ import SearchBar from './PerformanceTabParts/SearchBar';
 import Pagination from './PerformanceTabParts/Pagination';
 import AffinityDetailsPanel from './PerformanceTabParts/AffinityDetailsPanel';
 import { useAppContext } from '../../../contexts/AppContext';
+import SearchableDropdown from '../../common/SearchableDropdown';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -237,24 +238,22 @@ const PerformanceTab = () => {
         {/* Time Period Controls */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <select
-              value={selectedYear}
-              onChange={(e) => { setSelectedYear(Number(e.target.value)); }}
-              className="border rounded px-3 py-1"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-            <select
-              value={selectedQuarter}
-              onChange={(e) => { setSelectedQuarter(Number(e.target.value)); }}
-              className="border rounded px-3 py-1"
-            >
-              {quarters.map((quarter) => (
-                <option key={quarter} value={quarter}>Q{quarter}</option>
-              ))}
-            </select>
+            <SearchableDropdown
+              options={years.map(year => ({ value: year, label: year.toString() }))}
+              value={{ value: selectedYear, label: selectedYear.toString() }}
+              onChange={(option) => setSelectedYear(option ? Number(option.value) : new Date().getFullYear())}
+              placeholder="Select year..."
+              className="w-24"
+              noOptionsMessage="No years found"
+            />
+            <SearchableDropdown
+              options={quarters.map(quarter => ({ value: quarter, label: `Q${quarter}` }))}
+              value={{ value: selectedQuarter, label: `Q${selectedQuarter}` }}
+              onChange={(option) => setSelectedQuarter(option ? Number(option.value) : 1)}
+              placeholder="Select quarter..."
+              className="w-24"
+              noOptionsMessage="No quarters found"
+            />
           </div>
           {/* Print Button */}
           <button

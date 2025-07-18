@@ -13,6 +13,7 @@ import './styles/agents.css';
 
 // Lazy load page components
 const Dashboard = lazy(() => import('./components/Dashboard'));
+const AffinityScorecard = lazy(() => import('./components/tabs/AffinityScorecard'));
 const AgentView = lazy(() => import('./components/tabs/AgentView'));
 const AffinityLibrary = lazy(() => import('./components/tabs/AffinityLibrary'));
 const ScoringExplorer = lazy(() => import('./components/tabs/ScoringExplorer'));
@@ -21,10 +22,14 @@ const LifecycleTracker = lazy(() => import('./components/tabs/LifecycleTracker')
 const AffinityCombination = lazy(() => import('./components/tabs/AffinityCombination'));
 const ImplementationGuide = lazy(() => import('./components/tabs/ImplementationGuide'));
 const ReportsAnalytics = lazy(() => import('./components/tabs/ReportsAnalytics'));
-const Settings = lazy(() => import('./components/tabs/Settings'));
+const Settings = lazy(() => import('./pages/Settings'));
 const HelpSupport = lazy(() => import('./components/tabs/HelpSupport'));
 const AnalyticsDashboard = lazy(() => import('./components/admin/AnalyticsDashboard'));
 const Workbench = lazy(() => import('./components/tabs/Workbench'));
+const LastMileView = lazy(() => import('./components/tabs/LastMileView'));
+const SentimentInsights = lazy(() => import('./components/tabs/SentimentInsights'));
+const ConceptRelationshipInsights = lazy(() => import('./components/crp/ConceptRelationshipPanel'));
+const AffinityConfigurationStudio = lazy(() => import('./components/tabs/AffinityConfigurationStudio'));
 const DestinationInsightsPage = lazy(() => import('./pages/DestinationInsightsPage'));
 
 // Simple loading fallback component - replace with your actual spinner if you have one
@@ -126,6 +131,14 @@ const App = () => {
                         </ProtectedRoute>
                       } />
                       
+                      <Route path="/scorecard" element={
+                        <ProtectedRoute requiredPermissions={['read']}>
+                          <AppLayout>
+                            <AffinityScorecard />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
                       <Route path="/affinities" element={
                         <ProtectedRoute requiredPermissions={['read']}>
                           <AppLayout>
@@ -146,6 +159,14 @@ const App = () => {
                         <ProtectedRoute requiredPermissions={['read', 'write']}>
                           <AppLayout>
                             <ContentStudio />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/content-studio/concept-relationship-panel" element={
+                        <ProtectedRoute requiredPermissions={['read', 'write']}>
+                          <AppLayout>
+                            <ConceptRelationshipInsights />
                           </AppLayout>
                         </ProtectedRoute>
                       } />
@@ -213,6 +234,30 @@ const App = () => {
                         <ProtectedRoute>
                           <AppLayout>
                             <Workbench />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/last-mile" element={
+                        <ProtectedRoute>
+                          <AppLayout>
+                            <LastMileView />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/sentiment-insights" element={
+                        <ProtectedRoute requiredPermissions={['read']}>
+                          <AppLayout>
+                            <SentimentInsights />
+                          </AppLayout>
+                        </ProtectedRoute>
+                      } />
+                      
+                      <Route path="/affinity-configuration-studio" element={
+                        <ProtectedRoute requiredPermissions={['read']}>
+                          <AppLayout>
+                            <AffinityConfigurationStudio />
                           </AppLayout>
                         </ProtectedRoute>
                       } />

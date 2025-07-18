@@ -2,6 +2,7 @@ import { cacheService } from './cacheService';
 import axios from 'axios';
 import API_CONFIG from '../config/appConfig';
 import { baliProperties } from './mockData/bali_properties';
+import affinityDefinitionService from './affinityDefinitionService';
 
 // Utility function for creating delays
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -138,58 +139,6 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 // Mock data for the application
 const affinityConcepts = [
   {
-    id: "aff1",
-    name: "Pet-Friendly",
-    type: "travel",
-    category: "amenity",
-    scoreAvailable: true,
-    definition: "Properties that welcome pets and provide pet-friendly amenities",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "vacation_rental"],
-    metrics: {
-      accuracy: 0.85,
-      coverage: 72,
-      completeness: 0.89,
-      lastValidated: "2024-03-15"
-    },
-    averageScore: 0.82,
-    highestScore: 0.95,
-    lowestScore: 0.65,
-    coverage: 72,
-    propertiesTagged: 156,
-    propertiesWithScore: 142,
-    // Brand-specific property tracking
-    propertiesTaggedVrbo: 85,
-    propertiesTaggedBex: 45,
-    propertiesTaggedHcom: 26,
-    propertiesScoredVrbo: 82,
-    propertiesScoredBex: 42,
-    propertiesScoredHcom: 18,
-    // Implementation metadata
-    implementationStatus: {
-      vrbo: {
-        status: "completed",
-        progress: 96,
-        lastUpdated: "2024-03-15",
-        owner: "Team Alpha"
-      },
-      bex: {
-        status: "in-progress",
-        progress: 93,
-        lastUpdated: "2024-03-14",
-        owner: "Team Beta"
-      },
-      hcom: {
-        status: "at-risk",
-        progress: 69,
-        lastUpdated: "2024-03-13",
-        owner: "Team Gamma"
-      }
-    },
-    dateCreated: "2024-01-15",
-    lastUpdatedDate: "2024-03-15"
-  },
-  {
     id: "aff2",
     name: "Romantic",
     type: "travel",
@@ -203,6 +152,64 @@ const affinityConcepts = [
       coverage: 65,
       completeness: 0.82,
       lastValidated: "2024-03-10"
+    },
+    scorecard: {
+      coverage: {
+        current: 68,
+        target: 85,
+        trend: "+1.8%",
+        description: "Proportion of eligible properties that receive a romantic tag",
+        status: "warning"
+      },
+      accuracy: {
+        current: 84,
+        target: 90,
+        trend: "+0.9%",
+        description: "Precision and recall against human-labeled romantic properties",
+        status: "warning"
+      },
+      explainability: {
+        current: 91,
+        target: 95,
+        trend: "+2.1%",
+        description: "Percentage of scores with visible evidence anchors",
+        status: "good"
+      },
+      freshness: {
+        current: 4,
+        target: 2,
+        trend: "+2 days",
+        description: "Days since last full score refresh",
+        status: "warning"
+      },
+      engagement: {
+        current: 15.2,
+        target: 18,
+        trend: "+2.3%",
+        description: "CTR lift versus neutral baseline in A/B tests",
+        status: "warning",
+        impressions: {
+          current: 128.4,
+          target: 150,
+          trend: "+4.2%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 11.8,
+        target: 15,
+        trend: "+1.4%",
+        description: "CVR and gross profit lift from romantic-tagged properties",
+        status: "warning"
+      },
+      stability: {
+        current: 79,
+        target: 90,
+        trend: "-1.2%",
+        description: "Week-over-week score consistency (100% = no drift)",
+        status: "warning"
+      }
     },
     averageScore: 0.75,
     highestScore: 0.88,
@@ -242,110 +249,6 @@ const affinityConcepts = [
     lastUpdatedDate: "2024-03-10"
   },
   {
-    id: "aff3",
-    name: "Family-Friendly",
-    type: "travel",
-    category: "amenity",
-    scoreAvailable: true,
-    definition: "Properties suitable for families with children",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "vacation_rental"],
-    metrics: {
-      accuracy: 0.92,
-      coverage: 81,
-      completeness: 0.95,
-      lastValidated: "2024-03-20"
-    },
-    averageScore: 0.89,
-    highestScore: 0.98,
-    lowestScore: 0.75,
-    coverage: 81,
-    propertiesTagged: 178,
-    propertiesWithScore: 165,
-    // Platform-specific property tracking
-    propertiesTaggedVrbo: 95,
-    propertiesTaggedBex: 48,
-    propertiesTaggedHcom: 35,
-    propertiesScoredVrbo: 92,
-    propertiesScoredBex: 45,
-    propertiesScoredHcom: 28,
-    // Implementation metadata
-    implementationStatus: {
-      vrbo: {
-        status: "completed",
-        progress: 97,
-        lastUpdated: "2024-03-20",
-        owner: "Team Alpha"
-      },
-      bex: {
-        status: "completed",
-        progress: 94,
-        lastUpdated: "2024-03-19",
-        owner: "Team Beta"
-      },
-      hcom: {
-        status: "in-progress",
-        progress: 80,
-        lastUpdated: "2024-03-18",
-        owner: "Team Gamma"
-      }
-    },
-    dateCreated: "2024-01-17",
-    lastUpdatedDate: "2024-03-20"
-  },
-  {
-    id: "aff4",
-    name: "Luxury",
-    type: "travel",
-    category: "experience",
-    scoreAvailable: true,
-    definition: "High-end properties offering premium amenities and services",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "boutique"],
-    metrics: {
-      accuracy: 0.88,
-      coverage: 45,
-      completeness: 0.91,
-      lastValidated: "2024-03-18"
-    },
-    averageScore: 0.85,
-    highestScore: 0.92,
-    lowestScore: 0.78,
-    coverage: 45,
-    propertiesTagged: 98,
-    propertiesWithScore: 92,
-    // Adding platform-specific property tracking
-    propertiesTaggedVrbo: 45,
-    propertiesTaggedBex: 30,
-    propertiesTaggedHcom: 23,
-    propertiesScoredVrbo: 42,
-    propertiesScoredBex: 28,
-    propertiesScoredHcom: 22,
-    // Adding implementation metadata
-    implementationStatus: {
-      vrbo: {
-        status: "completed",
-        progress: 93,
-        lastUpdated: "2024-03-18",
-        owner: "Team Alpha"
-      },
-      bex: {
-        status: "completed",
-        progress: 93,
-        lastUpdated: "2024-03-17",
-        owner: "Team Beta"
-      },
-      hcom: {
-        status: "in-progress",
-        progress: 96,
-        lastUpdated: "2024-03-16",
-        owner: "Team Gamma"
-      }
-    },
-    dateCreated: "2024-01-18",
-    lastUpdatedDate: "2024-03-18"
-  },
-  {
     id: "aff5",
     name: "Business",
     type: "travel",
@@ -359,6 +262,64 @@ const affinityConcepts = [
       coverage: 68,
       completeness: 0.88,
       lastValidated: "2024-03-12"
+    },
+    scorecard: {
+      coverage: {
+        current: 95,
+        target: 90,
+        trend: "+4.2%",
+        description: "Business-suitable properties receiving appropriate tags",
+        status: "excellent"
+      },
+      accuracy: {
+        current: 98,
+        target: 94,
+        trend: "+2.6%",
+        description: "Precision in identifying genuine business travel properties",
+        status: "excellent"
+      },
+      explainability: {
+        current: 97,
+        target: 95,
+        trend: "+1.8%",
+        description: "Business amenity evidence clearly surfaced to travelers",
+        status: "excellent"
+      },
+      freshness: {
+        current: 1,
+        target: 2,
+        trend: "stable",
+        description: "Real-time business facility and service updates",
+        status: "excellent"
+      },
+      engagement: {
+        current: 19.4,
+        target: 20,
+        trend: "+3.1%",
+        description: "Business traveler click-through rate improvements",
+        status: "good",
+        impressions: {
+          current: 189.7,
+          target: 195,
+          trend: "+6.8%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 22.7,
+        target: 18,
+        trend: "+7.3%",
+        description: "Business booking conversion and revenue impact",
+        status: "excellent"
+      },
+      stability: {
+        current: 94,
+        target: 95,
+        trend: "+0.3%",
+        description: "Consistent business property scoring across markets",
+        status: "good"
+      }
     },
     averageScore: 0.83,
     highestScore: 0.90,
@@ -412,6 +373,64 @@ const affinityConcepts = [
       completeness: 0.91,
       lastValidated: "2024-03-20"
     },
+    scorecard: {
+      coverage: {
+        current: 72,
+        target: 80,
+        trend: "+3.4%",
+        description: "All-inclusive resorts properly identified and tagged",
+        status: "good"
+      },
+      accuracy: {
+        current: 96,
+        target: 95,
+        trend: "+2.1%",
+        description: "Accuracy in identifying true all-inclusive properties",
+        status: "excellent"
+      },
+      explainability: {
+        current: 93,
+        target: 98,
+        trend: "+1.7%",
+        description: "Clear package details and inclusions shown to travelers",
+        status: "good"
+      },
+      freshness: {
+        current: 1,
+        target: 1,
+        trend: "stable",
+        description: "Up-to-date package offerings and seasonal changes",
+        status: "excellent"
+      },
+      engagement: {
+        current: 32.1,
+        target: 28,
+        trend: "+12.4%",
+        description: "All-inclusive filter engagement and click-through rates",
+        status: "excellent",
+        impressions: {
+          current: 267.3,
+          target: 200,
+          trend: "+22.8%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 28.5,
+        target: 22,
+        trend: "+9.7%",
+        description: "Higher conversion rates for all-inclusive bookings",
+        status: "excellent"
+      },
+      stability: {
+        current: 86,
+        target: 92,
+        trend: "+1.9%",
+        description: "Consistent all-inclusive property identification",
+        status: "good"
+      }
+    },
     averageScore: 0.84,
     highestScore: 0.96,
     lowestScore: 0.72,
@@ -463,6 +482,64 @@ const affinityConcepts = [
       completeness: 0.94,
       lastValidated: "2024-03-19"
     },
+    scorecard: {
+      coverage: {
+        current: 92,
+        target: 90,
+        trend: "+4.7%",
+        description: "Oceanfront properties with verified view availability",
+        status: "excellent"
+      },
+      accuracy: {
+        current: 98,
+        target: 98,
+        trend: "+0.9%",
+        description: "Precision in ocean view room and property identification",
+        status: "excellent"
+      },
+      explainability: {
+        current: 96,
+        target: 96,
+        trend: "+0.3%",
+        description: "View photos and room-specific ocean access details",
+        status: "excellent"
+      },
+      freshness: {
+        current: 1,
+        target: 1,
+        trend: "stable",
+        description: "Real-time view availability and seasonal changes",
+        status: "excellent"
+      },
+      engagement: {
+        current: 28.4,
+        target: 25,
+        trend: "+9.2%",
+        description: "High engagement with ocean view search filters",
+        status: "excellent",
+        impressions: {
+          current: 304.8,
+          target: 250,
+          trend: "+18.9%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 22.1,
+        target: 19,
+        trend: "+6.8%",
+        description: "Premium conversion rates for ocean view bookings",
+        status: "excellent"
+      },
+      stability: {
+        current: 99,
+        target: 95,
+        trend: "+0.4%",
+        description: "Consistent ocean view property scoring",
+        status: "excellent"
+      }
+    },
     averageScore: 0.88,
     highestScore: 0.98,
     lowestScore: 0.75,
@@ -499,108 +576,7 @@ const affinityConcepts = [
     dateCreated: "2024-01-21",
     lastUpdatedDate: "2024-03-19"
   },
-  {
-    id: "aff8",
-    name: "Spa & Wellness",
-    type: "travel",
-    category: "amenity",
-    scoreAvailable: true,
-    definition: "Properties offering spa services, wellness programs, and relaxation amenities",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "boutique"],
-    metrics: {
-      accuracy: 0.86,
-      coverage: 55,
-      completeness: 0.88,
-      lastValidated: "2024-03-18"
-    },
-    averageScore: 0.82,
-    highestScore: 0.94,
-    lowestScore: 0.68,
-    coverage: 55,
-    propertiesTagged: 120,
-    propertiesWithScore: 112,
-    // Add platform-specific property tracking
-    propertiesTaggedVrbo: 65,
-    propertiesTaggedBex: 35,
-    propertiesTaggedHcom: 20,
-    propertiesScoredVrbo: 62,
-    propertiesScoredBex: 32,
-    propertiesScoredHcom: 18,
-    implementationStatus: {
-      vrbo: {
-        status: "completed",
-        progress: 94,
-        lastUpdated: "2024-03-18",
-        owner: "Team Alpha"
-      },
-      bex: {
-        status: "in-progress",
-        progress: 88,
-        lastUpdated: "2024-03-17",
-        owner: "Team Beta"
-      },
-      hcom: {
-        status: "in-progress",
-        progress: 82,
-        lastUpdated: "2024-03-16",
-        owner: "Team Gamma"
-      }
-    },
-    dateCreated: "2024-01-22",
-    lastUpdatedDate: "2024-03-18"
-  },
-  {
-    id: "aff9",
-    name: "Beach",
-    type: "travel",
-    category: "location",
-    scoreAvailable: true,
-    definition: "Properties with direct beach access or located near beaches",
-    status: "active",
-    applicableEntities: ["hotel", "resort", "vacation_rental"],
-    metrics: {
-      accuracy: 0.94,
-      coverage: 42,
-      completeness: 0.96,
-      lastValidated: "2024-03-17"
-    },
-    averageScore: 0.90,
-    highestScore: 0.99,
-    lowestScore: 0.78,
-    coverage: 42,
-    propertiesTagged: 92,
-    propertiesWithScore: 88,
-    // Add platform-specific property tracking
-    propertiesTaggedVrbo: 48,
-    propertiesTaggedBex: 26,
-    propertiesTaggedHcom: 18,
-    propertiesScoredVrbo: 46,
-    propertiesScoredBex: 25,
-    propertiesScoredHcom: 17,
-    implementationStatus: {
-      vrbo: {
-        status: "completed",
-        progress: 98,
-        lastUpdated: "2024-03-17",
-        owner: "Team Alpha"
-      },
-      bex: {
-        status: "completed",
-        progress: 97,
-        lastUpdated: "2024-03-16",
-        owner: "Team Beta"
-      },
-      hcom: {
-        status: "completed",
-        progress: 95,
-        lastUpdated: "2024-03-15",
-        owner: "Team Gamma"
-      }
-    },
-    dateCreated: "2024-01-23",
-    lastUpdatedDate: "2024-03-17"
-  },
+
   {
     id: "aff10",
     name: "Historic & Cultural",
@@ -615,6 +591,64 @@ const affinityConcepts = [
       coverage: 28,
       completeness: 0.91,
       lastValidated: "2024-03-14"
+    },
+    scorecard: {
+      coverage: {
+        current: 52,
+        target: 80,
+        trend: "+0.8%",
+        description: "Historic properties and cultural landmarks properly tagged",
+        status: "critical"
+      },
+      accuracy: {
+        current: 78,
+        target: 85,
+        trend: "+1.2%",
+        description: "Authentic historic and cultural significance validation",
+        status: "warning"
+      },
+      explainability: {
+        current: 85,
+        target: 92,
+        trend: "+1.4%",
+        description: "Rich historical context and cultural details provided",
+        status: "warning"
+      },
+      freshness: {
+        current: 8,
+        target: 3,
+        trend: "+2 days",
+        description: "Updated cultural event schedules and historic site access",
+        status: "critical"
+      },
+      engagement: {
+        current: 9.7,
+        target: 15,
+        trend: "+0.6%",
+        description: "Cultural traveler engagement with heritage filters",
+        status: "critical",
+        impressions: {
+          current: 45.8,
+          target: 80,
+          trend: "+1.2%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 6.4,
+        target: 12,
+        trend: "+0.3%",
+        description: "Cultural tourism bookings and extended stays",
+        status: "critical"
+      },
+      stability: {
+        current: 67,
+        target: 85,
+        trend: "-1.8%",
+        description: "Consistent cultural property identification",
+        status: "critical"
+      }
     },
     averageScore: 0.86,
     highestScore: 0.96,
@@ -666,6 +700,64 @@ const affinityConcepts = [
       completeness: 0.93,
       lastValidated: "2024-03-16"
     },
+    scorecard: {
+      coverage: {
+        current: 89,
+        target: 85,
+        trend: "+6.3%",
+        description: "Adventure and sports properties with activity offerings",
+        status: "excellent"
+      },
+      accuracy: {
+        current: 81,
+        target: 88,
+        trend: "+1.4%",
+        description: "Verified adventure activities and sports facility availability",
+        status: "warning"
+      },
+      explainability: {
+        current: 76,
+        target: 85,
+        trend: "+2.8%",
+        description: "Detailed activity descriptions and equipment availability",
+        status: "warning"
+      },
+      freshness: {
+        current: 2,
+        target: 1,
+        trend: "+1 day",
+        description: "Real-time activity schedules and seasonal availability",
+        status: "warning"
+      },
+      engagement: {
+        current: 38.9,
+        target: 30,
+        trend: "+18.7%",
+        description: "High engagement from adventure travelers and sports enthusiasts",
+        status: "excellent",
+        impressions: {
+          current: 425.6,
+          target: 300,
+          trend: "+35.2%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 31.2,
+        target: 25,
+        trend: "+14.8%",
+        description: "Strong conversion for adventure activity packages",
+        status: "excellent"
+      },
+      stability: {
+        current: 73,
+        target: 85,
+        trend: "+1.9%",
+        description: "Seasonal stability for adventure property scoring",
+        status: "warning"
+      }
+    },
     averageScore: 0.88,
     highestScore: 0.97,
     lowestScore: 0.75,
@@ -715,6 +807,64 @@ const affinityConcepts = [
       coverage: 64,
       completeness: 0.89,
       lastValidated: "2024-03-19"
+    },
+    scorecard: {
+      coverage: {
+        current: 96,
+        target: 95,
+        trend: "+3.8%",
+        description: "Budget properties and value offerings properly identified",
+        status: "excellent"
+      },
+      accuracy: {
+        current: 82,
+        target: 90,
+        trend: "+0.7%",
+        description: "Accurate value assessment against market pricing",
+        status: "warning"
+      },
+      explainability: {
+        current: 79,
+        target: 88,
+        trend: "+1.3%",
+        description: "Clear value propositions and cost breakdown visibility",
+        status: "warning"
+      },
+      freshness: {
+        current: 2,
+        target: 1,
+        trend: "+1 day",
+        description: "Real-time pricing updates and promotional offers",
+        status: "warning"
+      },
+      engagement: {
+        current: 35.2,
+        target: 32,
+        trend: "+11.4%",
+        description: "High engagement with budget and value filters",
+        status: "excellent",
+        impressions: {
+          current: 412.6,
+          target: 350,
+          trend: "+24.3%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 29.8,
+        target: 24,
+        trend: "+8.6%",
+        description: "Strong conversion rates for budget-conscious travelers",
+        status: "excellent"
+      },
+      stability: {
+        current: 76,
+        target: 85,
+        trend: "+1.9%",
+        description: "Pricing stability and consistent value scoring",
+        status: "warning"
+      }
     },
     averageScore: 0.83,
     highestScore: 0.94,
@@ -766,6 +916,64 @@ const affinityConcepts = [
       completeness: 0.86,
       lastValidated: "2024-03-21"
     },
+    scorecard: {
+      coverage: {
+        current: 47,
+        target: 70,
+        trend: "+2.1%",
+        description: "Certified eco-friendly and sustainable properties identified",
+        status: "critical"
+      },
+      accuracy: {
+        current: 73,
+        target: 85,
+        trend: "+1.8%",
+        description: "Verified sustainability certifications and green practices",
+        status: "warning"
+      },
+      explainability: {
+        current: 94,
+        target: 90,
+        trend: "+3.7%",
+        description: "Detailed sustainability initiatives and environmental impact",
+        status: "excellent"
+      },
+      freshness: {
+        current: 6,
+        target: 3,
+        trend: "+1 day",
+        description: "Updated green certifications and eco-program changes",
+        status: "warning"
+      },
+      engagement: {
+        current: 24.3,
+        target: 18,
+        trend: "+8.9%",
+        description: "Growing eco-conscious traveler engagement",
+        status: "excellent",
+        impressions: {
+          current: 156.8,
+          target: 110,
+          trend: "+19.4%",
+          unit: "M",
+          description: "Total impressions generated till date"
+        }
+      },
+      conversion: {
+        current: 18.7,
+        target: 14,
+        trend: "+6.2%",
+        description: "Increasing bookings from sustainability-focused travelers",
+        status: "excellent"
+      },
+      stability: {
+        current: 82,
+        target: 90,
+        trend: "+1.4%",
+        description: "Consistent eco-friendly property identification",
+        status: "warning"
+      }
+    },
     averageScore: 0.81,
     highestScore: 0.93,
     lowestScore: 0.65,
@@ -804,40 +1012,13 @@ const affinityConcepts = [
 ];
 
 const mockAffinityDetails = {
-  "Pet-Friendly": {
-    relatedConcepts: ['Family-Friendly', 'Spacious', 'Outdoor Recreation'],
-    metrics: {
-      accuracy: 0.85,
-      coverage: 72,
-      completeness: 0.89,
-      lastValidated: '2024-03-15'
-    }
-  },
   "Romantic": {
-    relatedConcepts: ['Privacy', 'Luxury', 'Beach Access'],
+    relatedConcepts: ['Privacy', 'Beach Access', 'Premium'],
     metrics: {
       accuracy: 0.78,
       coverage: 65,
       completeness: 0.82,
       lastValidated: '2024-03-10'
-    }
-  },
-  "Family-Friendly": {
-    relatedConcepts: ['Pet-Friendly', 'Spacious', 'Safety'],
-    metrics: {
-      accuracy: 0.92,
-      coverage: 81,
-      completeness: 0.95,
-      lastValidated: '2024-03-20'
-    }
-  },
-  "Luxury": {
-    relatedConcepts: ['Premium', 'Upscale Dining', 'Romantic'],
-    metrics: {
-      accuracy: 0.88,
-      coverage: 45,
-      completeness: 0.91,
-      lastValidated: '2024-03-18'
     }
   }
 };
@@ -885,7 +1066,176 @@ const generateMockPerformanceData = () => {
 
 const mockPerformanceData = generateMockPerformanceData();
 
-// Update getAffinities to use cacheService
+// Helper function to generate synthetic definition data for mock affinities
+const generateSyntheticDefinition = (affinity) => {
+  const affinityType = affinity.category || 'experience';
+  
+  // Create context based on affinity properties
+  const context = {
+    entityType: 'property',
+    brand: 'all',
+    lodgingType: 'Any',
+    version: '1'
+  };
+
+  // Generate sub-scores based on affinity type and characteristics
+  const subScores = [];
+  
+  // All affinities get review sentiments
+  subScores.push({
+    urn: 'urn:expe:taxo:insights:affinity-score:review-sentiments',
+    weight: 0.40, // Higher weight for mock affinities
+    rules: [
+      {
+        type: 'OPTIONAL',
+        description: `${affinity.name}-related sentiment concepts`,
+        logicalOperator: 'OR',
+        conditions: generateSyntheticConditions(affinity, 'review-sentiments', 3)
+      }
+    ],
+    formula: { type: 'VariableMethod', name: 'WEIGHTED_AVERAGE_SCORE' },
+    metadata: {},
+    categoryUrn: 'urn:expe:taxo:insights:category:review-sentiments'
+  });
+
+  // Add attributes sub-score
+  subScores.push({
+    urn: 'urn:expe:taxo:insights:affinity-score:attribute',
+    weight: 0.35,
+    rules: [
+      {
+        type: 'MUST_HAVE',
+        description: `Essential ${affinity.name.toLowerCase()} attributes`,
+        logicalOperator: 'OR',
+        conditions: generateSyntheticConditions(affinity, 'attribute', 2)
+      }
+    ],
+    formula: { type: 'VariableMethod', name: 'WEIGHTED_AVERAGE_SCORE' },
+    metadata: {},
+    categoryUrn: 'urn:expe:taxo:insights:category:attributes'
+  });
+
+  // Add images sub-score
+  subScores.push({
+    urn: 'urn:expe:taxo:insights:affinity-score:images',
+    weight: 0.25,
+    rules: [
+      {
+        type: 'OPTIONAL',
+        description: `${affinity.name} visual indicators`,
+        logicalOperator: 'OR',
+        conditions: generateSyntheticConditions(affinity, 'images', 2)
+      }
+    ],
+    formula: { type: 'VariableMethod', name: 'BINARY_OPERATION' },
+    metadata: {},
+    categoryUrn: 'urn:expe:taxo:insights:category:images'
+  });
+
+  return {
+    context,
+    subScores,
+    formula: { type: 'VariableNode', name: 'WEIGHTED_AVERAGE_SCORE' },
+    status: 'SYNTHETIC'
+  };
+};
+
+// Helper function to generate synthetic conditions
+const generateSyntheticConditions = (affinity, source, count) => {
+  const conditions = [];
+  const affinityName = affinity.name.toLowerCase();
+  
+  // Define condition templates based on affinity type and source
+  const conditionTemplates = {
+    'review-sentiments': {
+      'romantic': ['intimate setting', 'couples retreat', 'romantic atmosphere'],
+      'business': ['business center', 'meeting facilities', 'work-friendly'],
+      'all-inclusive': ['all inclusive', 'package deal', 'everything included'],
+      'oceanview': ['ocean view', 'sea facing', 'water view'],
+      'historic & cultural': ['historic charm', 'cultural significance', 'heritage site'],
+      'adventure & sports': ['adventure activities', 'sports facilities', 'outdoor recreation'],
+      'budget-friendly': ['affordable', 'budget option', 'good value'],
+      'eco-friendly': ['eco-friendly', 'sustainable', 'green practices']
+    },
+    'attribute': {
+      'romantic': ['Private balcony', 'Jacuzzi'],
+      'business': ['Business center', 'Meeting rooms'],
+      'all-inclusive': ['All-inclusive package', 'Multiple restaurants'],
+      'oceanview': ['Ocean view room', 'Beachfront location'],
+      'historic & cultural': ['Historic building', 'Cultural tours'],
+      'adventure & sports': ['Adventure sports', 'Fitness center'],
+      'budget-friendly': ['Budget rate', 'Basic amenities'],
+      'eco-friendly': ['Eco-certified', 'Solar power']
+    },
+    'images': {
+      'romantic': ['Romantic dining', 'Sunset views'],
+      'business': ['Business lounge', 'Conference room'],
+      'all-inclusive': ['Resort dining', 'Pool area'],
+      'oceanview': ['Ocean panorama', 'Beach view'],
+      'historic & cultural': ['Historic architecture', 'Cultural artifacts'],
+      'adventure & sports': ['Adventure equipment', 'Sports activities'],
+      'budget-friendly': ['Simple accommodation', 'Basic facilities'],
+      'eco-friendly': ['Natural environment', 'Sustainable features']
+    }
+  };
+
+  const templates = conditionTemplates[source]?.[affinityName] || ['Generic concept', 'Related feature'];
+  
+  for (let i = 0; i < Math.min(count, templates.length); i++) {
+    const template = templates[i];
+    conditions.push({
+      lhs: {
+        urn: `urn:expe:taxo:${source}:${template.toLowerCase().replace(/\s+/g, '-')}`,
+        source: source,
+        label: template
+      },
+      operator: 'EXISTS',
+      rhs: null,
+      weight: 0.7 + (Math.random() * 0.3), // Random weight between 0.7-1.0
+      penalty: 0.1,
+      metadata: {}
+    });
+  }
+
+  return conditions;
+};
+
+// Helper function to generate weight distribution
+const generateWeightDistribution = (subScores) => {
+  const distribution = {};
+  subScores.forEach(subScore => {
+    const label = getSubScoreLabel(subScore.urn);
+    distribution[label] = Math.round(subScore.weight * 100);
+  });
+  return distribution;
+};
+
+// Helper function to get sub-score label
+const getSubScoreLabel = (urn) => {
+  if (!urn) return 'Unknown';
+  
+  if (urn.includes('review-sentiments')) return 'Review Sentiments';
+  if (urn.includes('attribute')) return 'Attributes';
+  if (urn.includes('geo')) return 'Geo Location';
+  if (urn.includes('images')) return 'Images';
+  return 'Unknown';
+};
+
+// Helper function to generate synthetic test results
+const generateSyntheticTestResults = (affinity) => {
+  // Generate realistic test results based on affinity characteristics
+  const baseProperties = 120 + Math.floor(Math.random() * 80); // 120-200 properties tested
+  const accuracy = affinity.metrics?.accuracy || (0.75 + Math.random() * 0.20); // 75-95% accuracy
+  
+  return {
+    samplePropertiesTested: baseProperties,
+    averageScore: Number((accuracy + (Math.random() * 0.1 - 0.05)).toFixed(2)), // ±5% variance
+    propertiesMatching: Math.floor(baseProperties * (0.25 + Math.random() * 0.35)), // 25-60% matching
+    confidenceScore: Number((0.80 + Math.random() * 0.15).toFixed(2)) // 80-95% confidence
+  };
+};
+
+// Update getAffinities to prioritize JSON-defined affinities first
    const getAffinities = async ({ page = 1, limit = 10, searchTerm = '' } = {}) => {
   try {
     const cacheKey = cacheService.generateKey('affinities', { page, limit, searchTerm });
@@ -896,10 +1246,46 @@ const mockPerformanceData = generateMockPerformanceData();
 
     await delay(300);
 
-    // Filter affinities if searchTerm is provided
-    let filteredAffinities = affinityConcepts;
+    // Step 1: Load JSON-defined affinities (these appear first)
+    let jsonAffinities = [];
+    try {
+      jsonAffinities = await affinityDefinitionService.getDefinitionsAsAffinities();
+      console.log(`Loaded ${jsonAffinities.length} JSON-defined affinities`);
+    } catch (error) {
+      console.error('Failed to load JSON-defined affinities:', error);
+    }
+
+    // Step 2: Add mock data affinities with synthetic enrichment (these appear after JSON-defined ones)
+    const mockAffinities = affinityConcepts.map(affinity => {
+      // Generate synthetic definition data for mock affinities
+      const syntheticDefinition = generateSyntheticDefinition(affinity);
+      
+      return {
+        ...affinity,
+        id: affinity.id.startsWith('aff') ? affinity.id : `aff${affinity.id}`,
+        hasConfiguration: false, // Mark as not having JSON configuration
+        // Add synthetic rich attributes to match JSON-defined affinities
+        urn: `urn:expe:taxo:insights:${affinity.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+        label: affinity.name,
+        definitions: [syntheticDefinition],
+        subScores: syntheticDefinition.subScores.length,
+        totalRules: syntheticDefinition.subScores.reduce((total, sub) => total + (sub.rules?.length || 0), 0),
+        conditions: syntheticDefinition.subScores.reduce((total, sub) => 
+          total + sub.rules.reduce((ruleTotal, rule) => ruleTotal + (rule.conditions?.length || 0), 0), 0
+        ),
+        weightDistribution: generateWeightDistribution(syntheticDefinition.subScores),
+        // Add synthetic test results to make them appear complete
+        testResults: generateSyntheticTestResults(affinity)
+      };
+    });
+
+    // Step 3: Combine affinities (JSON-defined first, then mock data)
+    const allAffinities = [...jsonAffinities, ...mockAffinities];
+
+    // Step 4: Apply search filtering if searchTerm is provided
+    let filteredAffinities = allAffinities;
     if (searchTerm) {
-      filteredAffinities = affinityConcepts.filter(affinity => 
+      filteredAffinities = allAffinities.filter(affinity => 
         affinity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         affinity.definition?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         affinity.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -907,12 +1293,7 @@ const mockPerformanceData = generateMockPerformanceData();
       );
     }
 
-    // Ensure consistent ID format (with 'aff' prefix)
-    filteredAffinities = filteredAffinities.map(affinity => ({
-      ...affinity,
-      id: affinity.id.startsWith('aff') ? affinity.id : `aff${affinity.id}`
-    }));
-
+    // Step 5: Apply pagination
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedData = filteredAffinities.slice(startIndex, endIndex);
@@ -928,6 +1309,7 @@ const mockPerformanceData = generateMockPerformanceData();
     cacheService.set(cacheKey, response);
     return response;
   } catch (error) {
+    console.error('Error in getAffinities:', error);
     return { data: [], total: 0, page, limit, totalPages: 0 };
   }
 };
@@ -1018,10 +1400,7 @@ const properties = [
     location: "Miami Beach, FL",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff1", score: 0.72 },  // Pet-Friendly
-      { affinityId: "aff2", score: 0.85 },  // Romantic
-      { affinityId: "aff4", score: 0.91 },  // Luxury
-      { affinityId: "aff3", score: 0.67 }   // Family-Friendly
+      { affinityId: "aff2", score: 0.85 }   // Romantic
     ]
   },
   {
@@ -1029,11 +1408,7 @@ const properties = [
     name: "Mountain Lodge",
     location: "Aspen, CO",
     propertyType: "Resort",
-    affinityScores: [
-      { affinityId: "aff1", score: 0.87 },  // Pet-Friendly
-      { affinityId: "aff3", score: 0.76 },  // Family-Friendly
-      { affinityId: "aff4", score: 0.81 }   // Luxury
-    ]
+    affinityScores: []
   },
   {
     id: "PROP24680",
@@ -1041,8 +1416,7 @@ const properties = [
     location: "New York, NY",
     propertyType: "Hotel",
     affinityScores: [
-      { affinityId: "aff2", score: 0.79 },  // Romantic
-      { affinityId: "aff4", score: 0.88 }   // Luxury
+      { affinityId: "aff2", score: 0.79 }   // Romantic
     ]
   },
   {
@@ -1052,8 +1426,6 @@ const properties = [
     propertyType: "Resort",
     affinityScores: [
       { affinityId: "aff2", score: 0.95 },  // Romantic
-      { affinityId: "aff4", score: 0.93 },  // Luxury
-      { affinityId: "aff3", score: 0.65 }   // Family-Friendly
     ]
   },
   {
@@ -1062,9 +1434,6 @@ const properties = [
     location: "Orlando, FL",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff3", score: 0.94 },  // Family-Friendly
-      { affinityId: "aff1", score: 0.82 },  // Pet-Friendly
-      { affinityId: "aff4", score: 0.75 }   // Luxury
     ]
   },
   {
@@ -1073,9 +1442,7 @@ const properties = [
     location: "Park City, UT",
     propertyType: "Vacation Rental",
     affinityScores: [
-      { affinityId: "aff1", score: 0.89 },  // Pet-Friendly
       { affinityId: "aff2", score: 0.78 },  // Romantic
-      { affinityId: "aff3", score: 0.85 }   // Family-Friendly
     ]
   },
   {
@@ -1084,7 +1451,6 @@ const properties = [
     location: "Chicago, IL",
     propertyType: "Hotel",
     affinityScores: [
-      { affinityId: "aff4", score: 0.96 },  // Luxury
       { affinityId: "aff2", score: 0.88 }   // Romantic
     ]
   },
@@ -1094,8 +1460,6 @@ const properties = [
     location: "Portland, OR",
     propertyType: "Hotel",
     affinityScores: [
-      { affinityId: "aff1", score: 0.98 },  // Pet-Friendly
-      { affinityId: "aff3", score: 0.72 }   // Family-Friendly
     ]
   },
   {
@@ -1105,7 +1469,6 @@ const properties = [
     propertyType: "Boutique",
     affinityScores: [
       { affinityId: "aff2", score: 0.97 },  // Romantic
-      { affinityId: "aff4", score: 0.89 }   // Luxury
     ]
   },
   {
@@ -1114,9 +1477,6 @@ const properties = [
     location: "Boulder, CO",
     propertyType: "Lodge",
     affinityScores: [
-      { affinityId: "aff1", score: 0.85 },  // Pet-Friendly
-      { affinityId: "aff3", score: 0.88 },  // Family-Friendly
-      { affinityId: "aff4", score: 0.76 }   // Luxury
     ]
   },
   {
@@ -1125,8 +1485,6 @@ const properties = [
     location: "San Diego, CA",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff3", score: 0.92 },  // Family-Friendly
-      { affinityId: "aff1", score: 0.75 },  // Pet-Friendly
       { affinityId: "aff2", score: 0.68 }   // Romantic
     ]
   },
@@ -1136,9 +1494,7 @@ const properties = [
     location: "Palm Beach, FL",
     propertyType: "Villa",
     affinityScores: [
-      { affinityId: "aff4", score: 0.95 },  // Luxury
       { affinityId: "aff2", score: 0.92 },  // Romantic
-      { affinityId: "aff1", score: 0.65 }   // Pet-Friendly
     ]
   },
   {
@@ -1147,8 +1503,6 @@ const properties = [
     location: "Vail, CO",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff4", score: 0.87 },  // Luxury
-      { affinityId: "aff3", score: 0.83 },  // Family-Friendly
       { affinityId: "aff2", score: 0.81 }   // Romantic
     ]
   },
@@ -1159,7 +1513,6 @@ const properties = [
     propertyType: "Boutique",
     affinityScores: [
       { affinityId: "aff2", score: 0.86 },  // Romantic
-      { affinityId: "aff4", score: 0.84 }   // Luxury
     ]
   },
   {
@@ -1168,8 +1521,6 @@ const properties = [
     location: "Myrtle Beach, SC",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff3", score: 0.89 },  // Family-Friendly
-      { affinityId: "aff1", score: 0.77 },  // Pet-Friendly
       { affinityId: "aff2", score: 0.71 }   // Romantic
     ]
   },
@@ -1179,7 +1530,6 @@ const properties = [
     location: "Charleston, SC",
     propertyType: "Boutique",
     affinityScores: [
-      { affinityId: "aff4", score: 0.92 },  // Luxury
       { affinityId: "aff2", score: 0.90 }   // Romantic
     ]
   },
@@ -1189,9 +1539,6 @@ const properties = [
     location: "Lake Tahoe, CA",
     propertyType: "Lodge",
     affinityScores: [
-      { affinityId: "aff3", score: 0.86 },  // Family-Friendly
-      { affinityId: "aff1", score: 0.83 },  // Pet-Friendly
-      { affinityId: "aff4", score: 0.79 }   // Luxury
     ]
   },
   {
@@ -1200,9 +1547,7 @@ const properties = [
     location: "Scottsdale, AZ",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff4", score: 0.94 },  // Luxury
       { affinityId: "aff2", score: 0.87 },  // Romantic
-      { affinityId: "aff3", score: 0.75 }   // Family-Friendly
     ]
   },
   {
@@ -1211,8 +1556,6 @@ const properties = [
     location: "Newport, RI",
     propertyType: "Resort",
     affinityScores: [
-      { affinityId: "aff1", score: 0.93 },  // Pet-Friendly
-      { affinityId: "aff3", score: 0.82 },  // Family-Friendly
       { affinityId: "aff2", score: 0.74 }   // Romantic
     ]
   },
@@ -1222,9 +1565,7 @@ const properties = [
     location: "Telluride, CO",
     propertyType: "Chalet",
     affinityScores: [
-      { affinityId: "aff4", score: 0.96 },  // Luxury
       { affinityId: "aff2", score: 0.93 },  // Romantic
-      { affinityId: "aff1", score: 0.68 }   // Pet-Friendly
     ]
   }
 ];
@@ -1347,7 +1688,7 @@ const mockCollections = [
     name: "My First Collection",
     description: "A collection of my favorite properties",
     isFavorite: true,
-    affinityIds: ["aff1", "aff2"].map(id => String(id)),  // Store normalized IDs
+    affinityIds: ["aff2"].map(id => String(id)),  // Store normalized IDs
     createdAt: "2024-01-15",
     lastUpdated: "2024-03-15",
     ownerId: "demo@example.com"
@@ -1357,7 +1698,7 @@ const mockCollections = [
     name: "Market Research",
     description: "Properties for market analysis",
     isFavorite: false,
-    affinityIds: ["aff4", "aff5"].map(id => String(id)),
+    affinityIds: ["aff5"].map(id => String(id)),
     createdAt: "2024-01-16",
     lastUpdated: "2024-03-16",
     ownerId: "demo@example.com"
@@ -1367,7 +1708,7 @@ const mockCollections = [
     name: "Luxury Escapes",
     description: "High-end properties",
     isFavorite: false,
-    affinityIds: ["aff4", "aff2"].map(id => String(id)),
+    affinityIds: ["aff2"].map(id => String(id)),
     createdAt: "2024-01-17",
     lastUpdated: "2024-03-17",
     ownerId: "demo@example.com"
@@ -1377,7 +1718,7 @@ const mockCollections = [
     name: "Family Adventures",
     description: "Family-friendly destinations",
     isFavorite: true,
-    affinityIds: ["aff3", "aff1"].map(id => String(id)),
+    affinityIds: [].map(id => String(id)),
     createdAt: "2024-01-18",
     lastUpdated: "2024-03-18",
     ownerId: "demo@example.com"
@@ -2136,11 +2477,54 @@ const generateMockSearchResults = (query) => {
 // Mock recently viewed storage (in-memory for demo)
 let mockRecentlyViewed = {
   // userId: [affinity, ...]
+  // Add some default recently viewed items
+  'default': [
+    {
+      id: 'def_family-friendly',
+      name: 'Family-Friendly',
+      lastViewed: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 min ago
+      score: 0.85,
+      coverage: 0.92
+    },
+    {
+      id: 'def_pet-friendly', 
+      name: 'Pet-Friendly',
+      lastViewed: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // 1 hour ago
+      score: 0.78,
+      coverage: 0.87
+    },
+    {
+      id: 'def_luxury',
+      name: 'Luxury',
+      lastViewed: new Date(Date.now() - 1000 * 60 * 120).toISOString(), // 2 hours ago
+      score: 0.91,
+      coverage: 0.88
+    },
+    {
+      id: 'def_wellness',
+      name: 'Wellness',
+      lastViewed: new Date(Date.now() - 1000 * 60 * 180).toISOString(), // 3 hours ago
+      score: 0.83,
+      coverage: 0.90
+    },
+    {
+      id: 'def_beachfront',
+      name: 'Beachfront',
+      lastViewed: new Date(Date.now() - 1000 * 60 * 240).toISOString(), // 4 hours ago
+      score: 0.89,
+      coverage: 0.85
+    }
+  ]
 };
 
    const getRecentlyViewed = async (userId) => {
   await delay(100);
-  return mockRecentlyViewed[userId] || [];
+  const userViewed = mockRecentlyViewed[userId] || [];
+  // If user has no recently viewed items, return default ones
+  if (userViewed.length === 0) {
+    return mockRecentlyViewed['default'] || [];
+  }
+  return userViewed;
 };
 
    const addRecentlyViewed = async (userId, affinity) => {
@@ -2165,6 +2549,7 @@ let mockRecentlyViewed = {
  const mergeRecentlyViewed = async (userId, localList) => {
   await delay(100);
   const serverList = mockRecentlyViewed[userId] || [];
+  const defaultList = mockRecentlyViewed['default'] || [];
   
   // Normalize IDs in local list
   const normalizedLocalList = localList.map(item => ({
@@ -2172,8 +2557,8 @@ let mockRecentlyViewed = {
     id: item.id.startsWith('aff') ? item.id : `aff${item.id}`
   }));
   
-  // Merge, dedupe by id, keep most recent first
-  const merged = [...normalizedLocalList, ...serverList].reduce((acc, item) => {
+  // Merge local, server, and default items, dedupe by id, keep most recent first
+  const merged = [...normalizedLocalList, ...serverList, ...defaultList].reduce((acc, item) => {
     if (!acc.find(a => a.id === item.id)) acc.push(item);
     return acc;
   }, []);

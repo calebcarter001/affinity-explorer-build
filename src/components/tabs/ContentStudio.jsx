@@ -20,6 +20,8 @@ import { useAffinityData } from '../../contexts/AffinityDataContext';
 import { useToast } from '../../contexts/ToastContext';
 import EmptyStateStyled from '../common/EmptyStateStyled';
 import SkeletonLoader from '../common/SkeletonLoader';
+import SearchableDropdown from '../common/SearchableDropdown';
+import ConceptRelationshipInsights from '../crp/ConceptRelationshipPanel';
 
 // Dynamic content generation function
 const generateContent = (focalAffinity, relatedConcepts, propertyContext, contentType) => {
@@ -328,6 +330,7 @@ const ContentBlock = ({ title, content, type = 'text', onEdit }) => {
 };
 
 const ContentStudio = () => {
+  const [activeTab, setActiveTab] = useState('content-generator'); // Tab state
   const { affinities, loading: affinitiesLoading, fetchAffinities } = useAffinityData();
   const showToast = useToast();
   
@@ -335,6 +338,7 @@ const ContentStudio = () => {
   const [selectedFocalAffinity, setSelectedFocalAffinity] = useState(null);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [contentType, setContentType] = useState('property_description');
+  const [contentTone, setContentTone] = useState('');
   const [recommendations, setRecommendations] = useState([]);
   const [selectedConcepts, setSelectedConcepts] = useState([]);
   const [generatedContent, setGeneratedContent] = useState(null);
@@ -494,269 +498,215 @@ const ContentStudio = () => {
 
   if (affinitiesLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <SkeletonLoader count={3} height={200} />
+      <div className="flex h-screen bg-gray-50">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-y-auto p-8">
+          <SkeletonLoader count={3} height={200} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                  <FiEdit3 className="mr-3 text-blue-600" />
-                  Content Studio
-                </h1>
-                <p className="mt-2 text-gray-600">
-                  AI-powered content generation based on affinity relationships
-                </p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => exportContent('clipboard')}
-                  disabled={!generatedContent}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
-                >
-                  <FiCopy className="mr-2" size={16} />
-                  Copy
-                </button>
-                <button
-                  onClick={() => exportContent('json')}
-                  disabled={!generatedContent}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 disabled:opacity-50"
-                >
-                  <FiDownload className="mr-2" size={16} />
-                  Export
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Column 1: Input Controls */}
-          <div className="space-y-6">
-            {/* Focal Concept Selection */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Focus Concept</h3>
-              <select
-                value={selectedFocalAffinity?.id || ''}
-                onChange={(e) => {
-                  const affinity = affinities?.find(a => a.id === e.target.value);
-                  setSelectedFocalAffinity(affinity);
-                }}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select an affinity...</option>
-                {affinityOptions}
-              </select>
-            </div>
-
-            {/* Property Context */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Context</h3>
-              {propertiesLoading ? (
-                <SkeletonLoader count={1} height={80} />
-              ) : (
-                <select
-                  value={selectedProperty?.id || ''}
-                  onChange={(e) => {
-                    const property = properties.find(p => p.id === e.target.value);
-                    setSelectedProperty(property);
-                  }}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select a property...</option>
-                  {propertyOptions}
-                </select>
-              )}
-            </div>
-
-            {/* Content Type */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Type</h3>
-              <select
-                value={contentType}
-                onChange={(e) => setContentType(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50"
-              >
-                <option value="property_description">📝 Property Description</option>
-                <option value="marketing_copy">🎯 Marketing Copy</option>
-                <option value="seo_content">🔍 SEO Content</option>
-                <option value="social_media">📱 Social Media</option>
-              </select>
-              <p className="text-sm text-gray-500 mt-2">
-                {contentType === 'property_description' && 'Detailed property descriptions for websites'}
-                {contentType === 'marketing_copy' && 'Persuasive copy for advertisements and promotions'}
-                {contentType === 'seo_content' && 'Search-optimized content for better rankings'}
-                {contentType === 'social_media' && 'Engaging posts for social media platforms'}
-              </p>
-            </div>
-
-            {/* Generate Button */}
-            <button
-              onClick={handleGenerateContent}
-              disabled={!selectedFocalAffinity || loading}
-              className="w-full flex items-center justify-center px-4 py-3 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            >
-              {loading ? (
-                <FiRefreshCw className="mr-2 animate-spin" size={16} />
-              ) : (
-                <FiZap className="mr-2" size={16} />
-              )}
-              {generatedContent ? 'Update Content' : 'Generate Content'}
-            </button>
-            {generatedContent && (
-              <p className="text-xs text-gray-500 text-center mt-2">
-                Content will update when you click the button above
-              </p>
-            )}
-          </div>
-
-          {/* Column 2: Concept Suggestions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Related Concepts</h3>
-              {selectedFocalAffinity && (
-                <span className="text-sm text-gray-500">
-                  Based on "{selectedFocalAffinity.name}"
-                </span>
-              )}
-            </div>
-
-            {!selectedFocalAffinity ? (
-              <EmptyStateStyled
-                icon="target"
-                title="Select a Focus Concept"
-                description="Choose an affinity to see related suggestions"
-              />
-            ) : recommendationsLoading ? (
-              <SkeletonLoader count={4} height={120} />
-            ) : (
-              <div className="space-y-4 max-h-96 overflow-y-auto">
-                {recommendations.map(({ affinity, score }) => (
-                  <ConceptCard
-                    key={affinity.id}
-                    concept={affinity}
-                    score={score}
-                    selected={selectedConcepts.some(c => c.id === affinity.id)}
-                    onSelect={handleConceptSelect}
-                    onFeedback={handleFeedback}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Column 3: Generated Content */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Generated Content</h3>
-                {generatedContent && (
-                  <div className="space-y-1">
-                    <div className="flex items-center">
-                      <span className="text-sm text-gray-500">Content Type: </span>
-                      <span className="ml-1 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                        {contentType === 'property_description' && '📝 Property Description'}
-                        {contentType === 'marketing_copy' && '🎯 Marketing Copy'}
-                        {contentType === 'seo_content' && '🔍 SEO Content'}
-                        {contentType === 'social_media' && '📱 Social Media'}
-                      </span>
-                    </div>
-                    {contentGeneratedAt && (
-                      <div className="text-xs text-gray-400">
-                        Generated: {contentGeneratedAt.toLocaleTimeString()}
-                      </div>
-                    )}
-                    <div className="text-xs text-blue-600 mt-1">
-                      💡 Change settings and click "Generate Content" to see updates
-                    </div>
+    <div className="flex h-screen bg-gray-50">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        <div className="min-h-screen bg-gray-50">
+          {/* Header */}
+          <div className="bg-white shadow-sm border-b border-gray-200">
+            <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12">
+              <div className="py-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+                      <FiEdit3 className="mr-3 text-blue-600" />
+                      Content Studio
+                    </h1>
+                    <p className="mt-2 text-gray-600">
+                      AI-powered content generation based on affinity relationships
+                    </p>
                   </div>
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={() => exportContent('clipboard')}
+                      disabled={!generatedContent}
+                      className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                    >
+                      <FiCopy className="mr-2" size={16} />
+                      Copy
+                    </button>
+                    <button
+                      onClick={() => exportContent('json')}
+                      disabled={!generatedContent}
+                      className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      <FiDownload className="mr-2" size={16} />
+                      Export
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sub-Navigation Tabs */}
+          <div className="bg-white border-b border-gray-200">
+            <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12">
+              <nav className="flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('content-generator')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'content-generator'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Content Generator
+                </button>
+                <button
+                  onClick={() => setActiveTab('concept-relationship-panel')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'concept-relationship-panel'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Concept Relationship Panel
+                </button>
+              </nav>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12 py-8">
+            {activeTab === 'content-generator' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Column 1: Input Controls */}
+              <div className="space-y-6">
+                {/* Focal Concept Selection */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Focus Concept</h3>
+                  <SearchableDropdown
+                    options={(affinities || []).map(affinity => ({
+                      value: affinity.id,
+                      label: `${affinity.name} (${affinity.category})`,
+                      affinity: affinity
+                    }))}
+                    value={selectedFocalAffinity ? {
+                      value: selectedFocalAffinity.id,
+                      label: `${selectedFocalAffinity.name} (${selectedFocalAffinity.category})`
+                    } : null}
+                    onChange={(option) => setSelectedFocalAffinity(option?.affinity || null)}
+                    placeholder="Select an affinity..."
+                    className="w-48"
+                    noOptionsMessage="No affinities found"
+                  />
+                </div>
+
+                {/* Property Context */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Context</h3>
+                  {propertiesLoading ? (
+                    <SkeletonLoader count={1} height={80} />
+                  ) : (
+                    <SearchableDropdown
+                      options={properties.map(property => ({
+                        value: property.id,
+                        label: `${property.name} - ${property.location}`,
+                        property: property
+                      }))}
+                      value={selectedProperty ? {
+                        value: selectedProperty.id,
+                        label: `${selectedProperty.name} - ${selectedProperty.location}`
+                      } : null}
+                      onChange={(option) => setSelectedProperty(option?.property || null)}
+                      placeholder="Select a property..."
+                      className="w-48"
+                      noOptionsMessage="No properties found"
+                    />
+                  )}
+                </div>
+
+                {/* Content Type */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Type</h3>
+                  <select
+                    value={contentType}
+                    onChange={(e) => setContentType(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50"
+                  >
+                    <option value="property_description">📝 Property Description</option>
+                    <option value="marketing_copy">🎯 Marketing Copy</option>
+                    <option value="seo_content">🔍 SEO Content</option>
+                    <option value="social_media">📱 Social Media</option>
+                  </select>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {contentType === 'property_description' && 'Detailed property descriptions for websites'}
+                    {contentType === 'marketing_copy' && 'Persuasive copy for advertisements and promotions'}
+                    {contentType === 'seo_content' && 'Search-optimized content for better rankings'}
+                    {contentType === 'social_media' && 'Engaging posts for social media platforms'}
+                  </p>
+                </div>
+
+                {/* Content Tone */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Tone</h3>
+                  <select
+                    value={contentTone}
+                    onChange={(e) => setContentTone(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-green-50"
+                  >
+                    <option value="">Select a tone...</option>
+                    <option value="expedia">🌍 Expedia</option>
+                    <option value="vrbo">🏠 Vrbo</option>
+                    <option value="hcom">🏨 HCom</option>
+                  </select>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {contentTone === 'expedia' && 'Travel-focused tone with adventure and discovery emphasis'}
+                    {contentTone === 'vrbo' && 'Home-away-from-home tone with comfort and family focus'}
+                    {contentTone === 'hcom' && 'Professional hospitality tone with service excellence'}
+                    {!contentTone && 'Choose a tone to match your brand voice'}
+                  </p>
+                </div>
+
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerateContent}
+                  disabled={!selectedFocalAffinity || !selectedProperty || !contentType || !contentTone || loading}
+                  className="w-full flex items-center justify-center px-4 py-3 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                >
+                  {loading ? (
+                    <FiRefreshCw className="mr-2 animate-spin" size={16} />
+                  ) : (
+                    <FiZap className="mr-2" size={16} />
+                  )}
+                  {generatedContent ? 'Update Content' : 'Generate Content'}
+                </button>
+                {generatedContent && (
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    Content will update when you click the button above
+                  </p>
                 )}
               </div>
-              {generatedContent && (
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={handleGenerateContent}
-                    className="p-2 text-gray-400 hover:text-orange-500"
-                    title="Regenerate content"
-                  >
-                    <FiRefreshCw size={16} />
-                  </button>
-                  <button
-                    onClick={() => exportContent('clipboard')}
-                    className="p-2 text-gray-400 hover:text-blue-500"
-                    title="Copy to clipboard"
-                  >
-                    <FiShare2 size={16} />
-                  </button>
-                  <button
-                    onClick={() => exportContent('json')}
-                    className="p-2 text-gray-400 hover:text-green-500"
-                    title="Export as JSON"
-                  >
-                    <FiSave size={16} />
-                  </button>
-                </div>
-              )}
-            </div>
 
-            {!generatedContent ? (
-              <EmptyStateStyled
-                icon="edit"
-                title="No Content Generated"
-                description="Select concepts and click generate to create content"
-              />
-            ) : (
-              <div className="space-y-4">
-                <ContentBlock
-                  title="Primary Message"
-                  content={generatedContent.primary}
-                  type="primary"
-                  onEdit={handleContentEdit}
-                />
-                
-                <ContentBlock
-                  title="Secondary Features"
-                  content={generatedContent.secondary}
-                  type="secondary"
-                  onEdit={handleContentEdit}
-                />
-                
-                <ContentBlock
-                  title="Supporting Details"
-                  content={generatedContent.tertiary}
-                  type="tertiary"
-                  onEdit={handleContentEdit}
-                />
-
-                {/* Content Statistics */}
-                <div className="bg-gray-50 rounded-lg p-4 mt-6">
-                  <h4 className="font-semibold text-gray-900 mb-2">Content Statistics</h4>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-600">Word Count:</span>
-                      <span className="ml-2 font-medium">
-                        {(generatedContent.primary + ' ' + generatedContent.secondary.join(' ') + ' ' + generatedContent.tertiary.join(' ')).split(' ').length}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Concepts Used:</span>
-                      <span className="ml-2 font-medium">{selectedConcepts.length + 1}</span>
-                    </div>
-                  </div>
+              {/* Column 2: Concept Suggestions */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900">Related Concepts</h3>
+                  {selectedFocalAffinity && (
+                    <span className="text-sm text-gray-500">
+                      Based on "{selectedFocalAffinity.name}"
+                    </span>
+                  )}
                 </div>
+                {/* Add concept suggestions content here */}
               </div>
+              </div>
+            )}
+            
+            {activeTab === 'concept-relationship-panel' && (
+              <ConceptRelationshipInsights />
             )}
           </div>
         </div>

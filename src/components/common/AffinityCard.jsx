@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAppContext } from '../../contexts/AppContext';
 import AddToCollectionIcon from './AddToCollectionIcon';
 import Tooltip from './Tooltip';
 
@@ -102,7 +101,7 @@ const AffinityCard = ({
   compact = false,
   selected = false
 }) => {
-  const { } = useAppContext();
+  // const { } = useAppContext(); // Removed unused context call
 
   if (!validateAffinity(affinity)) {
     return null;
@@ -163,9 +162,26 @@ const AffinityCard = ({
               </span>
             )}
           </div>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClasses()}`}>
-            {affinity.status}
-          </span>
+          <div className="flex items-center space-x-2">
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeClasses()}`}>
+              {affinity.status}
+            </span>
+            {affinity.hasConfiguration ? (
+              <Tooltip content="This affinity has a complete JSON configuration available">
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 flex items-center space-x-1">
+                  <span>⚙️</span>
+                  <span>Configured</span>
+                </span>
+              </Tooltip>
+            ) : affinity.definitions && affinity.definitions.length > 0 && affinity.definitions[0].status === 'SYNTHETIC' ? (
+              <Tooltip content="This affinity has synthetic configuration data for demonstration purposes">
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 flex items-center space-x-1">
+                  <span>🔧</span>
+                  <span>Synthetic</span>
+                </span>
+              </Tooltip>
+            ) : null}
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           {userCollections && (

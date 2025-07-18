@@ -1,0 +1,531 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://example.com/schemas/PropertyInsightUltimate.json",
+    "title": "PropertyInsightUltimate",
+    "description": "A comprehensive, extensible schema for delivering explainable, multi-category property insights, optimized for GenAI content generation, scalability, personalization, and future adaptability across diverse use cases.",
+    "type": "object",
+    "properties": {
+      
+      "schemaVersion": {
+        "type": "string",
+        "description": "Schema version (e.g., '1.0', '1.1') for backward compatibility and evolution tracking.",
+        "examples": ["1.0", "1.1"]
+      },
+      "propertyId": {
+        "type": "string",
+        "description": "Unique identifier for the property (e.g., 'PROP54321')."
+      },
+      "insightType": {
+        "type": "string",
+        "enum": [
+          "affinity", "highlight", "spotlight", "standoutStay", "vibeTagline", 
+          "propertyAspect", "uniqueFeature", "experienceHighlight", "travelAd"
+        ],
+        "description": "Type of insight, combining V1 and V2 options for flexibility (e.g., 'travelAd' for MeSo, 'experienceHighlight' for unique activities)."
+      },
+      "insightLabel": {
+        "type": "string",
+        "description": "Short, GenAI-friendly label (e.g., 'Luxury Family Retreat', 'Austin's Music Escape').",
+        "maxLength": 50
+      },
+      "summary": {
+        "type": "string",
+        "description": "A concise, human-readable explanation of the insight, optimized for LLM headline/description generation.",
+        "maxLength": 200
+      },
+  
+      
+      "travelCategories": {
+        "type": "array",
+        "description": "Categories this insight supports, with confidence and relevance details.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Category name (e.g., 'Luxury', 'Family', 'Budget', 'Adventure')."
+            },
+            "confidenceLevel": {
+              "type": "number",
+              "description": "Confidence (0.0-1.0). <0.5 omit, 0.5-0.7 tentative, >0.7 strong.",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "source": {
+              "type": "string",
+              "enum": ["reviews", "attributes", "manual", "mixed"],
+              "description": "Origin of the category assignment."
+            },
+            "topRelevantFactors": {
+              "type": "array", 
+              "description": "Most relevant contributing factors for this category (from V2).",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["name", "confidenceLevel"]
+        },
+        "minItems": 1
+      },
+  
+      
+      "contributingFactors": {
+        "type": "array",
+        "description": "Key factors with detailed proof points for explainability and GenAI use.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "factorType": {
+              "type": "string",
+              "enum": [
+                "reviews", "attributes", "location", "image", "luxury", "walkability", "trending",
+                "amenities", "privacy", "uniqueAmenity", "uniqueExperience", "views", "architecture",
+                "vibe", "atmosphere", "surroundings", "serviceQuality", "proximity", "seasonalEvents", "climate"
+              ],
+              "description": "Unified enum from all schemas, covering all Scaling Requirements aspects."
+            },
+            "factorLabel": {
+              "type": "string",
+              "description": "Human-readable label (e.g., 'Stunning Ocean Views') from V2."
+            },
+            "factorStrength": {
+              "type": "number",
+              "description": "Strength score (0.0-1.0) based on evidence volume/recency (from V2).",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "evidence": {
+              "type": "array",
+              "description": "Proof points with rich metadata for validation and traceability.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Short proof point (e.g., '80% positive spa mentions').",
+                    "maxLength": 100
+                  },
+                  "detailedText": {
+                    "type": "string",
+                    "description": "Longer context (e.g., 'Guests rave about the spa's luxury') from V2.",
+                    "maxLength": 500
+                  },
+                  "languageCode": {
+                    "type": "string",
+                    "description": "IETF language tag (e.g., 'en-US')."
+                  },
+                  "applicableCategories": {
+                    "type": "array",
+                    "description": "Categories this evidence supports.",
+                    "items": { "type": "string" }
+                  },
+                  "sourceType": {
+                    "type": "string",
+                    "enum": ["review", "structured", "image", "verified", "derived", "inferred"],
+                    "description": "Origin of the proof point (from V2)."
+                  },
+                  "sourceMetadata": {
+                    "type": "object",
+                    "description": "Detailed source tracking (from My Schema).",
+                    "properties": {
+                      "reviewIds": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Review IDs (e.g., ['REV123'])."
+                      },
+                      "photoIds": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Photo IDs (e.g., ['PHOTO789'])."
+                      },
+                      "attributeSource": {
+                        "type": "string",
+                        "description": "Structured data source (e.g., 'ACS')."
+                      }
+                    }
+                  },
+                  "sentiment": {
+                    "type": "number",
+                    "description": "Sentiment score (-1.0 to 1.0) from V2.",
+                    "minimum": -1,
+                    "maximum": 1
+                  },
+                  "strengthScore": {
+                    "type": "number",
+                    "description": "Strength (0.0-1.0) based on volume/recency (from My Schema).",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "frequencyScore": {
+                    "type": "number",
+                    "description": "How common this point is (0.0-1.0) from V2.",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "recency": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When evidence was collected (from V2)."
+                  },
+                  "ephemeral": {
+                    "type": "boolean",
+                    "description": "Indicates short-lived evidence."
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Expiration for ephemeral evidence."
+                  },
+                  "mediaReferences": {
+                    "type": "array",
+                    "description": "Media supporting this evidence (from V2).",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "mediaType": {
+                          "type": "string",
+                          "enum": ["image", "video", "audio", "document"]
+                        },
+                        "mediaId": { "type": "string" },
+                        "mediaUrl": { "type": "string" },
+                        "caption": { "type": "string" }
+                      },
+                      "required": ["mediaType", "mediaId"]
+                    }
+                  },
+                  "dataValidation": {
+                    "type": "object",
+                    "description": "Validation details (from V2).",
+                    "properties": {
+                      "validatedAgainst": { "type": "string" },
+                      "validationResult": {
+                        "type": "string",
+                        "enum": ["confirmed", "partially_confirmed", "not_found", "contradicted"]
+                      },
+                      "validationNotes": { "type": "string" },
+                      "isNew": {
+                        "type": "boolean",
+                        "description": "Flag for new amenities not in taxonomy (from My Schema)."
+                      }
+                    }
+                  }
+                },
+                "required": ["text", "strengthScore"]
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["factorType", "evidence"]
+        },
+        "minItems": 1
+      },
+  
+      
+      "visualElements": {
+        "type": "array",
+        "description": "Visual aspects enhancing property appeal (from V2).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "elementType": {
+              "type": "string",
+              "enum": ["architecturalFeature", "decor", "view", "atmosphere", "surroundings", "natural", "amenity"]
+            },
+            "description": { "type": "string" },
+            "sentiment": { "type": "number", "minimum": -1, "maximum": 1 },
+            "imageReferences": { "type": "array", "items": { "type": "string" } },
+            "applicableCategories": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["elementType", "description"]
+        }
+      },
+      "uniqueFeatures": {
+        "type": "array",
+        "description": "Distinctive features setting the property apart (from V2).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "featureType": {
+              "type": "string",
+              "enum": ["amenity", "experience", "service", "location", "design", "atmosphere"]
+            },
+            "featureDescription": { "type": "string" },
+            "uniquenessContext": {
+              "type": "string",
+              "enum": ["neighborhood", "city", "region", "country", "global"]
+            },
+            "supportingEvidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "evidenceType": {
+                    "type": "string",
+                    "enum": ["reviewMention", "comparativeAnalysis", "expertOpinion", "rarity"]
+                  },
+                  "description": { "type": "string" }
+                },
+                "required": ["evidenceType", "description"]
+              }
+            }
+          },
+          "required": ["featureType", "featureDescription"]
+        }
+      },
+      "propertyVibes": {
+        "type": "array",
+        "description": "Subjective atmospheres from reviews/images (from V2, enhanced from My Schema's vibe).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "vibeName": { "type": "string", "maxLength": 50 },
+            "vibeStrength": { "type": "number", "minimum": 0, "maximum": 1 },
+            "vibeDescription": { "type": "string", "maxLength": 200 },
+            "contributingElements": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["decor", "architecture", "amenities", "location", "service"] }
+            },
+            "sourcesOfEvidence": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["reviews", "images", "structured", "expertOpinion"] }
+            }
+          },
+          "required": ["vibeName", "vibeStrength"]
+        }
+      },
+      "locationHighlights": {
+        "type": "array",
+        "description": "Key location features (from V2).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "pointOfInterestType": {
+              "type": "string",
+              "enum": ["landmark", "naturalFeature", "neighborhood", "transport", "shopping", "dining", "entertainment", "business", "culture"]
+            },
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+            "distance": {
+              "type": "object",
+              "properties": {
+                "value": { "type": "number" },
+                "unit": { "type": "string", "enum": ["meters", "kilometers", "miles", "blocks", "minutes"] },
+                "description": { "type": "string" }
+              }
+            }
+          },
+          "required": ["pointOfInterestType", "name"]
+        }
+      },
+      "climateSurroundings": {
+        "type": "object",
+        "description": "Climate and natural surroundings (from V2).",
+        "properties": {
+          "naturalFeatures": { "type": "array", "items": { "type": "string" } },
+          "seasonalHighlights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "season": { "type": "string", "enum": ["spring", "summer", "fall", "winter", "dry", "wet", "peak", "offPeak"] },
+                "description": { "type": "string" }
+              },
+              "required": ["season", "description"]
+            }
+          },
+          "atmosphericDescription": { "type": "string" }
+        }
+      },
+      "propertyStrengths": {
+        "type": "array",
+        "description": "Areas of excellence (from V2).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "strengthCategory": {
+              "type": "string",
+              "enum": ["service", "cleanliness", "comfort", "value", "location", "amenities", "dining", "ambiance", "accessibility"]
+            },
+            "strengthScore": { "type": "number", "minimum": 0, "maximum": 1 },
+            "description": { "type": "string" },
+            "reviewHighlights": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["strengthCategory", "strengthScore"]
+        }
+      },
+  
+      
+      "personalization": {
+        "type": "object",
+        "description": "Enhanced personalization context.",
+        "properties": {
+          "context": { "type": "string" },
+          "source": { "type": "string" },
+          "intent": { "type": "string", "description": "Traveler intent (e.g., 'relaxation')." },
+          "bookingWindow": { "type": "string" },
+          "relevanceScores": {
+            "type": "object",
+            "description": "Relevance scores per segment/context (from V2).",
+            "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "userSegment": {
+            "type": "string",
+            "description": "Persona or segment (e.g., 'valueSeeker') from second V1."
+          }
+        },
+        "required": ["context"]
+      },
+      "personalizationStory": {
+        "type": "string",
+        "description": "Narrative for GenAI (e.g., 'Perfect for your beach-loving family').",
+        "maxLength": 500
+      },
+  
+      
+      "preferredExplanationMethod": {
+        "type": "string",
+        "enum": [
+          "affinity", "reviewSentiment", "amenitiesScore", "personalizationStory", "segmentInsight",
+          "vibeDescription", "uniqueFeatures", "locationHighlights"
+        ],
+        "description": "Recommended explanation method, merging all options."
+      },
+      "contentUsage": {
+        "type": "object",
+        "description": "Guidelines for content generation (from V2).",
+        "properties": {
+          "recommendedFormats": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["headline", "tagline", "shortDescription", "longDescription", "standoutStay", "travelAd", "spotlight", "experienceHighlight"] }
+          },
+          "toneSuggestions": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["informative", "enthusiastic", "luxurious", "practical", "adventurous", "relaxed", "sophisticated", "playful"] }
+          },
+          "writingGuidelines": { "type": "string" }
+        }
+      },
+      "styleHints": {
+        "type": "object",
+        "description": "Tone and length guidance (from My Schema).",
+        "properties": {
+          "tone": { "type": "string", "enum": ["dreamy", "punchy", "informative", "playful", "luxuryFocus", "budgetFocus"] },
+          "lengthPreference": { "type": "string", "enum": ["short", "medium", "long"] }
+        }
+      },
+  
+      
+      "confidenceLevel": {
+        "type": "number",
+        "description": "Overall insight confidence (0.0-1.0).",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "relatedAmenities": {
+        "type": "array",
+        "description": "Top amenities (e.g., 'saltwater infinity pool').",
+        "items": { "type": "string" }
+      },
+      "relatedPOIs": {
+        "type": "array",
+        "description": "Points of interest (e.g., 'Sydney Harbor').",
+        "items": { "type": "string" }
+      },
+      "ephemeral": { "type": "boolean" },
+      "expiresAt": { "type": "string", "format": "date-time" },
+      "resolutionHint": {
+        "type": "string",
+        "enum": ["primary", "hybrid", "complementary", "contextual", "omit"],
+        "description": "Extended conflict resolution options."
+      },
+      "action": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "type": { "type": "string", "enum": ["link", "button", "modal", "deepLink", "bookmark", "share"] },
+          "target": { "type": "string" },
+          "context": { "type": "string" }
+        },
+        "required": ["label", "type"]
+      },
+  
+      
+      "performanceMetadata": {
+        "type": "object",
+        "description": "Insight and content performance tracking (from V2).",
+        "properties": {
+          "engagementRate": { "type": "number", "minimum": 0, "maximum": 1 },
+          "sampleSize": { "type": "integer", "minimum": 0 },
+          "lastEvaluated": { "type": "string", "format": "date-time" },
+          "contentFormats": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "engagementRate": { "type": "number", "minimum": 0, "maximum": 1 },
+                "conversionRate": { "type": "number", "minimum": 0, "maximum": 1 }
+              }
+            }
+          }
+        }
+      },
+      "contentGenerationMetadata": {
+        "type": "object",
+        "description": "Performance of generated content (from V2).",
+        "properties": {
+          "generatedContentTypes": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["headline", "description", "tagline", "adCopy", "spotlightContent", "experienceHighlight"] }
+          },
+          "bestPerformingFormats": { "type": "array", "items": { "type": "string" } },
+          "sampleContent": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "contentType": { "type": "string" },
+                "content": { "type": "string" },
+                "performance": {
+                  "type": "object",
+                  "properties": {
+                    "impressions": { "type": "integer" },
+                    "engagements": { "type": "integer" },
+                    "conversions": { "type": "integer" }
+                  }
+                }
+              },
+              "required": ["contentType", "content"]
+            }
+          }
+        }
+      },
+      "pipelineMetadata": {
+        "type": "object",
+        "description": "Scalability and auditing (from My Schema).",
+        "properties": {
+          "batchId": { "type": "string" },
+          "generatedBy": { "type": "string" },
+          "processingTimestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "schemaExtensions": {
+        "type": "object",
+        "description": "Custom fields for future extensions (from My Schema).",
+        "additionalProperties": true
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Insight generation timestamp."
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "propertyId",
+      "insightType",
+      "insightLabel",
+      "summary",
+      "travelCategories",
+      "contributingFactors",
+      "timestamp"
+    ]
+  }

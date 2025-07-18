@@ -1,17 +1,64 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FiSave, FiMoon, FiSun } from 'react-icons/fi';
+import { FiSave, FiMoon, FiSun, FiDownload, FiUser, FiKey, FiSettings } from 'react-icons/fi';
 import { useAppContext } from '../contexts/AppContext';
+import { useLocation } from 'react-router-dom';
+import ExportConfiguration from '../components/tabs/ExportConfiguration';
+import SearchableDropdown from '../components/common/SearchableDropdown';
 
 const Settings = () => {
   const { theme, toggleTheme } = useAppContext();
+  const location = useLocation();
   
+  // Check if we should start on export tab (from URL params)
+  const queryParams = new URLSearchParams(location.search);
+  const initialTab = queryParams.get('tab') || 'preferences';
+  
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [preferences, setPreferences] = useState({
     defaultView: 'grid',
     resultsPerPage: '10',
     emailNotifications: true,
     statusUpdates: true
   });
+  
+  // Export configuration state
+  const [exportConfig, setExportConfig] = useState({
+    level: 'property',
+    affinities: [],
+    sentiments: [],
+    destinationInsights: {
+      themes: {
+        nanoThemes: [],
+        subThemes: [],
+        attributes: {
+          timeNeeded: false,
+          intensity: false,
+          emotions: false,
+          price: false
+        }
+      },
+      nuances: {
+        destination: [],
+        conventionalLodging: [],
+        vacationRental: []
+      },
+      related: {
+        similarDestinations: [],
+        tags: []
+      }
+    },
+    lastMile: {
+      transportation: [],
+      accessibility: []
+    }
+  });
+  
+  const tabs = [
+    { id: 'preferences', label: 'Preferences', icon: FiSettings },
+    { id: 'account', label: 'Account', icon: FiUser },
+    { id: 'export', label: 'Export Data', icon: FiDownload }
+  ];
   
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -34,35 +81,66 @@ const Settings = () => {
         <p>Customize your Affinity Explorer experience</p>
       </SettingsHeader>
       
-      <SettingsGrid>
-        <SettingsCard>
-          <h2>User Preferences</h2>
+      {/* Tab Navigation */}
+      <div className="flex border-b border-gray-200 mb-6 bg-white rounded-lg rounded-b-none overflow-hidden">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center space-x-2 px-6 py-4 border-b-2 font-medium transition-colors ${
+              activeTab === tab.id
+                ? 'border-blue-500 text-blue-600 bg-blue-50'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+            }`}
+          >
+            <tab.icon className="w-5 h-5" />
+            <span>{tab.label}</span>
+          </button>
+        ))}
+      </div>
+      
+      {/* Tab Content */}
+      <div className="min-h-96">
+        {activeTab === 'export' && (
+          <ExportConfiguration />
+        )}
+        
+        {activeTab === 'preferences' && (
+          <SettingsGrid>
+            <SettingsCard>
+              <h2>User Preferences</h2>
           
           <SettingsForm onSubmit={handleSubmit}>
             <FormGroup>
               <FormLabel>Default View:</FormLabel>
-              <FormSelect 
-                name="defaultView"
-                value={preferences.defaultView}
-                onChange={handleChange}
-              >
-                <option value="grid">Grid View</option>
-                <option value="list">List View</option>
-              </FormSelect>
+              <SearchableDropdown
+                options={[
+                  { value: 'grid', label: 'Grid View' },
+                  { value: 'list', label: 'List View' }
+                ]}
+                value={{ value: preferences.defaultView, label: preferences.defaultView === 'grid' ? 'Grid View' : 'List View' }}
+                onChange={(option) => setPreferences({ ...preferences, defaultView: option?.value || 'grid' })}
+                placeholder="Select view..."
+                className="w-48"
+                noOptionsMessage="No view options found"
+              />
             </FormGroup>
             
             <FormGroup>
               <FormLabel>Results Per Page:</FormLabel>
-              <FormSelect 
-                name="resultsPerPage"
-                value={preferences.resultsPerPage}
-                onChange={handleChange}
-              >
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </FormSelect>
+              <SearchableDropdown
+                options={[
+                  { value: '10', label: '10' },
+                  { value: '25', label: '25' },
+                  { value: '50', label: '50' },
+                  { value: '100', label: '100' }
+                ]}
+                value={{ value: preferences.resultsPerPage, label: preferences.resultsPerPage }}
+                onChange={(option) => setPreferences({ ...preferences, resultsPerPage: option?.value || '10' })}
+                placeholder="Select page size..."
+                className="w-48"
+                noOptionsMessage="No options found"
+              />
             </FormGroup>
             
             <CheckboxGroup>
@@ -102,49 +180,16 @@ const Settings = () => {
         </SettingsCard>
         
         <SettingsCard>
-          <h2>Appearance</h2>
-          
-          <ThemeSection>
-            <ThemeTitle>Theme Mode</ThemeTitle>
-            <ThemeButtons>
-              <ThemeButton 
-                active={theme === 'light'} 
-                onClick={() => theme !== 'light' && toggleTheme()}
-              >
-                <FiSun /> Light Mode
-              </ThemeButton>
-              <ThemeButton 
-                active={theme === 'dark'} 
-                onClick={() => theme !== 'dark' && toggleTheme()}
-              >
-                <FiMoon /> Dark Mode
-              </ThemeButton>
-            </ThemeButtons>
-          </ThemeSection>
-          
-          <ColorSection>
-            <ColorTitle>Accent Color</ColorTitle>
-            <ColorOptions>
-              <ColorOption color="#4a6cf7" active />
-              <ColorOption color="#10b981" />
-              <ColorOption color="#f59e0b" />
-              <ColorOption color="#ef4444" />
-              <ColorOption color="#8b5cf6" />
-            </ColorOptions>
-          </ColorSection>
-        </SettingsCard>
-        
-        <SettingsCard>
           <h2>Account Information</h2>
           
           <AccountInfo>
             <InfoItem>
               <InfoLabel>Username:</InfoLabel>
-              <InfoValue>johndoe</InfoValue>
+              <InfoValue>calcarter</InfoValue>
             </InfoItem>
             <InfoItem>
               <InfoLabel>Email:</InfoLabel>
-              <InfoValue>john.doe@example.com</InfoValue>
+              <InfoValue>calcarter@expediagroup.com</InfoValue>
             </InfoItem>
             <InfoItem>
               <InfoLabel>Role:</InfoLabel>
@@ -157,45 +202,45 @@ const Settings = () => {
           </AccountInfo>
           
           <ButtonRow>
-            <LinkButton>Change Password</LinkButton>
-            <LinkButton>Edit Profile</LinkButton>
-          </ButtonRow>
-        </SettingsCard>
-        
-        <SettingsCard>
-          <h2>API Access</h2>
-          
-          <ApiInfo>
-            <ApiKeySection>
-              <ApiKeyLabel>Your API Key:</ApiKeyLabel>
-              <ApiKeyDisplay>
-                ••••••••••••••••••••••••••••••
-                <ShowButton>Show</ShowButton>
-              </ApiKeyDisplay>
-            </ApiKeySection>
-            
-            <ApiStats>
-              <ApiStatItem>
-                <ApiStatLabel>Requests Today:</ApiStatLabel>
-                <ApiStatValue>156</ApiStatValue>
-              </ApiStatItem>
-              <ApiStatItem>
-                <ApiStatLabel>Monthly Limit:</ApiStatLabel>
-                <ApiStatValue>10,000</ApiStatValue>
-              </ApiStatItem>
-              <ApiStatItem>
-                <ApiStatLabel>Last Request:</ApiStatLabel>
-                <ApiStatValue>10 minutes ago</ApiStatValue>
-              </ApiStatItem>
-            </ApiStats>
-          </ApiInfo>
-          
-          <ButtonRow>
-            <LinkButton>Regenerate API Key</LinkButton>
-            <LinkButton>View API Documentation</LinkButton>
+            <LinkButton disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>Change Password</LinkButton>
+            <LinkButton disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>Edit Profile</LinkButton>
           </ButtonRow>
         </SettingsCard>
       </SettingsGrid>
+        )}
+        
+        {activeTab === 'account' && (
+          <SettingsGrid>
+            <SettingsCard>
+              <h2>Account Information</h2>
+              
+              <AccountInfo>
+                <InfoItem>
+                  <InfoLabel>Username:</InfoLabel>
+                  <InfoValue>calcarter</InfoValue>
+                </InfoItem>
+                <InfoItem>
+                  <InfoLabel>Email:</InfoLabel>
+                  <InfoValue>calcarter@expediagroup.com</InfoValue>
+                </InfoItem>
+                <InfoItem>
+                  <InfoLabel>Role:</InfoLabel>
+                  <InfoValue>Admin</InfoValue>
+                </InfoItem>
+                <InfoItem>
+                  <InfoLabel>Account Created:</InfoLabel>
+                  <InfoValue>January 15, 2023</InfoValue>
+                </InfoItem>
+              </AccountInfo>
+              
+              <ButtonRow>
+                <LinkButton disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>Change Password</LinkButton>
+                <LinkButton disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>Edit Profile</LinkButton>
+              </ButtonRow>
+            </SettingsCard>
+          </SettingsGrid>
+        )}
+      </div>
     </SettingsContainer>
   );
 };
@@ -322,75 +367,6 @@ const SaveButton = styled.button`
   }
 `;
 
-const ThemeSection = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const ThemeTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-`;
-
-const ThemeButtons = styled.div`
-  display: flex;
-  gap: 1rem;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const ThemeButton = styled.button`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: ${props => props.active ? 'var(--primary-color)' : 'transparent'};
-  color: ${props => props.active ? 'white' : 'inherit'};
-  border: 1px solid ${props => props.active ? 'var(--primary-color)' : 'var(--border-color)'};
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  
-  .dark & {
-    border-color: ${props => props.active ? 'var(--primary-color)' : '#374151'};
-  }
-  
-  &:hover:not(:disabled) {
-    background-color: ${props => props.active ? 'var(--primary-color)' : props.theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
-  }
-`;
-
-const ColorSection = styled.div``;
-
-const ColorTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-`;
-
-const ColorOptions = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
-
-const ColorOption = styled.button`
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background-color: ${props => props.color};
-  border: 3px solid ${props => props.active ? 'white' : 'transparent'};
-  box-shadow: ${props => props.active ? '0 0 0 2px var(--primary-color)' : 'none'};
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
-
 const AccountInfo = styled.div`
   margin-bottom: 1.5rem;
 `;
@@ -425,54 +401,6 @@ const LinkButton = styled.button`
   &:hover {
     background-color: rgba(74, 108, 247, 0.1);
   }
-`;
-
-const ApiInfo = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const ApiKeySection = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const ApiKeyLabel = styled.div`
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-`;
-
-const ApiKeyDisplay = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: ${props => props.theme === 'dark' ? '#111827' : '#f9fafb'};
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-family: monospace;
-`;
-
-const ShowButton = styled.button`
-  color: var(--primary-color);
-  background: transparent;
-  font-size: 0.875rem;
-  font-weight: 500;
-`;
-
-const ApiStats = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-`;
-
-const ApiStatItem = styled.div``;
-
-const ApiStatLabel = styled.div`
-  font-size: 0.75rem;
-  color: var(--secondary-color);
-  margin-bottom: 0.25rem;
-`;
-
-const ApiStatValue = styled.div`
-  font-weight: 600;
 `;
 
 export default Settings; 

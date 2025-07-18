@@ -22,8 +22,10 @@ export function AppProvider({ children }) {
   useEffect(() => {
     async function loadAffinities() {
       try {
-        const response = await getAffinities();
+        // Load all affinities without pagination limits
+        const response = await getAffinities({ page: 1, limit: 1000 });
         setAffinities(response.data || []);
+        console.log('AppContext - Loaded affinities:', response.data?.length || 0, 'total affinities');
       } catch (error) {
         console.error('Failed to load affinities:', error);
       }

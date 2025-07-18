@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiBell, FiHelpCircle, FiUser, FiLogOut, FiSettings } from 'react-icons/fi';
+import { FiBell, FiHelpCircle, FiUser, FiLogOut, FiSettings, FiDownload } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { trackFeatureUse } from '../utils/analytics';
@@ -124,6 +124,19 @@ const Header = () => {
                   </div>
                 )}
               </div>
+
+              <button
+                type="button"
+                className="ml-3 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={() => {
+                  trackFeatureUse('export_data_click');
+                  navigate('/settings?tab=export');
+                }}
+                title="Export Data Configuration"
+              >
+                <span className="sr-only">Export data configuration</span>
+                <FiDownload className="h-6 w-6" />
+              </button>
 
               <button
                 type="button"

@@ -14,6 +14,7 @@ import Pagination from './AffinityLibraryParts/Pagination';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { useAppContext } from '../../contexts/AppContext';
+import affinityDefinitionService from '../../services/affinityDefinitionService';
 
 const AffinityLibrary = () => {
   const location = useLocation();
@@ -73,9 +74,11 @@ const AffinityLibrary = () => {
     });
   }, [searchTerm, currentPage, setSearchParams]);
 
-  // Load affinities on mount
+  // Load affinities and definition service on mount
   useEffect(() => {
     fetchAffinities();
+    // Pre-load affinity definitions for faster sorting
+    affinityDefinitionService.loadDefinitions().catch(console.error);
   }, [fetchAffinities]);
 
   // Fetch user collections
@@ -97,7 +100,7 @@ const AffinityLibrary = () => {
     fetchUserCollections();
   }, [user, showToast]);
 
-  // Debounced search effect
+  // Debounced search effect (sorting is now handled at API level)
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(() => {
@@ -421,6 +424,15 @@ const AffinityLibrary = () => {
             <p className="mt-2 text-gray-600">
               Explore, search, and manage your organization's affinities.
             </p>
+            <div className="mt-3 flex items-center space-x-2 text-sm">
+              <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 flex items-center space-x-1">
+                <span>⚙️</span>
+                <span>Configured</span>
+              </span>
+              <span className="text-gray-500">
+                {affinities.filter(a => a.hasConfiguration).length} JSON-configured affinities appear first, followed by {affinities.filter(a => !a.hasConfiguration).length} synthetic-configured affinities
+              </span>
+            </div>
           </div>
         </div>
       </div>

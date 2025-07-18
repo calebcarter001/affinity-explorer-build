@@ -9,7 +9,7 @@ export const mockCollections = [
     owner: "Market Research Team",
     dateCreated: "2024-01-15",
     lastModified: "2024-03-15",
-    affinities: ["aff4", "aff5"], // Luxury and Business affinities
+    affinities: ["aff5"], // Business affinity
     metrics: {
       averageAccuracy: 0.87,
       averageCoverage: 72,
@@ -50,7 +50,7 @@ export const mockCollections = [
     },
     ownerId: "demo@example.com",
     isFavorite: false,
-    affinityIds: ["aff4", "aff5"]
+    affinityIds: ["aff5"]
   }
   // ... rest of collections
 ]; 
